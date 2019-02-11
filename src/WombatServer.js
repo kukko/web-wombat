@@ -3,14 +3,30 @@ let DatabaseHolder=require('./DatabaseHolder.js');
 	BaseController=require('./BaseController.js'),
 	WebMiddlewares=require('./MiddlewareProvider.js').getWebMiddlewares();
 
-class ClientServer{
+class WombatServer{
 	static init(){
-		DatabaseHolder.connect().then((databaseResult)=>{
-			require('http').createServer(this.serve).listen(this.prototype.port);
-			console.log("Listening on "+this.prototype.port+"!");
-		}).catch((error)=>{
-			console.log(error);
-		});
+		if (this.connectToDatabase){
+			DatabaseHolder.connect().then((databaseResult)=>{
+				this.listen();
+			}).catch((error)=>{
+				console.log(error);
+			});
+		}
+		else{
+			this.listen();
+		}
+	}
+	static withDatabase(){
+		this.connectToDatabase = true;
+		return this;
+	}
+	static withoutDatabase(){
+		this.connectToDatabase = false;
+		return this;
+	}
+	static listen(){
+		require('http').createServer(this.serve).listen(this.prototype.port);
+		console.log("Listening on " + this.port + "!");
 	}
 	static serve(request, response){
 		let route=RouteService.getRoute(request);
@@ -45,6 +61,8 @@ class ClientServer{
 	}
 }
 
-ClientServer.prototype.port=8888;
+WombatServer.prototype.port=8888;
 
-module.exports=ClientServer;
+WombatServer.connectToDatabase = true;
+
+module.exports=WombatServer;

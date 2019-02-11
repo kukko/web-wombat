@@ -19,7 +19,7 @@ for (let i in middlewareFolders){
 }
 
 module.exports = {
-	ClientServer: require('./src/ClientServer.js'),
+	WombatServer: require('./src/WombatServer.js'),
 	BaseController: require('./src/BaseController.js'),
 	Route: require('./src/Route.js'),
 	BaseMiddleware: require('./src/middlewares/BaseMiddleware.js'),
