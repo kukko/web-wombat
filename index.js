@@ -1,21 +1,21 @@
 let { lstatSync, readdirSync } = require('fs'),
-	{ join, dirname } = require('path'),
+	{ join, dirname, resolve } = require('path'),
 	middlewares = {},
-	middlewaresFolder = './src/middlewares',
+	middlewaresFolder = resolve(__dirname, './src/middlewares'),
 	middlewareFolders = readdirSync(middlewaresFolder).map((folder)=>{
 		return {
 			parentFolder:middlewaresFolder,
-			collectionFolder:folder
+			middlewareFolder:folder
 		};
 	}).filter((source) => {
-		return lstatSync(join(source.parentFolder, source.collectionFolder)).isDirectory();
+		return lstatSync(join(source.parentFolder, source.middlewareFolder)).isDirectory();
 	}).map((collection)=>{
-		return collection.collectionFolder
+		return collection.middlewareFolder
 	});
 
 for (let i in middlewareFolders){
 	let middlewareName = middlewareFolders[i];
-	middlewares[middlewareName] = require(join(dirname(require.main.filename), middlewaresFolder, middlewareName, middlewareName + '.js'));
+	middlewares[middlewareName] = require(join(middlewaresFolder, middlewareName, middlewareName + '.js'));
 }
 
 module.exports = {
