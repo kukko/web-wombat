@@ -1,0 +1,23 @@
+{
+  "name": "web-wombat",
+  "version": "1.0.0",
+  "description": "Framework for web services.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kukko/web-wombat.git"
+  },
+  "author": "kukko <nyariag@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kukko/web-wombat/issues"
+  },
+  "homepage": "https://github.com/kukko/web-wombat#readme",
+  "dependencies": {
+    "blade": "^3.3.1",
+    "mongodb": "^3.1.13"
+  }
+}
