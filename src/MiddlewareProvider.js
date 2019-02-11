@@ -5,7 +5,7 @@ class MiddlewareProvider{
 	static getMiddleware(name){
 		let { existsSync } = require('fs'),
 			{ join, dirname } = require('path'),
-			middlewareRoute = join('./middlewares', name, name + '.js');
+			middlewareRoute = join(__dirname, './middlewares', name, name + '.js');
 		if (existsSync(middlewareRoute)){
 			return require(middlewareRoute);
 		}

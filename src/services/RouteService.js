@@ -17,8 +17,9 @@ class RouteService{
 		}
 		return url;
 	}
+	static setRoutes(routes){
+		this.routes = routes;
+	}
 }
-
-RouteService.routes=require(join(dirname(require.main.filename, 'routes', 'routes.js')));
 
 module.exports=RouteService;

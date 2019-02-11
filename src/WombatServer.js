@@ -28,6 +28,10 @@ class WombatServer{
 		this.port = port;
 		return this;
 	}
+	static setRoutes(routes){
+		RouteService.setRoutes(routes);
+		return this;
+	}
 	static listen(){
 		require('http').createServer(this.serve).listen(this.port);
 		console.log("Listening on " + this.port + "!");
