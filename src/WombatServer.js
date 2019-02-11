@@ -24,8 +24,12 @@ class WombatServer{
 		this.connectToDatabase = false;
 		return this;
 	}
+	static setPort(port){
+		this.port = port;
+		return this;
+	}
 	static listen(){
-		require('http').createServer(this.serve).listen(this.prototype.port);
+		require('http').createServer(this.serve).listen(this.port);
 		console.log("Listening on " + this.port + "!");
 	}
 	static serve(request, response){
@@ -61,7 +65,7 @@ class WombatServer{
 	}
 }
 
-WombatServer.prototype.port=8888;
+WombatServer.port = 8888;
 
 WombatServer.connectToDatabase = true;
 
