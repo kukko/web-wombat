@@ -23,5 +23,6 @@ module.exports = {
 	BaseController: require('./src/BaseController.js'),
 	Route: require('./src/Route.js'),
 	BaseMiddleware: require('./src/middlewares/BaseMiddleware.js'),
-	middlewares: middlewares
+	middlewares: middlewares,
+	BaseCollection: require('./src/BaseCollection.js')
 };
