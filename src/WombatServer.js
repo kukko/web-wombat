@@ -4,16 +4,16 @@ let DatabaseHolder=require('./DatabaseHolder.js');
 	WebMiddlewares=require('./MiddlewareProvider.js').getWebMiddlewares();
 
 class WombatServer{
-	static init(){
+	static init(callback){
 		if (this.connectToDatabase){
 			DatabaseHolder.connect().then((databaseResult)=>{
-				this.listen();
+				this.listen(callback);
 			}).catch((error)=>{
 				console.log(error);
 			});
 		}
 		else{
-			this.listen();
+			this.listen(callback);
 		}
 	}
 	static withDatabase(){
@@ -32,9 +32,13 @@ class WombatServer{
 		RouteService.setRoutes(routes);
 		return this;
 	}
-	static listen(){
-		require('http').createServer(this.serve).listen(this.port);
-		console.log("Listening on " + this.port + "!");
+	static listen(callback){
+		require('http').createServer(this.serve).listen(this.port).on('listening', ()=>{
+			console.log("Listening on " + this.port + "!");
+			if (typeof callback !== 'undefined'){
+				callback(this.port);
+			}
+		});
 	}
 	static serve(request, response){
 		let route=RouteService.getRoute(request);
