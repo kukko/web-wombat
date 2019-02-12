@@ -1,6 +1,6 @@
 {
   "name": "web-wombat",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Framework for web services.",
   "main": "src/index.js",
   "scripts": {
