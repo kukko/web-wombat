@@ -49,9 +49,11 @@ class WombatServer{
 		else{
 			let path=require('path');
 			if (path.extname(request.url).length===0){
-				response.writeHead(404);
+				response.statusCode = 404;
 				let controller=new BaseController(request, response);
-				controller.view('404', {});
+				controller.view('404', {}).catch((error) => {
+					response.end('404');
+				});
 			}
 			else{
 				let fileSystem=require('fs'),

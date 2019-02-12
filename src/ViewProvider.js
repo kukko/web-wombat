@@ -16,21 +16,23 @@ class ViewProvider{
 			if (!this.response.hasHeader('Content-type')){
 				this.response.setHeader('Content-type', 'text/html');
 			}
-			this.blade.renderFile(viewPath, {
-				...options,
-				basedir:viewFolder
-			}, (error, html)=>{
-				if (error===null){
-					if (endResponse){
-						this.response.end(html);
+			return new Promise((resolve, reject) => {
+				this.blade.renderFile(viewPath, {
+					...options,
+					basedir:viewFolder
+				}, (error, html)=>{
+					if (error===null){
+						if (endResponse){
+							this.response.end(html);
+						}
+						else{
+							this.response.write(html, 'utf8');
+						}
 					}
 					else{
-						this.response.write(html, 'utf8');
+						reject(error);
 					}
-				}
-				else{
-					console.log(error);
-				}
+				});
 			});
 		}
 		else{
