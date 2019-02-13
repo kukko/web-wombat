@@ -1,10 +1,14 @@
 let DatabaseHolder=require('./DatabaseHolder.js');
 	RouteService=require('./services/RouteService.js'),
 	BaseController=require('./BaseController.js'),
+	ViewProvider=require('./ViewProvider.js'),
 	WebMiddlewares=require('./MiddlewareProvider.js').getWebMiddlewares();
 
 class WombatServer{
 	static init(callback){
+		if (typeof WombatServer.subfolder === 'undefined'){
+			this.setSubfolder('.');
+		}
 		if (this.connectToDatabase){
 			DatabaseHolder.connect().then((databaseResult)=>{
 				this.listen(callback);
@@ -30,6 +34,11 @@ class WombatServer{
 	}
 	static setRoutes(routes){
 		RouteService.setRoutes(routes);
+		return this;
+	}
+	static setSubfolder(subfolder){
+		this.subfolder = subfolder;
+		ViewProvider.setSubfolder(subfolder);
 		return this;
 	}
 	static listen(callback){

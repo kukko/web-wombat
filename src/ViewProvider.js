@@ -4,9 +4,12 @@ class ViewProvider{
 		this.response=response;
 		this.blade=require('blade');
 		this.path=require('path');
+		if (typeof ViewProvider.subfolder === 'undefined'){
+			ViewProvider.setSubfolder('.');
+		}
 	}
 	getView(filePath, options, writeToResponse=true, endResponse=true){
-		let viewFolder=this.path.join(this.path.dirname(require.main.filename), 'resources', 'views'),
+		let viewFolder=this.path.join(this.path.resolve(this.path.dirname(require.main.filename), ViewProvider.subfolder), 'resources', 'views'),
 			viewPath=this.path.join(viewFolder, filePath),
 			viewExtension=this.path.extname(viewPath);
 		if (viewExtension.length===0){
@@ -50,6 +53,9 @@ class ViewProvider{
 				});
 			});
 		}
+	}
+	static setSubfolder(subfolder){
+		ViewProvider.subfolder = subfolder;
 	}
 }
 

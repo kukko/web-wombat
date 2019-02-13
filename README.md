@@ -83,7 +83,14 @@ DELETE:
 Route.delete('/', require('../controllers/HomeController/HomeController.js'))
 ```
 
-You can add middlewares to be runned specific for each route, by specifing an `array` as the third parameter, for the methods above. The specified middlewares run synchronously after each other, like they are ordered in the array.
+In one controller, you can specifiy any method to serve a request and multiple routes can point to the same controller and to the same method, or to the same controller, but different methods. As the third parameter of the above methods, you can specify a method name, which will be serve the requests. If this parameter isn't specified, then the controller's `serve` method will handle the request to the route.
+
+Here is an example:
+```
+Route.get('/profile', require('../controllers/UserController/UserController.js'), 'showSelf')
+```
+
+You can add middlewares to be runned specific for each route, by specifing an `array` as the fourth parameter, for the methods above. The specified middlewares run synchronously after each other, like they are ordered in the array.
 
 Route with middlewares:
 ```
@@ -91,3 +98,50 @@ Route.get('/profile', require('../controllers/UserController/UserController.js')
 	MiddlewareProvider.getMiddleware('AuthenticationMiddleware')
 ])
 ```
+
+# Available classes
+*These are just those classes and their methods which is accessible from outside of the class and you can do something with them, without the deeper knowledge of the classes.*
+## WombatServer
+### init([function callback])
+Initialize the `WombatServer` to listen on a port for requests.
+**callback**
+It's a function which will be called after the `WombatServer` started listening.
+### withDatabase()
+Configure `WombatServer` to load the database configuration and connect to the database on startup.
+### withoutDatabase()
+Configure `WombatServer` to not try to load the database configuration and don't try to connect to database on startup.
+### setPort(mixed port)
+Set the port where the WombatServer will listen for requests.
+**port**
+The port where the `WombatServer` will listen for requests.
+### setRoutes(Route[] routes)
+Set the routes, which will be redirected to Controllers.
+**routes**
+An array of `Route` instances.
+### setSubfolder(string subfolder)
+You can set a path where the `WombatServer` and the dependant classes find the resources relatively to the file, which have been started by `node`.
+**subfolder**
+A relative path where the required resources can be found relatively to the running script file.
+
+## BaseController
+This is the which must be the parent class of each controller.
+### view(string filePath, object options, [boolean writeToResponse = true, boolean endResponse = true])
+**filePath**
+Route to the view, in the `resources/views` folder.
+**options**
+An object with the variables which will be accessible in the view file.
+**writeToResponse**
+If this parameter is `true`, the controller will write the builded template to the ServerResponse, else the controller will return a promise which's then branch will receive the builded output as first parameter.
+**endResponse**
+If this parameter is `true`, the controller will end the response after it's writed the builded template to it. If the `writeToResponse` parameter is `false`, then this parameter will be ignored.
+### getMiddleware(string name)
+This method will return the request middleware class, not an instance of the class. First this will find the middleware in the `web-wombat` module folder, after that in the projects `middlewares` folder.
+**name**
+The name of the required `middleware` class.
+
+## ViewProvider
+This is the class through which you can build views.
+### setSubfolder(string subfolder)
+You can set a path where the `ViewProvider` can find the resources relatively to the file, which have been started by `node`.
+**subfolder**
+A relative path where the required resources can be found relatively to the running script file.
