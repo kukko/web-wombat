@@ -1,10 +1,11 @@
 class Route{
-	constructor(route, method, controller, controllerFunction='serve', middlewares=[]){
+	constructor(route, method, controller, controllerFunction = 'serve', middlewares = [], websocket = false){
 		this.route=route;
 		this.method=method;
 		this.controller=controller;
 		this.controllerFunction=controllerFunction;
 		this.middlewares=middlewares;
+		this.websocket=websocket;
 	}
 	serve(request, response){
 		let controller=new this.controller(request, response),
@@ -22,6 +23,9 @@ class Route{
 			});
 		}
 	}
+	serveWebSocket(request, socket, head){
+		new this.controller(request, socket, head);
+	}
 	runController(controller, request, response){
 		for (let i in controller.allMiddlewares){
 			controller.allMiddlewares[i].run(request, response);
@@ -34,7 +38,7 @@ class Route{
 		}
 	}
 	isMatching(request){
-		return this.urlIsMatching(request) && request.method===this.method;
+		return this.urlIsMatching(request) && request.method===this.method && request.upgrade===this.websocket;
 	}
 	urlIsMatching(request){
 		let routeService=require('./services/RouteService.js'),
@@ -80,6 +84,9 @@ class Route{
 	}
 	static delete(route, controller, controllerFunction, middlewares){
 		return new Route(route, 'DELETE', controller, controllerFunction, middlewares);
+	}
+	static websocket(route, controller, controllerFunction, middlewares){
+		return new Route(route, 'GET', controller, controllerFunction, middlewares, true);
 	}
 }
 

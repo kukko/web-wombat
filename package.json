@@ -1,6 +1,6 @@
 {
   "name": "web-wombat",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "Framework for web services.",
   "main": "src/index.js",
   "scripts": {
@@ -20,5 +20,8 @@
     "blade": "^3.3.1",
     "cookie": "^0.3.1",
     "mongodb": "^3.1.13"
+  },
+  "devDependencies": {
+    "websocket": "^1.0.28"
   }
 }

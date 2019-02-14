@@ -47,7 +47,7 @@ class WombatServer{
 			if (typeof callback !== 'undefined'){
 				callback(this.port);
 			}
-		});
+		}).on('upgrade', this.serveWebSocket);
 	}
 	static serve(request, response){
 		let route=RouteService.getRoute(request);
@@ -80,6 +80,13 @@ class WombatServer{
 					response.end("404");
 				}
 			}
+		}
+	}
+	static serveWebSocket(request, socket, head){
+		let route=RouteService.getRoute(request);
+		if (typeof route !== "undefined"){
+			request.route = route;
+			route.serveWebSocket(request, socket, head);
 		}
 	}
 }

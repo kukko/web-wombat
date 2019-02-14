@@ -21,6 +21,7 @@ for (let i in middlewareFolders){
 module.exports = {
 	WombatServer: require('./src/WombatServer.js'),
 	BaseController: require('./src/BaseController.js'),
+	WebSocketController: require('./src/WebSocketController.js'),
 	Route: require('./src/Route.js'),
 	BaseMiddleware: require('./src/middlewares/BaseMiddleware.js'),
 	middlewares: middlewares,

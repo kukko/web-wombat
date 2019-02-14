@@ -124,7 +124,7 @@ You can set a path where the `WombatServer` and the dependant classes find the r
 A relative path where the required resources can be found relatively to the running script file.
 
 ## BaseController
-This is the which must be the parent class of each controller.
+This is the class which must be the parent class of each controller.
 ### view(string filePath, object options, [boolean writeToResponse = true, boolean endResponse = true])
 **filePath**
 Route to the view, in the `resources/views` folder.
@@ -138,6 +138,19 @@ If this parameter is `true`, the controller will end the response after it's wri
 This method will return the request middleware class, not an instance of the class. First this will find the middleware in the `web-wombat` module folder, after that in the projects `middlewares` folder.
 **name**
 The name of the required `middleware` class.
+
+## WebSocketController
+This is the class which must be the parent class of each WebSocket controller. The following methods called automatically by this class and the classes which have been extends this parent class, just need to implement these classes. None of them are required to override, just optional.
+### onOpen()
+Called when a client have been connected.
+### onMessage(string message)
+Called when a client sent a message to the server.
+**message**
+Containts the message which the client have been sent to the server.
+### onClose()
+Called when a client have been disconnected from the server.
+### onError()
+Called when an error occured in the connection.
 
 ## ViewProvider
 This is the class through which you can build views.
