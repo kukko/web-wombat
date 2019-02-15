@@ -1,7 +1,7 @@
 # web-wombat
 Framework for web services with NodeJS.
 
-With web-wombat, you can easily set up a simple webserver in 1-2 minutes.
+With web-wombat, you can easily set up a simple webserver in 1-2 minutes. You can also set up a WebSocket server in one minute.
 
 # Create new project with web-wombat
 ```
@@ -62,6 +62,7 @@ module.exports=[
 You can create routes for specific request methods, like `GET`, `POST`, `PUT`, `UPDATE` and `DELETE`.
 
 Here are some example for the different methods.
+
 GET:
 ```
 Route.get('/', require('../controllers/HomeController/HomeController.js'))
@@ -97,6 +98,37 @@ Route with middlewares:
 Route.get('/profile', require('../controllers/UserController/UserController.js'), 'showSelf', [
 	MiddlewareProvider.getMiddleware('AuthenticationMiddleware')
 ])
+```
+
+## WebSocket
+And you can create websocket servers with `WebWombat`. For this, you need to specify a route, with the `Route` class's `websocket` method.
+
+Here is an example:
+Specify route:
+```
+Route.websocket('/', require('./controllers/WebSocketTestController/WebSocketTestController.js'))
+```
+Create controller for websocket:
+```
+let { WebSocketController } = require('../../../../index.js');
+
+class WebSocketTestController extends WebSocketController{
+	onOpen(){
+		console.log('Connection opened!');
+	}
+	onMessage(message){
+		console.log('Message received: ' + message);
+	}
+	onClose(){
+		console.log('Server: connection closed!');
+	}
+	onError(error){
+		console.log('Error occured!');
+		console.log(error);
+	}
+}
+
+module.exports = WebSocketTestController;
 ```
 
 # Available classes
@@ -146,11 +178,13 @@ Called when a client have been connected.
 ### onMessage(string message)
 Called when a client sent a message to the server.
 **message**
-Containts the message which the client have been sent to the server.
+Contains the message which the client have been sent to the server.
 ### onClose()
 Called when a client have been disconnected from the server.
-### onError()
+### onError(Error error)
 Called when an error occured in the connection.
+**error**
+Contains the error which is occured in the WebSocket connection.
 
 ## ViewProvider
 This is the class through which you can build views.

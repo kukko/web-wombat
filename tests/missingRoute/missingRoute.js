@@ -1,4 +1,4 @@
-let { WombatServer } = require('../index.js');
+let { WombatServer } = require('../../index.js');
 WombatServer.withoutDatabase().init((port)=>{
 	require('http').get('http://localhost:'+port, (response) => {
 		let data = '';
