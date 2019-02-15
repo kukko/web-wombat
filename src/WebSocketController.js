@@ -51,6 +51,10 @@ class WebSocketController extends BaseController{
 			WebSocketClientService.removeClient(this.uuid);
 			return null;
 		}
+		if (opCode === 0x9){
+			this.pong();
+			return;
+		}
 		if (opCode !== 0x1){
 			this.onError(new Error('Unsopported frame type.'));
 			return;
@@ -118,6 +122,12 @@ class WebSocketController extends BaseController{
 		}
 		buffer.write(message, payloadOffset);
 		socket.write(buffer);
+	}
+	pong(){
+		let buffer = Buffer.alloc(2);
+		buffer.writeUInt8(0b10001010, 0);
+		buffer.writeUInt8(0b00000000, 1);
+		this.socket.write(buffer);
 	}
 }
 
