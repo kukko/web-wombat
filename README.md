@@ -185,6 +185,20 @@ Called when a client have been disconnected from the server.
 Called when an error occured in the connection.
 **error**
 Contains the error which is occured in the WebSocket connection.
+### send(mixed message)
+Sends the specified message to the connected user.
+**message**
+The message to be sended to the client connected to this controller.
+### sendTo(string uuid, mixed message)
+Send the provided message to the client identified by the specified uuid.
+**uuid**
+The uuid of the client which is the target of the provided message.
+**message**
+The message to be sended to the client with the provided uuid.
+### broadcast(mixed message)
+Sends the provided message to all connected clients.
+**message**
+The message to be sended to all connected clients.
 
 ## ViewProvider
 This is the class through which you can build views.
