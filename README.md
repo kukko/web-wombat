@@ -21,6 +21,14 @@ let { WombatServer } = require('web-wombat');
 WombatServer.setRoutes(require('./routes/routes.js')).init();
 ```
 
+By default `WebWombat` accepts secure connections, but it's requires SSL certificate's private key and certification to be in `config/secureKey` folder in `key.pem` and `certificate.pem` files. If for some reasons you don't want to use secure connections, you can easily turn this off with the `setUnsecure` method of `WombatServer` class, before calling the `init` method.
+
+```
+let { WombatServer } = require('web-wombat');
+
+WombatServer.setUnsecure().init();
+```
+
 Basically `WebWombat` try to load database config and connect to the database, but you can turn this behavior off with calling the `static` `withoutDatabase` method on the `WombatServer` class.
 
 Here is an example:
@@ -138,6 +146,10 @@ module.exports = WebSocketTestController;
 Initialize the `WombatServer` to listen on a port for requests.
 **callback**
 It's a function which will be called after the `WombatServer` started listening.
+### setUnsecure()
+It's disable the listening for secure connections. Must be called before init method. Basically `WombatServer` listening for secure connections too.
+### setSecure()
+It's enable the listening for secure connections. Must be called before init method. Basically `WombatServer` listening for secure connections too. To call this method, is only required if you previously called `setUnsecure` method.
 ### withDatabase()
 Configure `WombatServer` to load the database configuration and connect to the database on startup.
 ### withoutDatabase()

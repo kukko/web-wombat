@@ -41,13 +41,45 @@ class WombatServer{
 		ViewProvider.setSubfolder(subfolder);
 		return this;
 	}
+	static setUnsecure(){
+		this.secureConnection = false;
+		return this;
+	}
+	static setSecure(){
+		this.secureConnection = true;
+		return this;
+	}
 	static listen(callback){
-		require('http').createServer(this.serve).listen(this.port).on('listening', ()=>{
+		let listening = 0,
+			finish = () => {
+				listening++;
+				if (listening === (this.secureConnection ? 2 : 1)){
+					callback(this.port);
+				}
+			};
+		if (this.secureConnection){
+			process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+			let { readFileSync } = require('fs'),
+				{ resolve, dirname, join } = require('path'),
+				privateKey = readFileSync(resolve(dirname(require.main.filename), join('config', 'secureKey', 'key.pem'))).toString(),
+				certificate = readFileSync(resolve(dirname(require.main.filename), join('config', 'secureKey', 'certificate.pem'))).toString();
+			let https = require('https').createServer({
+				key: privateKey,
+				cert: certificate
+			}, this.serve).on('listening', ()=>{
+				console.log("Listening on 443!");
+				finish();
+			}).on('upgrade', this.serveWebSocket).on('clientError', (error) => {
+				console.log(error);
+			}).listen(443);
+		}
+		let server = require('http').createServer(this.serve);
+		server.on('listening', ()=>{
 			console.log("Listening on " + this.port + "!");
-			if (typeof callback !== 'undefined'){
-				callback(this.port);
-			}
-		}).on('upgrade', this.serveWebSocket);
+			finish();
+		}).on('upgrade', this.serveWebSocket).on('clientError', (error) => {
+			console.log(error);
+		}).listen(this.port);
 	}
 	static serve(request, response){
 		let route=RouteService.getRoute(request);
@@ -94,5 +126,7 @@ class WombatServer{
 WombatServer.port = 8888;
 
 WombatServer.connectToDatabase = true;
+
+WombatServer.secureConnection = true;
 
 module.exports=WombatServer;

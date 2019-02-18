@@ -1,5 +1,5 @@
 let { WombatServer, Route } = require('../../index.js');
-WombatServer.withoutDatabase().setRoutes([
+WombatServer.withoutDatabase().setUnsecure().setRoutes([
 	Route.put('/', require('./controllers/PutRequestController/PutRequestController.js'))
 ]).init((port)=>{
 	let request = require('http').request({
