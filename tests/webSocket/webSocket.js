@@ -1,5 +1,5 @@
 let { WombatServer, Route } = require('../../index.js');
-WombatServer.withoutDatabase().setUnsecure().setRoutes([
+WombatServer.withoutDatabase().setRoutes([
 	Route.get('/', require('../putRequest/controllers/PutRequestController/PutRequestController.js')),
 	Route.websocket('/', require('./controllers/WebSocketTestController/WebSocketTestController.js'))
 ]).init((port)=>{
@@ -42,5 +42,5 @@ WombatServer.withoutDatabase().setUnsecure().setRoutes([
 			connection.close();
 		}, 5000);
 	});
-	ws2.connect('ws://localhost:' + port);
+	ws2.connect('wss://localhost');
 });
