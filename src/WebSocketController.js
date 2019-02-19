@@ -85,7 +85,10 @@ class WebSocketController extends BaseController{
 		else{
 			buffer.copy(data, 0, offset++);
 		}
-		this.onMessage(data.toString('utf8'));
+		this.onMessage(data);
+	}
+	convertMessage(buffer){
+		return buffer.toString('utf8');
 	}
 	onOpen(){
 	}
