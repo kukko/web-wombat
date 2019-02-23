@@ -2,7 +2,8 @@ let DatabaseHolder=require('./DatabaseHolder.js');
 	RouteService=require('./services/RouteService.js'),
 	BaseController=require('./BaseController.js'),
 	ViewProvider=require('./ViewProvider.js'),
-	WebMiddlewares=require('./MiddlewareProvider.js').getWebMiddlewares();
+	WebMiddlewares=require('./MiddlewareProvider.js').getWebMiddlewares(),
+	TemplateInterface=require('./TemplateConnectors/TemplateInterface.js');
 
 class WombatServer{
 	static init(callback){
@@ -53,7 +54,7 @@ class WombatServer{
 		let listening = 0,
 			finish = () => {
 				listening++;
-				if (listening === (this.secureConnection ? 2 : 1)){
+				if (listening === (this.secureConnection ? 2 : 1) && typeof callback !== 'undefined'){
 					callback(this.port);
 				}
 			};
@@ -120,6 +121,13 @@ class WombatServer{
 			request.route = route;
 			route.serveWebSocket(request, socket, head);
 		}
+	}
+	static setTemplateConnector(connector){
+		if (!(new connector() instanceof TemplateInterface)){
+			throw new Error('The ' + connector.constructor.name + ' is not extending the TemplateInterface class.');
+		}
+		ViewProvider.setDefaultConnector(connector);
+		return this;
 	}
 }
 

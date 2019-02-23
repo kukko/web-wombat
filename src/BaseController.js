@@ -27,11 +27,14 @@ class BaseController{
 	}
 	view(filePath, options, writeToResponse=true, endResponse=true){
 		let ViewProvider=require('./ViewProvider.js'),
-			viewProviderObj=new ViewProvider(this.request, this.response);
+			viewProviderObj=new ViewProvider(this.request, this.response, this.viewConnector);
 		return viewProviderObj.getView(filePath, options, writeToResponse, endResponse);
 	}
 	getMiddleware(name){
 		return require('./MiddlewareProvider.js').getMiddleware(name);
+	}
+	setViewConnector(viewConnector){
+		this.viewConnector = viewConnector;
 	}
 
 	get allMiddlewares(){

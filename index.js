@@ -18,6 +18,24 @@ for (let i in middlewareFolders){
 	middlewares[middlewareName] = require(join(middlewaresFolder, middlewareName, middlewareName + '.js'));
 }
 
+let templateConnectors = {},
+	templateConnectorsFolder = resolve(__dirname, './src/TemplateConnectors'),
+	templateConnectorFolders = readdirSync(templateConnectorsFolder).map((folder)=>{
+		return {
+			parentFolder:templateConnectorsFolder,
+			templateConnectorFolder:folder
+		};
+	}).filter((source) => {
+		return lstatSync(join(source.parentFolder, source.templateConnectorFolder)).isDirectory();
+	}).map((collection)=>{
+		return collection.templateConnectorFolder
+	});
+
+for (let i in templateConnectorFolders){
+	let templateConnectorName = templateConnectorFolders[i];
+	templateConnectors[templateConnectorName] = require(join(templateConnectorsFolder, templateConnectorName, templateConnectorName + '.js'));
+}
+
 module.exports = {
 	WombatServer: require('./src/WombatServer.js'),
 	BaseController: require('./src/BaseController.js'),
@@ -25,5 +43,7 @@ module.exports = {
 	Route: require('./src/Route.js'),
 	BaseMiddleware: require('./src/middlewares/BaseMiddleware.js'),
 	middlewares: middlewares,
-	BaseCollection: require('./src/BaseCollection.js')
+	BaseCollection: require('./src/BaseCollection.js'),
+	TemplateInterface: require('./src/TemplateConnectors/TemplateInterface.js'),
+	templateConnectors: templateConnectors
 };
