@@ -10,6 +10,10 @@ class WombatServer{
 		if (typeof WombatServer.subfolder === 'undefined'){
 			this.setSubfolder('.');
 		}
+		if (typeof this.getRoutes() === 'undefined'){
+			let { resolve, dirname, join } = require('path');
+			this.setRoutes(require(resolve(dirname(require.main.filename), join('routes', 'routes.js'))));
+		}
 		if (this.connectToDatabase){
 			DatabaseHolder.connect().then((databaseResult)=>{
 				this.listen(callback);
@@ -36,6 +40,9 @@ class WombatServer{
 	static setRoutes(routes){
 		RouteService.setRoutes(routes);
 		return this;
+	}
+	static getRoutes(){
+		return RouteService.getRoutes();
 	}
 	static setSubfolder(subfolder){
 		this.subfolder = subfolder;

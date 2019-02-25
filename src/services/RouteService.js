@@ -20,6 +20,9 @@ class RouteService{
 	static setRoutes(routes){
 		this.routes = routes;
 	}
+	static getRoutes(){
+		return this.routes;
+	}
 }
 
 module.exports=RouteService;
