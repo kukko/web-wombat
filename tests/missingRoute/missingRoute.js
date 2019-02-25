@@ -1,5 +1,5 @@
 let { WombatServer } = require('../../index.js');
-WombatServer.withoutDatabase().setUnsecure().init((port)=>{
+WombatServer.withoutDatabase().setUnsecure().setRoutes([]).init((port)=>{
 	require('http').get('http://localhost:'+port, (response) => {
 		let data = '';
 		response.on('data', (chunk) => {

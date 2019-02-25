@@ -11,8 +11,15 @@ class WombatServer{
 			this.setSubfolder('.');
 		}
 		if (typeof this.getRoutes() === 'undefined'){
-			let { resolve, dirname, join } = require('path');
-			this.setRoutes(require(resolve(dirname(require.main.filename), join('routes', 'routes.js'))));
+			let { resolve, dirname, join } = require('path'),
+				{ existsSync } = require('fs'),
+				routesFile = resolve(dirname(require.main.filename), join('routes', 'routes.js'));
+			if (existsSync(routesFile)){
+				this.setRoutes(require(routesFile));
+			}
+			else{
+				throw new Error('No routes provided.');
+			}
 		}
 		if (this.connectToDatabase){
 			DatabaseHolder.connect().then((databaseResult)=>{
