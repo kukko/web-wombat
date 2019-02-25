@@ -106,7 +106,8 @@ class WombatServer{
 			}
 			else{
 				let fileSystem=require('fs'),
-					resourcePath=path.join(path.dirname(require.main.filename), request.url);
+					filePath=request.url.indexOf('?')===-1?request.url:request.url.substr(0, request.url.indexOf('?')),
+					resourcePath=path.join(path.dirname(require.main.filename), filePath);
 				if (fileSystem.existsSync(resourcePath)){
 					let responseHeaders={};
 					if (typeof request.headers['accept']!=='undefined'){
