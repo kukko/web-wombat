@@ -117,9 +117,10 @@ class WombatServer{
 					resourcePath=path.join(path.dirname(require.main.filename), filePath);
 				if (fileSystem.existsSync(resourcePath)){
 					let responseHeaders={};
-					if (typeof request.headers['accept']!=='undefined'){
-						responseHeaders['Content-type']=request.headers['accept'].split(',')[0];
+					if (typeof this.mime === 'undefined'){
+						this.mime = require('mime');
 					}
+					responseHeaders['Content-type'] = this.mime.getType(resourcePath);
 					response.writeHead(200, responseHeaders);
 					fileSystem.createReadStream(resourcePath).pipe(response);
 				}
