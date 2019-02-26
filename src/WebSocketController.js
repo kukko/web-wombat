@@ -14,12 +14,19 @@ class WebSocketController extends BaseController{
 		});
 	}
 	handshake(){
-		const responseHeaders = [
+		let responseHeaders = [
 			'HTTP/1.1 101 Web Socket Protocol Handshake',
 			'Upgrade: WebSocket',
 			'Connection: Upgrade',
 			'Sec-WebSocket-Accept: ' + this.generateAcceptValue(this.request.headers['sec-websocket-key'])
-		];
+		],
+			protocolsHeader = this.request.headers['sec-websocket-protocol'],
+			protocols = protocolsHeader ? protocolsHeader.split(',').map((protocol) => {
+				return protocol.trim();
+			}) : [];
+		if (protocols.length > 0){
+			responseHeaders.push('Sec-WebSocket-Protocol: ' + protocols.join(','));
+		}
 		this.socket.on('drain', this.onConnectListener);
 		if (this.socket.write(responseHeaders.join('\r\n') + '\r\n\r\n')){
 			this.onConnect();
@@ -34,6 +41,7 @@ class WebSocketController extends BaseController{
 	}
 	onConnect(){
 		this.uuid = WebSocketClientService.addClient(this.socket);
+		this.onOpen();
 	}
 	onConnectListener(){
 		this.onConnect();
