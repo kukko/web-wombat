@@ -1,6 +1,6 @@
 let { BaseController } = require('../../../../index.js');
 
-class PugController extends BaseController {
+class MustacheController extends BaseController {
 	existingView() {
 		this.view('existing', {
 			foo: 'bar'
@@ -11,9 +11,9 @@ class PugController extends BaseController {
 			foo: 'bar'
 		}).catch((e) => {
 			console.log(e);
-			process.exit(0);
+			this.response.end();
 		});
 	}
 }
 
-module.exports = PugController;
+module.exports = MustacheController;

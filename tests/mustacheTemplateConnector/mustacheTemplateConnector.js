@@ -4,18 +4,26 @@ WombatServer.withoutDatabase()
 	.setRoutes([
 		Route.get(
 			'/existingView',
-			require('./controllers/PugController/PugController.js'),
+			require('./controllers/MustacheController/MustacheController.js'),
 			'existingView'
 		),
 		Route.get(
 			'/notExistingView',
-			require('./controllers/PugController/PugController.js'),
+			require('./controllers/MustacheController/MustacheController.js'),
 			'notExistingView'
 		)
 	])
-	.setTemplateConnector(templateConnectors.PugConnector)
+	.setTemplateConnector(templateConnectors.MustacheConnector)
 	.setUnsecure()
 	.init((port) => {
+		let totalRequests = 2,
+			completedRequests = 0
+			completeRequest = () => {
+				completedRequests++;
+				if (completedRequests === totalRequests){
+					process.exit();
+				}
+			};
 		require('http')
 			.get('http://localhost:' + port + '/existingView', (response) => {
 				let data = '';
@@ -24,7 +32,7 @@ WombatServer.withoutDatabase()
 				});
 				response.on('end', () => {
 					console.log('Existing view: ' + data);
-					process.exit();
+					completeRequest();
 				});
 			})
 			.on('error', (error) => {
@@ -41,7 +49,7 @@ WombatServer.withoutDatabase()
 					});
 					response.on('end', () => {
 						console.log('Not existing view: ' + data);
-						process.exit();
+						completeRequest();
 					});
 				}
 			)
