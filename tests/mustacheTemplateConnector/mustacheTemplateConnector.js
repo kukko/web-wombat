@@ -17,13 +17,13 @@ WombatServer.withoutDatabase()
 	.setUnsecure()
 	.init((port) => {
 		let totalRequests = 2,
-			completedRequests = 0
-			completeRequest = () => {
-				completedRequests++;
-				if (completedRequests === totalRequests){
-					process.exit();
-				}
-			};
+			completedRequests = 0;
+		completeRequest = () => {
+			completedRequests++;
+			if (completedRequests === totalRequests) {
+				process.exit();
+			}
+		};
 		require('http')
 			.get('http://localhost:' + port + '/existingView', (response) => {
 				let data = '';

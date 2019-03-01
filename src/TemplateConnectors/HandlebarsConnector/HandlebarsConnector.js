@@ -1,22 +1,21 @@
 let TemplateInterface = require('../TemplateInterface.js');
 
-class MustacheConnector extends TemplateInterface {
+class HandlebarsConnector extends TemplateInterface {
 	getDefaultFileExtension() {
-		return '.mst';
+		return '.handlebars';
 	}
 	render(filePath, options, writeToResponse = true, endResponse = true) {
 		return new Promise((resolve, reject) => {
-			let template = MustacheConnector.readFileSync(filePath, 'utf8');
+			let template = HandlebarsConnector.readFileSync(filePath, 'utf8');
 			if (writeToResponse) {
 				if (!this.response.hasHeader('Content-type')) {
 					this.response.setHeader('Content-type', 'text/html');
 				}
 				return new Promise((resolve, reject) => {
 					try {
-						let html = MustacheConnector.mustache.render(
-							template,
-							options
-						);
+						let html = HandlebarsConnector.handlebars.compile(
+							template
+						)(options);
 						if (endResponse) {
 							this.response.end(html);
 						} else {
@@ -31,7 +30,9 @@ class MustacheConnector extends TemplateInterface {
 				return new Promise((resolve, reject) => {
 					try {
 						resolve(
-							MustacheConnector.mustache.render(template, options)
+							HandlebarsConnector.handlebars.compile(template)(
+								options
+							)
 						);
 					} catch (e) {
 						reject(e);
@@ -42,11 +43,11 @@ class MustacheConnector extends TemplateInterface {
 	}
 }
 
-MustacheConnector.mustache = require('mustache');
+HandlebarsConnector.handlebars = require('handlebars');
 
-if (typeof MustacheConnector.readFileSync === 'undefined') {
+if (typeof HandlebarsConnector.readFileSync === 'undefined') {
 	let { readFileSync } = require('fs');
-	MustacheConnector.readFileSync = readFileSync;
+	HandlebarsConnector.readFileSync = readFileSync;
 }
 
-module.exports = MustacheConnector;
+module.exports = HandlebarsConnector;

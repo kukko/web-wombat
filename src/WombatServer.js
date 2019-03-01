@@ -1,9 +1,9 @@
-let DatabaseHolder = require('./DatabaseHolder.js');
-(RouteService = require('./services/RouteService.js')),
-	(BaseController = require('./BaseController.js')),
-	(ViewProvider = require('./ViewProvider.js')),
-	(WebMiddlewares = require('./MiddlewareProvider.js').getWebMiddlewares()),
-	(TemplateInterface = require('./TemplateConnectors/TemplateInterface.js'));
+let DatabaseHolder = require('./DatabaseHolder.js'),
+	RouteService = require('./services/RouteService.js'),
+	BaseController = require('./BaseController.js'),
+	ViewProvider = require('./ViewProvider.js'),
+	WebMiddlewares = require('./MiddlewareProvider.js').getWebMiddlewares(),
+	TemplateInterface = require('./TemplateConnectors/TemplateInterface.js');
 
 class WombatServer {
 	static init(callback) {
