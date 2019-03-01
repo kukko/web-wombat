@@ -10,7 +10,8 @@ let { lstatSync, readdirSync } = require('fs'),
 	(printTestResult = (testName, testResult) => {
 		readline.clearLine(process.stdout, 0);
 		readline.cursorTo(process.stdout, 0, null);
-		let successful = testResult.status === 0,
+		let successful =
+				testResult.status === 0 && testResult.stderr.length === 0,
 			resultSymbol = successful ? '✓' : '✗',
 			outputColor = successful ? '\x1b[32m' : '\x1b[31m';
 		console.log(outputColor + testName + ' [' + resultSymbol + ']\x1b[0m');

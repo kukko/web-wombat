@@ -17,14 +17,14 @@ class Route {
 	serve(request, response) {
 		let requestBody = '';
 		if (['POST', 'PUT', 'UPDATE'].indexOf(request.method) === -1) {
-			this.runController(request, response);
+			return this.runController(request, response);
 		} else {
 			request.on('data', (chunk) => {
 				requestBody += chunk.toString();
 			});
 			request.on('end', () => {
 				request.rawBody = requestBody;
-				this.runController(request, response);
+				return this.runController(request, response);
 			});
 		}
 	}
@@ -32,19 +32,24 @@ class Route {
 		new this.controller(request, socket, head);
 	}
 	runController(request, response) {
-		this.runMiddlewares(request, response, [
+		return this.runMiddlewares(request, response, [
 			...this.controller.allMiddlewares,
 			...this.middlewares
 		]);
 	}
 	runMiddlewares(request, response, middlewares, i = 0) {
 		if (i < middlewares.length - 1) {
-			middlewares[i].run(request, response, () => {
-				this.runMiddlewares(request, response, middlewares, i + 1);
+			return middlewares[i].run(request, response, () => {
+				return this.runMiddlewares(
+					request,
+					response,
+					middlewares,
+					i + 1
+				);
 			});
 		} else {
 			let controller = new this.controller(request, response);
-			controller[this.controllerFunction](request, response);
+			return controller[this.controllerFunction](request, response);
 		}
 	}
 	isMatching(request) {
