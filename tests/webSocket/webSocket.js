@@ -20,13 +20,13 @@ WombatServer.withoutDatabase().setRoutes([
 		console.log("Connection connected!");
 		setInterval(() => {
 			connection.send('foo');
-		}, 1000);
+		}, 100);
 		setInterval(() => {
 			connection.ping();
-		}, 10000);
+		}, 1000);
 		setTimeout(() => {
 			connection.close();
-		}, 30000);
+		}, 3000);
 	});
 	ws.connect('ws://localhost:' + port);
 	let ws2 = new WebSocketClient();
@@ -40,7 +40,7 @@ WombatServer.withoutDatabase().setRoutes([
 		});
 		setTimeout(() => {
 			connection.close();
-		}, 5000);
+		}, 500);
 	});
 	ws2.connect('wss://localhost');
 });
