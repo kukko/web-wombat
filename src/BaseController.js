@@ -1,20 +1,25 @@
 let DatabaseHolder = require('./DatabaseHolder.js');
 
-class BaseController{
-	constructor(request, response){
-		this.request=request;
-		this.response=response;
+class BaseController {
+	constructor(request, response) {
+		this.request = request;
+		this.response = response;
 	}
-	get db(){
+	get db() {
 		return new Proxy(DatabaseHolder, {
-			get(target, name, receiver){
-				if (typeof target[name] !== 'undefined'){
-					if (typeof target.collections[name] !== 'undefined'){
-						throw new Error('Resolved keyword (' + name + ') used as collection name for ' + target.collections[name].name + '.');
+			get(target, name, receiver) {
+				if (typeof target[name] !== 'undefined') {
+					if (typeof target.collections[name] !== 'undefined') {
+						throw new Error(
+							'Resolved keyword (' +
+								name +
+								') used as collection name for ' +
+								target.collections[name].name +
+								'.'
+						);
 					}
-				}
-				else{
-					if (typeof target.collections[name] !== 'undefined'){
+				} else {
+					if (typeof target.collections[name] !== 'undefined') {
 						return target.collections[name];
 					}
 					return null;
@@ -22,40 +27,51 @@ class BaseController{
 			}
 		});
 	}
-	serve(){
-		console.warn('Not implemented \'serve\' method in class: ' + this.name + '!');
+	serve() {
+		console.warn(
+			"Not implemented 'serve' method in class: " + this.name + '!'
+		);
 	}
-	view(filePath, options, writeToResponse = true, endResponse = true){
-		let viewProviderObj = new BaseController.viewProvider(this.request, this.response, this.viewConnector);
-		return viewProviderObj.getView(filePath, options, writeToResponse, endResponse);
+	view(filePath, options, writeToResponse = true, endResponse = true) {
+		let viewProviderObj = new BaseController.viewProvider(
+			this.request,
+			this.response,
+			this.viewConnector
+		);
+		return viewProviderObj.getView(
+			filePath,
+			options,
+			writeToResponse,
+			endResponse
+		);
 	}
-	static getMiddleware(name){
+	static getMiddleware(name) {
 		return BaseController.middlewareProvider.getMiddleware(name);
 	}
-	setViewConnector(viewConnector){
+	setViewConnector(viewConnector) {
 		this.viewConnector = viewConnector;
 	}
 
-	static get allMiddlewares(){
+	static get allMiddlewares() {
 		return [...this.baseMiddlewares, ...this.middlewares];
 	}
-	static get baseMiddlewares(){
+	static get baseMiddlewares() {
 		return [
 			this.getMiddleware('CookieParserMiddleware'),
 			this.getMiddleware('BodyParserMiddleware'),
 			this.getMiddleware('RouteVariableParserMiddleware')
 		];
 	}
-	static get middlewares(){
+	static get middlewares() {
 		return [];
 	}
 }
 
-if (typeof BaseController.middlewareProvider === 'undefined'){
+if (typeof BaseController.middlewareProvider === 'undefined') {
 	BaseController.middlewareProvider = require('./MiddlewareProvider.js');
 }
 
-if (typeof BaseController.viewProvider === 'undefined'){
+if (typeof BaseController.viewProvider === 'undefined') {
 	BaseController.viewProvider = require('./ViewProvider.js');
 }
 

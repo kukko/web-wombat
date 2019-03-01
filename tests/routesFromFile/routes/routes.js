@@ -1,5 +1,5 @@
 let { Route, MiddlewareProvider } = require('../../../index.js');
 
-module.exports=[
+module.exports = [
 	Route.get('/', require('../controllers/MainController/MainController.js'))
 ];

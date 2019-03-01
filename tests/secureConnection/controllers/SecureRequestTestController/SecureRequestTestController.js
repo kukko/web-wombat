@@ -1,7 +1,7 @@
 let { BaseController } = require('../../../../index.js');
 
-class SecureRequestTestController extends BaseController{
-	serve(){
+class SecureRequestTestController extends BaseController {
+	serve() {
 		this.response.end('Secure connection established!');
 	}
 }

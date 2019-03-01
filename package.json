@@ -4,7 +4,8 @@
   "description": "Framework for web services.",
   "main": "src/index.js",
   "scripts": {
-    "test": "node tests/test.js"
+    "test": "node tests/test.js",
+    "prettify": "prettier --single-quote --trailing-coma --write --use-tabs --tab-width 4 --arrow-parens always \"**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "mongodb": "^3.1.13"
   },
   "devDependencies": {
+    "prettier": "^1.16.4",
     "websocket": "^1.0.28"
   }
 }

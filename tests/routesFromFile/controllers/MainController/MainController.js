@@ -1,7 +1,7 @@
 let { BaseController } = require('../../../../index.js');
 
-class MainController extends BaseController{
-	serve(){
+class MainController extends BaseController {
+	serve() {
 		this.response.end('Foo!');
 	}
 }
