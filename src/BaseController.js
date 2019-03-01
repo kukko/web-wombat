@@ -29,24 +29,24 @@ class BaseController{
 		let viewProviderObj = new BaseController.viewProvider(this.request, this.response, this.viewConnector);
 		return viewProviderObj.getView(filePath, options, writeToResponse, endResponse);
 	}
-	getMiddleware(name){
+	static getMiddleware(name){
 		return BaseController.middlewareProvider.getMiddleware(name);
 	}
 	setViewConnector(viewConnector){
 		this.viewConnector = viewConnector;
 	}
 
-	get allMiddlewares(){
+	static get allMiddlewares(){
 		return [...this.baseMiddlewares, ...this.middlewares];
 	}
-	get baseMiddlewares(){
+	static get baseMiddlewares(){
 		return [
 			this.getMiddleware('CookieParserMiddleware'),
 			this.getMiddleware('BodyParserMiddleware'),
 			this.getMiddleware('RouteVariableParserMiddleware')
 		];
 	}
-	get middlewares(){
+	static get middlewares(){
 		return [];
 	}
 }

@@ -1,7 +1,7 @@
 let BaseMiddleware=require('../BaseMiddleware.js');
 
 class AuthenticationMiddleware extends BaseMiddleware{
-	static run(request, response){
+	static run(request, response, next){
 		let jwt=require('jsonwebtoken'),
 			signKey=require('../../../../config/auth.js').signKey,
 			token=request.cookies['jwt'];
