@@ -1,16 +1,16 @@
 class BaseCollection{
 	static get name(){
-		throw new Error('Not implemented \'name\' attribute getter method in class: '+this.name+'!');
+		throw new Error('Not implemented \'name\' attribute getter method in class: ' + this.name + '!');
 	}
 	static get collection(){
-		return typeof this._collection!=='undefined'?this._collection:null;
+		return typeof this._collection !== 'undefined' ? this._collection : null;
 	}
 	static create(db){
 		return new Promise((resolve, reject) => {
-			if (typeof this._collection==='undefined'){
-				db.createCollection(this.collectionName, (error, collection)=>{
+			if (typeof this._collection === 'undefined'){
+				db.createCollection(this.collectionName, (error, collection) => {
 					if (!error){
-						this._collection=collection;
+						this._collection = collection;
 						resolve(this.collection);
 					}
 					else{
@@ -28,4 +28,4 @@ class BaseCollection{
 	}
 }
 
-module.exports=BaseCollection;
+module.exports = BaseCollection;

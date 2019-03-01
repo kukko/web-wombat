@@ -1,10 +1,6 @@
 let TemplateInterface = require('../TemplateInterface.js');
 
 class BladeConnector extends TemplateInterface{
-	constructor(request, response){
-		super(request, response);
-		this.blade = require('blade');
-	}
 	getDefaultFileExtension(){
 		return '.blade';
 	}
@@ -14,7 +10,7 @@ class BladeConnector extends TemplateInterface{
 				this.response.setHeader('Content-type', 'text/html');
 			}
 			return new Promise((resolve, reject) => {
-				this.blade.renderFile(filePath, {
+				BladeConnector.blade.renderFile(filePath, {
 					...options,
 					basedir:this.viewFolder
 				}, (error, html)=>{
@@ -34,7 +30,7 @@ class BladeConnector extends TemplateInterface{
 		}
 		else{
 			return new Promise((resolve, reject) => {
-				this.blade.renderFile(filePath, {
+				BladeConnector.blade.renderFile(filePath, {
 					...options,
 					basedir:this.viewFolder
 				}, (error, html)=>{
@@ -49,5 +45,7 @@ class BladeConnector extends TemplateInterface{
 		}
 	}
 }
+
+BladeConnector.blade = require('blade');
 
 module.exports = BladeConnector;

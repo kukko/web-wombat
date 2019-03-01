@@ -2,17 +2,13 @@ let TemplateInterface = require('./TemplateConnectors/TemplateInterface.js');
 
 class ViewProvider{
 	constructor(request, response, connector){
-		this.request=request;
-		this.response=response;
+		this.request = request;
+		this.response = response;
 		if (typeof connector !== 'undefined'){
 			this.setConnector(connector);
 		}
 		else{
 			this.connector = new ViewProvider.defaultConnector(request, response);
-		}
-		this.path=require('path');
-		if (typeof ViewProvider.subfolder === 'undefined'){
-			ViewProvider.setSubfolder('.');
 		}
 	}
 	setConnector(connector){
@@ -37,11 +33,11 @@ class ViewProvider{
 		return true;
 	}
 	getView(filePath, options, writeToResponse=true, endResponse=true){
-		let viewFolder=this.path.join(this.path.resolve(this.path.dirname(require.main.filename), ViewProvider.subfolder), 'resources', 'views'),
-			viewPath=this.path.join(viewFolder, filePath),
-			viewExtension=this.path.extname(viewPath);
+		let viewFolder=ViewProvider.path.join(ViewProvider.path.resolve(ViewProvider.path.dirname(require.main.filename), ViewProvider.subfolder), 'resources', 'views'),
+			viewPath=ViewProvider.path.join(viewFolder, filePath),
+			viewExtension=ViewProvider.path.extname(viewPath);
 		this.connector.viewFolder = viewFolder;
-		if (viewExtension.length===0){
+		if (viewExtension.length === 0){
 			viewPath += this.connector.getDefaultFileExtension();
 		}
 		return this.connector.render(viewPath, options, writeToResponse, endResponse);
@@ -52,5 +48,11 @@ class ViewProvider{
 }
 
 ViewProvider.defaultConnector = require('./TemplateConnectors/BladeConnector/BladeConnector.js');
+
+ViewProvider.setSubfolder('.');
+
+if (typeof ViewProvider.path === 'undefined'){
+	ViewProvider.path = require('path');
+}
 
 module.exports=ViewProvider;

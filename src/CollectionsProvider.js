@@ -1,30 +1,33 @@
-let { lstatSync, readdirSync }=require('fs');
-let { join, dirname }=require('path');
+let { lstatSync, readdirSync } = require('fs');
+let { join, dirname } = require('path');
 
 class CollectionsProvider{
 	static get collections(){
-		let output={},
-			collectionsDir=join(dirname(require.main.filename), '/collections'),
-			collections=this.getDirectories(collectionsDir);
-		for (let i in collections){
-			let tempCollection=require(join(collectionsDir, collections[i], collections[i]+".js"));
-			output[tempCollection.collectionName]=tempCollection;
+		if (typeof this._collections !== 'undefined'){
+			return this._collections;
 		}
-		return output;
+		let output = {},
+			collectionsDir = join(dirname(require.main.filename), '/collections'),
+			collections = this.getDirectories(collectionsDir);
+		for (let i in collections){
+			let tempCollection = require(join(collectionsDir, collections[i], collections[i] + ".js"));
+			output[tempCollection.collectionName] = tempCollection;
+		}
+		return this._collections = output;
 	}
 	static isDirectory(source){
 		return lstatSync(join(source.parentFolder, source.collectionFolder)).isDirectory();
 	}
 	static getDirectories(source){
-		return readdirSync(source).map((folder)=>{
+		return readdirSync(source).map((folder) => {
 			return {
 				parentFolder:source,
 				collectionFolder:folder
 			};
-		}).filter(this.isDirectory).map((collection)=>{
-			return collection.collectionFolder
+		}).filter(this.isDirectory).map((collection) => {
+			return collection.collectionFolder;
 		});
 	}
 }
 
-module.exports=CollectionsProvider;
+module.exports = CollectionsProvider;
