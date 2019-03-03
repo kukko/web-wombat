@@ -15,6 +15,9 @@ let { lstatSync, readdirSync } = require('fs'),
 			resultSymbol = successful ? '✓' : '✗',
 			outputColor = successful ? '\x1b[32m' : '\x1b[31m';
 		console.log(outputColor + testName + ' [' + resultSymbol + ']\x1b[0m');
+		if (!successful){
+			console.log(testResult.stderr.toString('utf8'));
+		}
 		successfulTests += successful ? 1 : 0;
 	});
 

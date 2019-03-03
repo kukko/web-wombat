@@ -32,7 +32,7 @@ WombatServer.withoutDatabase()
 				})
 				.on('error', (error) => {
 					console.log(error);
-					finish();
+					process.exit(1);
 				});
 			require('https')
 				.get('https://localhost/secure', (response) => {
@@ -47,7 +47,7 @@ WombatServer.withoutDatabase()
 				})
 				.on('error', (error) => {
 					console.log(error);
-					finish();
+					process.exit(1);
 				});
 		});
 	});

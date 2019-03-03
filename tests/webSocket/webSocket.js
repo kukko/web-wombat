@@ -14,8 +14,7 @@ WombatServer.withoutDatabase()
 		let WebSocketClient = require('websocket').client,
 			ws = new WebSocketClient();
 		ws.on('connectFailed', (error) => {
-			console.log(error);
-			process.exit();
+			throw error;
 		});
 		ws.on('connect', (connection) => {
 			connection.on('message', (message) => {
@@ -39,8 +38,7 @@ WombatServer.withoutDatabase()
 		ws.connect('ws://localhost:' + port);
 		let ws2 = new WebSocketClient();
 		ws2.on('connectFailed', (error) => {
-			console.log(error);
-			process.exit();
+			throw error;
 		});
 		ws2.on('connect', (connection) => {
 			connection.on('message', (message) => {
