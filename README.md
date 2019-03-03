@@ -4,7 +4,7 @@ Framework for web services with NodeJS.
 With web-wombat, you can easily set up a simple webserver in 1-2 minutes. You can also set up a WebSocket server in one minute.
 
 # Create new project with web-wombat
-```
+```bash
 mkdir wombat-project
 cd wombat-project
 npm init
@@ -15,7 +15,7 @@ cp node_modules/web-wombat/src/routes/example-routes.js routes/routes.js
 
 # Starting a web server with WebWombat
 After you successfully installed `WebWombat`, you can easily start a web server.
-```
+```javascript
 let { WombatServer } = require('web-wombat');
 
 WombatServer.setRoutes(require('./routes/routes.js')).init();
@@ -23,7 +23,7 @@ WombatServer.setRoutes(require('./routes/routes.js')).init();
 
 By default, `WebWombat` accepts secure connections, but it requires SSL certificate's private key and certification to be in `config/secureKey` folder in `key.pem` and `certificate.pem` files. If for some reasons you don't want to use secure connections, you can easily turn this off with the `setUnsecure` method of `WombatServer` class, before calling the `init` method.
 
-```
+```javascript
 let { WombatServer } = require('web-wombat');
 
 WombatServer.setUnsecure().init();
@@ -32,7 +32,7 @@ WombatServer.setUnsecure().init();
 Basically `WebWombat` tries to load the database configuration and connect to the database, but you can turn this behavior off with calling the `static` `withoutDatabase` method on the `WombatServer` class.
 
 Here is an example:
-```
+```javascript
 let { WombatServer } = require('web-wombat');
 
 WombatServer.withoutDatabase().setRoutes(require('./routes/routes.js')).init();
@@ -41,7 +41,7 @@ WombatServer.withoutDatabase().setRoutes(require('./routes/routes.js')).init();
 Basically `WebWombat` is listening on `port 8888`, but you can override this with the `static` `setPort` method.
 
 Example to set port for listening:
-```
+```javascript
 let { WombatServer } = require('web-wombat');
 
 WombatServer.setPort(1222).setRoutes(require('./routes/routes.js')).init();
@@ -49,7 +49,7 @@ WombatServer.setPort(1222).setRoutes(require('./routes/routes.js')).init();
 
 # Connect to database
 You can easily connect to a MongoDB database (In the future there will be other database connectors.), but it's not mandatory.
-```
+```bash
 mkdir config
 cp node_modules/web-wombat/src/config/example-db.js config/db.js
 mkdir collections
@@ -60,7 +60,7 @@ When connecting to the database, WebWombat will try to create collections which 
 # Create routes
 If you run all the commands listed at the Installation section, you have a file at `routes/routes.js` path. In that file, there is the requires required to create routes.
 The file contents are the following:
-```
+```javascript
 let { Route, MiddlewareProvider } = require('web-wombat');
 
 module.exports=[
@@ -72,37 +72,37 @@ You can create routes for specific request methods, like `GET`, `POST`, `PUT`, `
 Here are some examples for the different methods.
 
 GET:
-```
+```javascript
 Route.get('/', require('../controllers/HomeController/HomeController.js'))
 ```
 POST:
-```
+```javascript
 Route.post('/', require('../controllers/HomeController/HomeController.js'))
 ```
 PUT:
-```
+```javascript
 Route.put('/', require('../controllers/HomeController/HomeController.js'))
 ```
 UPDATE:
-```
+```javascript
 Route.update('/', require('../controllers/HomeController/HomeController.js'))
 ```
 DELETE:
-```
+```javascript
 Route.delete('/', require('../controllers/HomeController/HomeController.js'))
 ```
 
 In one controller, you can specify any method to serve a request and multiple routes can point to the same controller and to the same method, or to the same controller, but different methods. As the third parameter of the above methods, you can specify a method name, which will serve the requests. If this parameter isn't specified, then the controller's `serve` method will handle the request to the route.
 
 Here is an example:
-```
+```javascript
 Route.get('/profile', require('../controllers/UserController/UserController.js'), 'showSelf')
 ```
 
 You can add middlewares to be run specific for each route, by specifying an `array` as the fourth parameter, for the methods above. The specified middlewares run synchronously after each other, like they are ordered in the array.
 
 Route with middlewares:
-```
+```javascript
 Route.get('/profile', require('../controllers/UserController/UserController.js'), 'showSelf', [
 	MiddlewareProvider.getMiddleware('AuthenticationMiddleware')
 ])
@@ -113,11 +113,11 @@ And you can create websocket servers with `WebWombat`. For this, you need to spe
 
 Here is an example:
 Specify route:
-```
+```javascript
 Route.websocket('/', require('./controllers/WebSocketTestController/WebSocketTestController.js'))
 ```
 Create controller for websocket:
-```
+```javascript
 let { WebSocketController } = require('../../../../index.js');
 
 class WebSocketTestController extends WebSocketController{
