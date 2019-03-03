@@ -21,7 +21,7 @@ let { WombatServer } = require('web-wombat');
 WombatServer.setRoutes(require('./routes/routes.js')).init();
 ```
 
-By default `WebWombat` accepts secure connections, but it's requires SSL certificate's private key and certification to be in `config/secureKey` folder in `key.pem` and `certificate.pem` files. If for some reasons you don't want to use secure connections, you can easily turn this off with the `setUnsecure` method of `WombatServer` class, before calling the `init` method.
+By default, `WebWombat` accepts secure connections, but it requires SSL certificate's private key and certification to be in `config/secureKey` folder in `key.pem` and `certificate.pem` files. If for some reasons you don't want to use secure connections, you can easily turn this off with the `setUnsecure` method of `WombatServer` class, before calling the `init` method.
 
 ```
 let { WombatServer } = require('web-wombat');
@@ -29,7 +29,7 @@ let { WombatServer } = require('web-wombat');
 WombatServer.setUnsecure().init();
 ```
 
-Basically `WebWombat` try to load database config and connect to the database, but you can turn this behavior off with calling the `static` `withoutDatabase` method on the `WombatServer` class.
+Basically `WebWombat` tries to load the database configuration and connect to the database, but you can turn this behavior off with calling the `static` `withoutDatabase` method on the `WombatServer` class.
 
 Here is an example:
 ```
@@ -38,7 +38,7 @@ let { WombatServer } = require('web-wombat');
 WombatServer.withoutDatabase().setRoutes(require('./routes/routes.js')).init();
 ```
 
-Basically `WebWombat` listening on `port 8888`, but you can override this with the `static` `setPort` method.
+Basically `WebWombat` is listening on `port 8888`, but you can override this with the `static` `setPort` method.
 
 Example to set port for listening:
 ```
@@ -55,11 +55,11 @@ cp node_modules/web-wombat/src/config/example-db.js config/db.js
 mkdir collections
 ```
 After this, you just need to fill in the parameters in the `config/db.js` file and WebWombat will automatically connect to the database.
-When connecting to the database, WebWombat will try to create collections which you created in the `collections` folder. A collection must extends the `BaseCollection` class and must implement the `name` method. The `name` method returns a `string` which will be the collection's name in the database.
+When connecting to the database, WebWombat will try to create collections which you created in the `collections` folder. A collection must extend the `BaseCollection` class and must implement the `name` method. The `name` method returns a `string` which will be the collection's name in the database.
 
 # Create routes
-If you runned all the commands listed at the Installation section, you have a file at `routes/routes.js` path. In that file, there is the requires required to create routes.
-The file contents is the following:
+If you run all the commands listed at the Installation section, you have a file at `routes/routes.js` path. In that file, there is the requires required to create routes.
+The file contents are the following:
 ```
 let { Route, MiddlewareProvider } = require('web-wombat');
 
@@ -69,7 +69,7 @@ module.exports=[
 
 You can create routes for specific request methods, like `GET`, `POST`, `PUT`, `UPDATE` and `DELETE`.
 
-Here are some example for the different methods.
+Here are some examples for the different methods.
 
 GET:
 ```
@@ -92,14 +92,14 @@ DELETE:
 Route.delete('/', require('../controllers/HomeController/HomeController.js'))
 ```
 
-In one controller, you can specifiy any method to serve a request and multiple routes can point to the same controller and to the same method, or to the same controller, but different methods. As the third parameter of the above methods, you can specify a method name, which will be serve the requests. If this parameter isn't specified, then the controller's `serve` method will handle the request to the route.
+In one controller, you can specify any method to serve a request and multiple routes can point to the same controller and to the same method, or to the same controller, but different methods. As the third parameter of the above methods, you can specify a method name, which will serve the requests. If this parameter isn't specified, then the controller's `serve` method will handle the request to the route.
 
 Here is an example:
 ```
 Route.get('/profile', require('../controllers/UserController/UserController.js'), 'showSelf')
 ```
 
-You can add middlewares to be runned specific for each route, by specifing an `array` as the fourth parameter, for the methods above. The specified middlewares run synchronously after each other, like they are ordered in the array.
+You can add middlewares to be run specific for each route, by specifying an `array` as the fourth parameter, for the methods above. The specified middlewares run synchronously after each other, like they are ordered in the array.
 
 Route with middlewares:
 ```
@@ -144,43 +144,51 @@ module.exports = WebSocketTestController;
 ## WombatServer
 ### init([function callback])
 Initialize the `WombatServer` to listen on a port for requests.
-**callback**
+
+**callback:**
 It's a function which will be called after the `WombatServer` started listening.
 ### setUnsecure()
-It's disable the listening for secure connections. Must be called before init method. Basically `WombatServer` listening for secure connections too.
+Disables the listening for secure connections. Must be called before init method. Basically `WombatServer` listening for secure connections too.
 ### setSecure()
-It's enable the listening for secure connections. Must be called before init method. Basically `WombatServer` listening for secure connections too. To call this method, is only required if you previously called `setUnsecure` method.
+Enables the listening for secure connections. Must be called before init method. Basically `WombatServer` listening for secure connections too. Calling this method is only required if you previously called `setUnsecure` method.
 ### withDatabase()
 Configure `WombatServer` to load the database configuration and connect to the database on startup.
 ### withoutDatabase()
 Configure `WombatServer` to not try to load the database configuration and don't try to connect to database on startup.
 ### setPort(mixed port)
 Set the port where the WombatServer will listen for requests.
-**port**
+
+**port:**
 The port where the `WombatServer` will listen for requests.
 ### setRoutes(Route[] routes)
 Set the routes, which will be redirected to Controllers.
-**routes**
+
+**routes:**
 An array of `Route` instances.
 ### setSubfolder(string subfolder)
 You can set a path where the `WombatServer` and the dependant classes find the resources relatively to the file, which have been started by `node`.
-**subfolder**
+
+**subfolder:**
 A relative path where the required resources can be found relatively to the running script file.
 
 ## BaseController
 This is the class which must be the parent class of each controller.
 ### view(string filePath, object options, [boolean writeToResponse = true, boolean endResponse = true])
-**filePath**
+**filePath:**
 Route to the view, in the `resources/views` folder.
-**options**
+
+**options:**
 An object with the variables which will be accessible in the view file.
-**writeToResponse**
+
+**writeToResponse:**
 If this parameter is `true`, the controller will write the builded template to the ServerResponse, else the controller will return a promise which's then branch will receive the builded output as first parameter.
-**endResponse**
+
+**endResponse:**
 If this parameter is `true`, the controller will end the response after it's writed the builded template to it. If the `writeToResponse` parameter is `false`, then this parameter will be ignored.
 ### getMiddleware(string name)
 This method will return the request middleware class, not an instance of the class. First this will find the middleware in the `web-wombat` module folder, after that in the projects `middlewares` folder.
-**name**
+
+**name:**
 The name of the required `middleware` class.
 
 ## WebSocketController
@@ -189,32 +197,39 @@ This is the class which must be the parent class of each WebSocket controller. T
 Called when a client have been connected.
 ### onMessage(string message)
 Called when a client sent a message to the server.
-**message**
+
+**message:**
 Contains the message which the client have been sent to the server.
 ### onClose()
 Called when a client have been disconnected from the server.
 ### onError(Error error)
 Called when an error occured in the connection.
-**error**
+
+**error:**
 Contains the error which is occured in the WebSocket connection.
 ### send(mixed message)
 Sends the specified message to the connected user.
-**message**
+
+**message:**
 The message to be sended to the client connected to this controller.
 ### sendTo(string uuid, mixed message)
 Send the provided message to the client identified by the specified uuid.
-**uuid**
+
+**uuid:**
 The uuid of the client which is the target of the provided message.
-**message**
+
+**message:**
 The message to be sended to the client with the provided uuid.
 ### broadcast(mixed message)
 Sends the provided message to all connected clients.
-**message**
+
+**message:**
 The message to be sended to all connected clients.
 
 ## ViewProvider
 This is the class through which you can build views.
 ### setSubfolder(string subfolder)
 You can set a path where the `ViewProvider` can find the resources relatively to the file, which have been started by `node`.
-**subfolder**
+
+**subfolder:**
 A relative path where the required resources can be found relatively to the running script file.
