@@ -2,10 +2,11 @@ let { lstatSync, readdirSync } = require("fs"),
 	{ join, dirname, resolve } = require("path"),
 	{ spawnSync } = require("child_process"),
 	testsFolder = dirname(__filename),
+	ignoredTests = ["secureConnection", "webSocket"],
 	tests = readdirSync(resolve(testsFolder, "./")).filter(test => {
 		return (
 			lstatSync(resolve(testsFolder, join("./", test))).isDirectory() &&
-			["secureConnection", "webSocket"].indexOf(test) === -1
+			ignoredTests.indexOf(test) === -1
 		);
 	});
 (successfulTests = 0),
