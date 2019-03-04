@@ -107,6 +107,10 @@ class WombatServer {
 					finish();
 				})
 				.on('upgrade', this.serveWebSocket)
+				.on('error', (error) => {
+					console.log(error);
+					throw error;
+				})
 				.on('clientError', (error) => {
 					console.log(error);
 				})
@@ -119,6 +123,10 @@ class WombatServer {
 				finish();
 			})
 			.on('upgrade', this.serveWebSocket)
+			.on('error', (error) => {
+				console.log(error);
+				throw error;
+			})
 			.on('clientError', (error) => {
 				console.log(error);
 			})
