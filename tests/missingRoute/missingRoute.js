@@ -5,6 +5,9 @@ WombatServer.withoutDatabase()
 	.init((port) => {
 		require('http')
 			.get('http://localhost:' + port, (response) => {
+				if (response.statusCode !== 404) {
+					throw new Error("Request returned other code than 404.");
+				}
 				let data = '';
 				response.on('data', (chunk) => {
 					data += chunk;
@@ -16,6 +19,6 @@ WombatServer.withoutDatabase()
 			})
 			.on('error', (error) => {
 				console.log(error);
-				process.exit();
+				process.exit(1);
 			});
 	});
