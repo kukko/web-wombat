@@ -2,16 +2,19 @@ let { lstatSync, readdirSync } = require("fs"),
 	{ join, dirname, resolve } = require("path"),
 	{ spawnSync } = require("child_process"),
 	testsFolder = dirname(__filename),
-	ignoredTests = ["secureConnection", "webSocket"],
+	ignoredTests =
+		typeof process.env.TRAVIS === "undefined"
+			? []
+			: ["secureConnection", "webSocket"],
 	tests = readdirSync(resolve(testsFolder, "./")).filter(test => {
 		return (
 			lstatSync(resolve(testsFolder, join("./", test))).isDirectory() &&
 			ignoredTests.indexOf(test) === -1
 		);
-	});
-(successfulTests = 0),
-	(readline = require("readline")),
-	(printTestResult = (testName, testResult) => {
+	}),
+	successfulTests = 0,
+	readline = require("readline"),
+	printTestResult = (testName, testResult) => {
 		readline.clearLine(process.stdout, 0);
 		readline.cursorTo(process.stdout, 0, null);
 		let successful =
@@ -24,7 +27,7 @@ let { lstatSync, readdirSync } = require("fs"),
 			console.log(testResult.stderr.toString("utf8"));
 		}
 		successfulTests += successful ? 1 : 0;
-	});
+	};
 
 for (let testIndex in tests) {
 	let test = tests[testIndex];
