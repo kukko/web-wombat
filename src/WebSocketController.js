@@ -73,7 +73,7 @@ class WebSocketController extends BaseController {
 			this.pong();
 			return;
 		}
-		if (opCode !== 0x1) {
+		if ([0x1, 0x2].indexOf(opCode) === -1) {
 			this.onError(new Error('Unsopported frame type.'));
 			return;
 		}
