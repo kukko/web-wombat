@@ -31,8 +31,13 @@ WombatServer.withoutDatabase()
 						data += chunk;
 					});
 					response.on("end", () => {
-						if (data !== "<h1>" + sentString + "</h1>") {
-							throw new Error('Received response is not containing the sent string!');
+						if (data === "<h1>" + sentString + "</h1>") {
+							console.log('Existing view test completed!');
+						}
+						else{
+							throw new Error(
+								"Received response is not containing the sent string!"
+							);
 						}
 						completeRequest();
 					});
@@ -54,16 +59,21 @@ WombatServer.withoutDatabase()
 		request.end();
 		require("http")
 			.get("http://localhost:" + port + "/notExistingView", response => {
-				if (response.statusCode !== 200){
-					throw new Error('Not existing route!');
+				if (response.statusCode !== 200) {
+					throw new Error("Not existing route!");
 				}
 				let data = "";
 				response.on("data", chunk => {
 					data += chunk;
 				});
 				response.on("end", () => {
-					if (data !== 'VIEW ERROR!'){
-						throw new Error('Not existing view request returned with wrong response!');
+					if (data === "VIEW ERROR!") {
+						console.log('Not existing view test completed!');
+					}
+					else{
+						throw new Error(
+							"Not existing view request returned with wrong response!"
+						);
 					}
 					completeRequest();
 				});

@@ -5,17 +5,25 @@ WombatServer.withoutDatabase()
 	.init((port) => {
 		require('http')
 			.get('http://localhost:' + port, (response) => {
+				if (response.statusCode !== 200){
+					throw new Error("Request returned other code than 200.");
+				}
 				let data = '';
 				response.on('data', (chunk) => {
 					data += chunk;
 				});
 				response.on('end', () => {
-					console.log('Unsecure response: ' + data);
-					process.exit();
+					if (data === 'Foo!'){
+						console.log('Request from file test completed!');
+						process.exit();
+					}
+					else{
+						throw new Error('Request returned wrong response.');
+					}
 				});
 			})
 			.on('error', (error) => {
 				console.log(error);
-				process.exit();
+				process.exit(1);
 			});
 	});

@@ -16,7 +16,7 @@ WombatServer.withoutDatabase()
 			"http://localhost:" + port + "/resources/assets/images/wombat.jpg",
 			response => {
 				if (response.statusCode !== 200) {
-					throw new Error("Not existing asset.");
+					throw new Error("Request returned other code than 200.");
 				}
 				let data = "";
 				response.on("data", chunk => {
