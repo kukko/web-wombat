@@ -5,19 +5,18 @@ WombatServer.withoutDatabase()
 	.init((port) => {
 		require('http')
 			.get('http://localhost:' + port, (response) => {
-				if (response.statusCode !== 200){
-					throw new Error("Request returned other code than 200.");
+				if (response.statusCode !== 200) {
+					throw new Error('Request returned other code than 200.');
 				}
 				let data = '';
 				response.on('data', (chunk) => {
 					data += chunk;
 				});
 				response.on('end', () => {
-					if (data === 'Foo!'){
+					if (data === 'Foo!') {
 						console.log('Request from file test completed!');
 						process.exit();
-					}
-					else{
+					} else {
 						throw new Error('Request returned wrong response.');
 					}
 				});
