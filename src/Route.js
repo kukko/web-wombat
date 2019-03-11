@@ -1,11 +1,14 @@
+let ResourceController = require("./ResourceController.js");
+
 class Route {
 	constructor(
 		route,
 		method,
 		controller,
-		controllerFunction = 'serve',
+		controllerFunction = "serve",
 		middlewares = [],
-		websocket = false
+		websocket = false,
+		routeAliasBase = ""
 	) {
 		this.route = route;
 		this.method = method;
@@ -13,16 +16,17 @@ class Route {
 		this.controllerFunction = controllerFunction;
 		this.middlewares = middlewares;
 		this.websocket = websocket;
+		this.routeAliasBase = routeAliasBase;
 	}
 	serve(request, response) {
-		let requestBody = '';
-		if (['POST', 'PUT', 'UPDATE'].indexOf(request.method) === -1) {
+		let requestBody = "";
+		if (["POST", "PUT", "UPDATE"].indexOf(request.method) === -1) {
 			return this.runController(request, response);
 		} else {
-			request.on('data', (chunk) => {
+			request.on("data", chunk => {
 				requestBody += chunk.toString();
 			});
-			request.on('end', () => {
+			request.on("end", () => {
 				request.rawBody = requestBody;
 				return this.runController(request, response);
 			});
@@ -38,7 +42,7 @@ class Route {
 		]);
 	}
 	runMiddlewares(request, response, middlewares, i = 0) {
-		if (i < middlewares.length - 1) {
+		if (i < middlewares.length) {
 			return middlewares[i].run(request, response, () => {
 				return this.runMiddlewares(
 					request,
@@ -49,6 +53,9 @@ class Route {
 			});
 		} else {
 			let controller = new this.controller(request, response);
+			if (controller instanceof ResourceController) {
+				controller.setRouteAliasBase(this.routeAliasBase);
+			}
 			return controller[this.controllerFunction](request, response);
 		}
 	}
@@ -60,9 +67,9 @@ class Route {
 		);
 	}
 	urlIsMatching(request) {
-		let routeService = require('./services/RouteService.js'),
-			urlParts = routeService.trimURL(request.url).split('/'),
-			routeParts = routeService.trimURL(this.route).split('/'),
+		let routeService = require("./services/RouteService.js"),
+			urlParts = routeService.trimURL(request.url).split("/"),
+			routeParts = routeService.trimURL(this.route).split("/"),
 			output = true;
 		for (let i in urlParts) {
 			if (i < routeParts.length) {
@@ -84,9 +91,9 @@ class Route {
 		return output;
 	}
 	getRouteVariableNames() {
-		let routeParts = require('./services/RouteService.js')
+		let routeParts = require("./services/RouteService.js")
 				.trimURL(this.route)
-				.split('/'),
+				.split("/"),
 			output = {};
 		for (let i in routeParts) {
 			let isRouteVariable =
@@ -111,13 +118,52 @@ class Route {
 	}
 	getRoute(trim = false) {
 		return trim
-			? require('./services/RouteService.js').trimURL(this.route)
+			? require("./services/RouteService.js").trimURL(this.route)
 			: this.route;
+	}
+	as(alias) {
+		this.alias = alias;
+		return this;
+	}
+	toString(parameters) {
+		let output = this.route,
+			routeParameters = output.match(
+				new RegExp(
+					Route.routeVariableSeparators.start +
+						"[^" +
+						Route.routeVariableSeparators.start +
+						Route.routeVariableSeparators.end +
+						"]+" +
+						Route.routeVariableSeparators.end,
+					"g"
+				)
+			);
+		if (routeParameters !== null) {
+			for (let i in routeParameters) {
+				let variableName = routeParameters[i]
+					.replace(Route.routeVariableSeparators.start, "")
+					.replace(Route.routeVariableSeparators.end, "");
+				if (typeof parameters[variableName] === "undefined") {
+					throw new Error(
+						"Required parameter '" +
+							variableName +
+							"' for route '" +
+							this.alias +
+							"' is not present!"
+					);
+				}
+				output = output.replace(
+					new RegExp(routeParameters[i], "g"),
+					parameters[variableName]
+				);
+			}
+		}
+		return output;
 	}
 	static get(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'GET',
+			"GET",
 			controller,
 			controllerFunction,
 			middlewares
@@ -126,7 +172,7 @@ class Route {
 	static post(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'POST',
+			"POST",
 			controller,
 			controllerFunction,
 			middlewares
@@ -135,7 +181,7 @@ class Route {
 	static put(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'PUT',
+			"PUT",
 			controller,
 			controllerFunction,
 			middlewares
@@ -144,7 +190,7 @@ class Route {
 	static update(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'UPDATE',
+			"UPDATE",
 			controller,
 			controllerFunction,
 			middlewares
@@ -153,7 +199,7 @@ class Route {
 	static delete(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'DELETE',
+			"DELETE",
 			controller,
 			controllerFunction,
 			middlewares
@@ -162,18 +208,86 @@ class Route {
 	static websocket(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'GET',
+			"GET",
 			controller,
 			controllerFunction,
 			middlewares,
 			true
 		);
 	}
+	static resources(route, controller, middlewares) {
+		let baseAlias = route.replace(/^\/+|\/+$/g, "").replace(/\//g, ".");
+		return [
+			new Route(
+				route,
+				"GET",
+				controller,
+				"index",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".index"),
+			new Route(
+				route + "/create",
+				"GET",
+				controller,
+				"create",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".create"),
+			new Route(
+				route,
+				"POST",
+				controller,
+				"store",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".store"),
+			new Route(
+				route + "/{id}",
+				"GET",
+				controller,
+				"show",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".show"),
+			new Route(
+				route + "/{id}/edit",
+				"GET",
+				controller,
+				"edit",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".edit"),
+			new Route(
+				route + "/{id}",
+				"PUT",
+				controller,
+				"update",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".update"),
+			new Route(
+				route + "/{id}",
+				"DELETE",
+				controller,
+				"destroy",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".destroy")
+		];
+	}
 }
 
 Route.routeVariableSeparators = {
-	start: '{',
-	end: '}'
+	start: "{",
+	end: "}"
 };
 
 module.exports = Route;

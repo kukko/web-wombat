@@ -31,6 +31,8 @@ class BaseCollection {
 		});
 	}
 	static runAfterCreate() {}
+	static getDocument(){
+	}
 }
 
 module.exports = BaseCollection;

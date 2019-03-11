@@ -1,4 +1,5 @@
-let TemplateInterface = require('./TemplateConnectors/TemplateInterface.js');
+let TemplateInterface = require('./TemplateConnectors/TemplateInterface.js'),
+	RouteService = require('./services/RouteService.js');
 
 class ViewProvider {
 	constructor(request, response, connector) {
@@ -43,7 +44,9 @@ class ViewProvider {
 		return true;
 	}
 	getView(filePath, options, writeToResponse = true, endResponse = true) {
-		let viewFolder = ViewProvider.path.join(
+		let { isAbsolute, resolve, join } = require('path'),
+			isAbsolutePath = isAbsolute(filePath),
+			viewFolder = isAbsolutePath ? resolve(__dirname, join('resources', 'views')) : ViewProvider.path.join(
 				ViewProvider.path.resolve(
 					ViewProvider.path.dirname(require.main.filename),
 					ViewProvider.subfolder
@@ -51,12 +54,13 @@ class ViewProvider {
 				'resources',
 				'views'
 			),
-			viewPath = ViewProvider.path.join(viewFolder, filePath),
+			viewPath = isAbsolutePath ? filePath : ViewProvider.path.join(viewFolder, filePath),
 			viewExtension = ViewProvider.path.extname(viewPath);
 		this.connector.viewFolder = viewFolder;
 		if (viewExtension.length === 0) {
 			viewPath += this.connector.getDefaultFileExtension();
 		}
+		options.RouteService = RouteService;
 		return this.connector.render(
 			viewPath,
 			options,

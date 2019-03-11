@@ -1,7 +1,7 @@
 let BaseMiddleware = require('../BaseMiddleware.js');
 
 class RouteVariableParserMiddleware extends BaseMiddleware {
-	static run(request, response) {
+	static run(request, response, next) {
 		let RouteService = require('../../services/RouteService.js');
 		let urlParts = RouteService.trimURL(request.url).split('/'),
 			routeVariables = {},
@@ -10,6 +10,7 @@ class RouteVariableParserMiddleware extends BaseMiddleware {
 			routeVariables[routeVariableNames[i]] = urlParts[i];
 		}
 		request.routeVariables = routeVariables;
+		next();
 	}
 }
 
