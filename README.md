@@ -228,6 +228,13 @@ Sends the provided message to all connected clients.
 **message:**
 The message to be sended to all connected clients.
 
+### getSocketTag()
+**If you have two controllers which have extends the `WebSocketController` class they shouldn't have the same name.**
+
+**If you override it you should be cautious how two class which extends the `WebSocketController` shouldn't return the same value from this method and they don't have the same name.**
+
+Returns the tag of the WebSocket controller to be able to make more WebSocket controller in one application. The client's will be grouped by the tag returned by this method. By default it's return the name of the controller class. You shouldn't override this method.
+
 ## ViewProvider
 This is the class through which you can build views.
 ### setSubfolder(string subfolder)

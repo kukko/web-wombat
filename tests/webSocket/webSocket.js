@@ -17,6 +17,10 @@ WombatServer.withoutDatabase()
 			throw error;
 		});
 		ws.on('connect', (connection) => {
+			connection.on('error', (error) => {
+				console.log(error);
+				process.exit(1);
+			});
 			connection.on('message', (message) => {
 				console.log('Server => Client: ' + message.utf8Data);
 			});
@@ -26,13 +30,24 @@ WombatServer.withoutDatabase()
 			});
 			console.log('Connection connected!');
 			setInterval(() => {
-				connection.send('foo');
+				if (connection.socket.writable) {
+					connection.send('foo');
+				} else {
+					console.log('AJJJAJJJ!!!');
+				}
 			}, 100);
 			setInterval(() => {
-				connection.ping();
+				if (connection.socket.writable) {
+					connection.ping();
+				} else {
+					console.log('Te ezt már biza nem!');
+				}
 			}, 1000);
 			setTimeout(() => {
 				connection.close();
+				setTimeout(() => {
+					process.exit();
+				}, 2000);
 			}, 3000);
 		});
 		ws.connect('ws://localhost:' + port);
@@ -41,6 +56,10 @@ WombatServer.withoutDatabase()
 			throw error;
 		});
 		ws2.on('connect', (connection) => {
+			connection.on('error', (error) => {
+				console.log(error);
+				process.exit(1);
+			});
 			connection.on('message', (message) => {
 				console.log('Server => Client 2: ' + message.utf8Data);
 			});

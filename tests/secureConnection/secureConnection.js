@@ -2,12 +2,14 @@ let { WombatServer, Route } = require('../../index.js');
 WombatServer.withoutDatabase()
 	.setRoutes([
 		Route.get(
-			'/unsecure',
-			require('./controllers/UnsecureRequestTestController/UnsecureRequestTestController.js')
+			'/secure',
+			require('./controllers/SecurityTestController/SecurityTestController.js'),
+			'secure'
 		),
 		Route.get(
-			'/secure',
-			require('./controllers/SecureRequestTestController/SecureRequestTestController.js')
+			'/unsecure',
+			require('./controllers/SecurityTestController/SecurityTestController.js'),
+			'unsecure'
 		)
 	])
 	.init((port) => {
@@ -21,14 +23,12 @@ WombatServer.withoutDatabase()
 				};
 			require('http')
 				.get('http://localhost:' + port + '/unsecure', (response) => {
-					let data = '';
-					response.on('data', (chunk) => {
-						data += chunk;
-					});
-					response.on('end', () => {
-						console.log('Unsecure response: ' + data);
+					if (response.statusCode === 200) {
+						console.log('Unsecure connection test completed!');
 						finish();
-					});
+					} else {
+						throw new Error("Can't establish unsecure connection!");
+					}
 				})
 				.on('error', (error) => {
 					console.log(error);
@@ -36,14 +36,12 @@ WombatServer.withoutDatabase()
 				});
 			require('https')
 				.get('https://localhost/secure', (response) => {
-					let data = '';
-					response.on('data', (chunk) => {
-						data += chunk;
-					});
-					response.on('end', () => {
-						console.log('Secure response: ' + data);
+					if (response.statusCode === 200) {
+						console.log('Secure connection test completed!');
 						finish();
-					});
+					} else {
+						throw new Error("Can't establish secure connection!");
+					}
 				})
 				.on('error', (error) => {
 					console.log(error);

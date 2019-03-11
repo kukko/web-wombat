@@ -1,6 +1,6 @@
-let { BaseController } = require('../../../../index.js');
+let { BaseController, templateConnectors } = require('../../../../index.js');
 
-class PugController extends BaseController {
+class BladeController extends BaseController {
 	existingView() {
 		this.view('existing', {
 			foo: this.request.body.foo
@@ -15,4 +15,4 @@ class PugController extends BaseController {
 	}
 }
 
-module.exports = PugController;
+module.exports = BladeController;

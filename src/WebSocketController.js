@@ -50,7 +50,10 @@ class WebSocketController extends BaseController {
 			.digest('base64');
 	}
 	onConnect() {
-		this.uuid = WebSocketClientService.addClient(this.socket);
+		this.uuid = WebSocketClientService.addClient(
+			this.socket,
+			this.getSocketTag()
+		);
 		this.onOpen();
 	}
 	onConnectListener() {
@@ -66,14 +69,14 @@ class WebSocketController extends BaseController {
 			opCode = firstByte & 0xf;
 		if (opCode === 0x8) {
 			this.onClose();
-			WebSocketClientService.removeClient(this.uuid);
+			WebSocketClientService.removeClient(this.uuid, this.getSocketTag());
 			return null;
 		}
 		if (opCode === 0x9) {
 			this.pong();
 			return;
 		}
-		if (opCode !== 0x1) {
+		if ([0x1, 0x2].indexOf(opCode) === -1) {
 			this.onError(new Error('Unsopported frame type.'));
 			return;
 		}
@@ -116,10 +119,13 @@ class WebSocketController extends BaseController {
 		this.sendMessage(this.socket, message);
 	}
 	sendTo(uuid, message) {
-		this.sendMessage(WebSocketClientService.getClientByUUID(uuid), message);
+		this.sendMessage(
+			WebSocketClientService.getClientByUUID(uuid, this.getSocketTag()),
+			message
+		);
 	}
 	broadcast(message) {
-		let clients = WebSocketClientService.getClients();
+		let clients = WebSocketClientService.getClients(this.getSocketTag());
 		for (let uuid in clients) {
 			this.sendMessage(clients[uuid], message);
 		}
@@ -144,6 +150,12 @@ class WebSocketController extends BaseController {
 		buffer.writeUInt8(0b10001010, 0);
 		buffer.writeUInt8(0b00000000, 1);
 		this.socket.write(buffer);
+	}
+	getSocketTag() {
+		return this.constructor.name + this.getSocketTagPostfix();
+	}
+	getSocketTagPostfix() {
+		return '';
 	}
 }
 

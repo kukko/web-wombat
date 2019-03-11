@@ -21,7 +21,13 @@ WombatServer.withoutDatabase()
 					data += chunk;
 				});
 				response.on('end', () => {
-					console.log('Response: ' + data);
+					if (data === '<h1>' + sentString + '</h1>') {
+						console.log('Put request test completed!');
+					} else {
+						throw new Error(
+							'Received response is not containing the sent string!'
+						);
+					}
 					process.exit();
 				});
 			}
@@ -29,6 +35,14 @@ WombatServer.withoutDatabase()
 		request.on('error', (error) => {
 			process.exit();
 		});
-		request.write('foo=bar');
+		let sentString = '';
+		for (let i = 0; i < 8; i++) {
+			let chars =
+				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+			sentString += chars.charAt(
+				Math.floor(Math.random() * chars.length)
+			);
+		}
+		request.write('foo=' + sentString);
 		request.end();
 	});

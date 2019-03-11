@@ -1,20 +1,20 @@
 let { WombatServer, Route, templateConnectors } = require('../../index.js');
 
 WombatServer.withoutDatabase()
+	.setUnsecure()
+	.setTemplateConnector(templateConnectors.BladeConnector)
 	.setRoutes([
 		Route.post(
 			'/existingView',
-			require('./controllers/PugController/PugController.js'),
+			require('./controllers/BladeController/BladeController.js'),
 			'existingView'
 		),
 		Route.get(
 			'/notExistingView',
-			require('./controllers/PugController/PugController.js'),
+			require('./controllers/BladeController/BladeController.js'),
 			'notExistingView'
 		)
 	])
-	.setTemplateConnector(templateConnectors.PugConnector)
-	.setUnsecure()
 	.init((port) => {
 		let totalRequests = 2,
 			completedRequests = 0;
