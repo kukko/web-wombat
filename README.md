@@ -144,7 +144,7 @@ module.exports = WebSocketTestController;
 ## Available classes
 *These are just those classes and their methods which is accessible from outside of the class and you can do something with them, without the deeper knowledge of the classes.*
 ### WombatServer
-#### init([function callback])
+#### init(\[function callback])
 Initialize the `WombatServer` to listen on a port for requests.
 
 **callback:**
@@ -175,7 +175,7 @@ A relative path where the required resources can be found relatively to the runn
 
 ### BaseController
 This is the class which must be the parent class of each controller.
-#### view(string filePath, object options, [boolean writeToResponse = true, boolean endResponse = true])
+#### view(string filePath, object options, \[boolean writeToResponse = true, boolean endResponse = true])
 **filePath:**
 Route to the view, in the `resources/views` folder.
 
