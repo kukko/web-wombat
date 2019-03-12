@@ -4,6 +4,8 @@ table
 			th
 				|
 					ID
+			foreach documentStructure as field
+				th #{field.label}
 			th
 				|
 					Methods
@@ -11,6 +13,8 @@ table
 		foreach elements as element
 			tr
 				td #{element._id}
+				foreach documentStructure as field
+					td #{element[field.name]}
 				td
 					- let showRoute = RouteService.getRouteByAlias(routeAliasBase + '.show', {id:element._id})
 					a(href=showRoute)

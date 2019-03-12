@@ -53,8 +53,11 @@ class BaseField {
 	setLabel(label){
 		this._label = label;
 	}
+	getLabel(){
+		return this._label;
+	}
 	get label(){
-		return typeof this._label !== 'undefined' ? this._label : this.name;
+		return typeof this.getLabel() !== 'undefined' ? this.getLabel() : this.name;
 	}
 	validate(){
 		return typeof this.value === this.type && (!this.required || (this.required && typeof this.value !== 'undefined' && this.value !== ''));
