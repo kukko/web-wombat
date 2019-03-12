@@ -1,5 +1,5 @@
 let { WombatServer } = require("../../index.js"),
-	{ Console } = require('console'),
+	{ Console } = require("console"),
 	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
 
 WombatServer.withoutDatabase()

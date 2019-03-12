@@ -1,6 +1,8 @@
 let { lstatSync, readdirSync } = require("fs"),
 	{ join, dirname, resolve } = require("path"),
 	{ spawnSync } = require("child_process"),
+	{ Console } = require("console"),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr }),
 	testsFolder = dirname(__filename),
 	ignoredTests =
 		typeof process.env.TRAVIS === "undefined"
@@ -27,9 +29,7 @@ let { lstatSync, readdirSync } = require("fs"),
 			logger.log(testResult.stderr.toString("utf8"));
 		}
 		successfulTests += successful ? 1 : 0;
-	},
-	{ Console } = require('console'),
-	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
+	};
 
 for (let testIndex in tests) {
 	let test = tests[testIndex];
