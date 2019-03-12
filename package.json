@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "node tests/test.js",
-    "prettify": "prettier --single-quote --trailing-coma --write --use-tabs --tab-width 4 --arrow-parens always \"**/*.js\""
+    "prettify": "prettier --trailing-coma --write --use-tabs --tab-width 4 --arrow-parens always \"**/*.js\""
   },
   "repository": {
     "type": "git",

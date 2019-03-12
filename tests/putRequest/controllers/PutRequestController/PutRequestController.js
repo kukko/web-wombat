@@ -1,8 +1,8 @@
-let { BaseController } = require('../../../../index.js');
+let { BaseController } = require("../../../../index.js");
 
 class PutRequestController extends BaseController {
 	serve(request, response) {
-		this.view('index', request.body);
+		this.view("index", request.body);
 	}
 }
 

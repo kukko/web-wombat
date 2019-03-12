@@ -1,13 +1,13 @@
-let TemplateInterface = require('../TemplateInterface.js');
+let TemplateInterface = require("../TemplateInterface.js");
 
 class PugConnector extends TemplateInterface {
 	getDefaultFileExtension() {
-		return '.pug';
+		return ".pug";
 	}
 	render(filePath, options, writeToResponse = true, endResponse = true) {
 		if (writeToResponse) {
-			if (!this.response.hasHeader('Content-type')) {
-				this.response.setHeader('Content-type', 'text/html');
+			if (!this.response.hasHeader("Content-type")) {
+				this.response.setHeader("Content-type", "text/html");
 			}
 			return new Promise((resolve, reject) => {
 				try {
@@ -18,7 +18,7 @@ class PugConnector extends TemplateInterface {
 					if (endResponse) {
 						this.response.end(html);
 					} else {
-						this.response.write(html, 'utf8');
+						this.response.write(html, "utf8");
 					}
 					resolve(html);
 				} catch (e) {
@@ -41,6 +41,6 @@ class PugConnector extends TemplateInterface {
 	}
 }
 
-PugConnector.pug = require('pug');
+PugConnector.pug = require("pug");
 
 module.exports = PugConnector;

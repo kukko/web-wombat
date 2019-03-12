@@ -1,16 +1,16 @@
-let { BaseController } = require('../../../../index.js');
+let { BaseController } = require("../../../../index.js");
 
 class HandlebarsController extends BaseController {
 	existingView() {
-		this.view('existing', {
+		this.view("existing", {
 			foo: this.request.body.foo
 		});
 	}
 	notExistingView() {
-		this.view('not-existing', {
-			foo: 'bar'
+		this.view("not-existing", {
+			foo: "bar"
 		}).catch((e) => {
-			this.response.end('VIEW ERROR!');
+			this.response.end("VIEW ERROR!");
 		});
 	}
 }

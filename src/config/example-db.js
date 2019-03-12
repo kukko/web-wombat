@@ -1,8 +1,8 @@
 module.exports = {
-	username: '',
-	password: '',
-	host: 'localhost',
+	username: "",
+	password: "",
+	host: "localhost",
 	port: 27017,
-	database: '',
-	authSource: ''
+	database: "",
+	authSource: ""
 };

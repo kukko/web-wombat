@@ -1,4 +1,4 @@
-let { join, dirname } = require('path');
+let { join, dirname } = require("path");
 
 class RouteService {
 	static getRoute(request) {
@@ -9,10 +9,10 @@ class RouteService {
 		}
 	}
 	static trimURL(url) {
-		if (url[0] === '/') {
+		if (url[0] === "/") {
 			url = url.substring(1);
 		}
-		if (url[url.length - 1] === '/') {
+		if (url[url.length - 1] === "/") {
 			url = url.substring(0, url.length - 1);
 		}
 		return url;

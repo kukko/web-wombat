@@ -1,9 +1,9 @@
-let { join, dirname } = require('path');
+let { join, dirname } = require("path");
 
 class DatabaseHolder {
 	static get collections() {
-		if (typeof this._collections === 'undefined') {
-			this._collections = require('./CollectionsProvider.js').collections;
+		if (typeof this._collections === "undefined") {
+			this._collections = require("./CollectionsProvider.js").collections;
 		}
 		return this._collections;
 	}
@@ -13,27 +13,27 @@ class DatabaseHolder {
 	static connect(connectionString, database) {
 		let dbConfig = require(join(
 			dirname(require.main.filename),
-			'/config/db.js'
+			"/config/db.js"
 		));
-		if (typeof connectionString === 'undefined') {
+		if (typeof connectionString === "undefined") {
 			connectionString =
-				'mongodb://' +
+				"mongodb://" +
 				this.getAuthentication(dbConfig.username, dbConfig.password) +
 				dbConfig.host +
-				':' +
+				":" +
 				dbConfig.port +
-				'/';
+				"/";
 			if (
-				typeof dbConfig.authSource !== 'undefined' &&
+				typeof dbConfig.authSource !== "undefined" &&
 				dbConfig.authSource.length > 0
 			) {
-				connectionString += '?authSource=' + dbConfig.authSource;
+				connectionString += "?authSource=" + dbConfig.authSource;
 			}
 		}
 		let createdCollections = 0,
 			failedCollectionCreation = 0;
 		return new Promise((resolve, reject) => {
-			require('mongodb').MongoClient.connect(
+			require("mongodb").MongoClient.connect(
 				connectionString,
 				{
 					useNewUrlParser: true
@@ -42,7 +42,7 @@ class DatabaseHolder {
 					if (!error) {
 						this.dbConnection = connection;
 						this.db = this.dbConnection.db(
-							typeof database !== 'undefined'
+							typeof database !== "undefined"
 								? database
 								: dbConfig.database
 						);
@@ -69,14 +69,14 @@ class DatabaseHolder {
 	}
 	static getAuthentication(username, password) {
 		if (
-			typeof username !== 'undefined' &&
+			typeof username !== "undefined" &&
 			username.length > 0 &&
-			typeof password !== 'undefined' &&
+			typeof password !== "undefined" &&
 			password.length > 0
 		) {
-			return username + ':' + password + '@';
+			return username + ":" + password + "@";
 		}
-		return '';
+		return "";
 	}
 }
 

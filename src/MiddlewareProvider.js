@@ -3,30 +3,30 @@ class MiddlewareProvider {
 		return [];
 	}
 	static getMiddleware(name) {
-		if (typeof this.middlewares[name] !== 'undefined') {
+		if (typeof this.middlewares[name] !== "undefined") {
 			return this.middlewares[name];
 		}
-		let { existsSync } = require('fs'),
-			{ join, dirname } = require('path'),
+		let { existsSync } = require("fs"),
+			{ join, dirname } = require("path"),
 			middlewareRoute = join(
 				__dirname,
-				'./middlewares',
+				"./middlewares",
 				name,
-				name + '.js'
+				name + ".js"
 			);
 		if (existsSync(middlewareRoute)) {
 			return (this.middlewares[name] = require(middlewareRoute));
 		} else {
 			middlewareRoute = join(
 				dirname(require.main.filename),
-				'middlewares',
+				"middlewares",
 				name,
-				name + '.js'
+				name + ".js"
 			);
 			if (existsSync(middlewareRoute)) {
 				return (this.middlewares[name] = require(middlewareRoute));
 			} else {
-				throw new Error('Middleware (' + name + ') missing!');
+				throw new Error("Middleware (" + name + ") missing!");
 			}
 		}
 	}

@@ -1,6 +1,6 @@
-let BaseController = require('./BaseController.js'),
-	DatabaseHolder = require('./DatabaseHolder.js'),
-	WebSocketClientService = require('./WebSocketClientService.js');
+let BaseController = require("./BaseController.js"),
+	DatabaseHolder = require("./DatabaseHolder.js"),
+	WebSocketClientService = require("./WebSocketClientService.js");
 
 class WebSocketController extends BaseController {
 	constructor(request, socket, head) {
@@ -9,45 +9,45 @@ class WebSocketController extends BaseController {
 		this.socket = socket;
 		this.head = head;
 		this.handshake();
-		socket.on('data', (buffer) => {
+		socket.on("data", (buffer) => {
 			this.parseMessage(buffer);
 		});
 	}
 	handshake() {
 		let responseHeaders = [
-				'HTTP/1.1 101 Web Socket Protocol Handshake',
-				'Upgrade: WebSocket',
-				'Connection: Upgrade',
-				'Sec-WebSocket-Accept: ' +
+				"HTTP/1.1 101 Web Socket Protocol Handshake",
+				"Upgrade: WebSocket",
+				"Connection: Upgrade",
+				"Sec-WebSocket-Accept: " +
 					this.generateAcceptValue(
-						this.request.headers['sec-websocket-key']
+						this.request.headers["sec-websocket-key"]
 					)
 			],
-			protocolsHeader = this.request.headers['sec-websocket-protocol'],
+			protocolsHeader = this.request.headers["sec-websocket-protocol"],
 			protocols = protocolsHeader
-				? protocolsHeader.split(',').map((protocol) => {
+				? protocolsHeader.split(",").map((protocol) => {
 						return protocol.trim();
 				  })
 				: [];
 		if (protocols.length > 0) {
 			responseHeaders.push(
-				'Sec-WebSocket-Protocol: ' + protocols.join(',')
+				"Sec-WebSocket-Protocol: " + protocols.join(",")
 			);
 		}
-		this.socket.on('drain', this.onConnectListener);
-		if (this.socket.write(responseHeaders.join('\r\n') + '\r\n\r\n')) {
+		this.socket.on("drain", this.onConnectListener);
+		if (this.socket.write(responseHeaders.join("\r\n") + "\r\n\r\n")) {
 			this.onConnect();
-			this.socket.removeListener('drain', this.onConnectListener);
+			this.socket.removeListener("drain", this.onConnectListener);
 		}
 	}
 	generateAcceptValue(acceptKey) {
-		return require('crypto')
-			.createHash('sha1')
+		return require("crypto")
+			.createHash("sha1")
 			.update(
-				acceptKey + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11',
-				'binary'
+				acceptKey + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11",
+				"binary"
 			)
-			.digest('base64');
+			.digest("base64");
 	}
 	onConnect() {
 		this.uuid = WebSocketClientService.addClient(
@@ -58,7 +58,7 @@ class WebSocketController extends BaseController {
 	}
 	onConnectListener() {
 		this.onConnect();
-		this.socket.removeListener('drain', this.onConnectListener);
+		this.socket.removeListener("drain", this.onConnectListener);
 	}
 	parseMessage(buffer) {
 		let firstByte = buffer.readUInt8(0),
@@ -77,7 +77,7 @@ class WebSocketController extends BaseController {
 			return;
 		}
 		if ([0x1, 0x2].indexOf(opCode) === -1) {
-			this.onError(new Error('Unsopported frame type.'));
+			this.onError(new Error("Unsopported frame type."));
 			return;
 		}
 		let offset = 2;
@@ -107,7 +107,7 @@ class WebSocketController extends BaseController {
 		this.onMessage(this.convertMessage(data));
 	}
 	convertMessage(buffer) {
-		return buffer.toString('utf8');
+		return buffer.toString("utf8");
 	}
 	onOpen() {}
 	onMessage(message) {}
@@ -155,7 +155,7 @@ class WebSocketController extends BaseController {
 		return this.constructor.name + this.getSocketTagPostfix();
 	}
 	getSocketTagPostfix() {
-		return '';
+		return "";
 	}
 }
 

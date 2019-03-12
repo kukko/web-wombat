@@ -1,8 +1,8 @@
-let { BaseController } = require('../../../../index.js');
+let { BaseController } = require("../../../../index.js");
 
 class UnsecureRequestTestController extends BaseController {
 	serve() {
-		this.response.end('Connection established!');
+		this.response.end("Connection established!");
 	}
 }
 

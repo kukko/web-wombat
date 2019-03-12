@@ -1,7 +1,7 @@
-let { lstatSync, readdirSync } = require('fs'),
-	{ join, dirname, resolve } = require('path'),
+let { lstatSync, readdirSync } = require("fs"),
+	{ join, dirname, resolve } = require("path"),
 	middlewares = {},
-	middlewaresFolder = resolve(__dirname, './src/middlewares'),
+	middlewaresFolder = resolve(__dirname, "./src/middlewares"),
 	middlewareFolders = readdirSync(middlewaresFolder)
 		.map((folder) => {
 			return {
@@ -23,12 +23,12 @@ for (let i in middlewareFolders) {
 	middlewares[middlewareName] = require(join(
 		middlewaresFolder,
 		middlewareName,
-		middlewareName + '.js'
+		middlewareName + ".js"
 	));
 }
 
 let templateConnectors = {},
-	templateConnectorsFolder = resolve(__dirname, './src/TemplateConnectors'),
+	templateConnectorsFolder = resolve(__dirname, "./src/TemplateConnectors"),
 	templateConnectorFolders = readdirSync(templateConnectorsFolder)
 		.map((folder) => {
 			return {
@@ -50,18 +50,18 @@ for (let i in templateConnectorFolders) {
 	templateConnectors[templateConnectorName] = require(join(
 		templateConnectorsFolder,
 		templateConnectorName,
-		templateConnectorName + '.js'
+		templateConnectorName + ".js"
 	));
 }
 
 module.exports = {
-	WombatServer: require('./src/WombatServer.js'),
-	BaseController: require('./src/BaseController.js'),
-	WebSocketController: require('./src/WebSocketController.js'),
-	Route: require('./src/Route.js'),
-	BaseMiddleware: require('./src/middlewares/BaseMiddleware.js'),
+	WombatServer: require("./src/WombatServer.js"),
+	BaseController: require("./src/BaseController.js"),
+	WebSocketController: require("./src/WebSocketController.js"),
+	Route: require("./src/Route.js"),
+	BaseMiddleware: require("./src/middlewares/BaseMiddleware.js"),
 	middlewares: middlewares,
-	BaseCollection: require('./src/BaseCollection.js'),
-	TemplateInterface: require('./src/TemplateConnectors/TemplateInterface.js'),
+	BaseCollection: require("./src/BaseCollection.js"),
+	TemplateInterface: require("./src/TemplateConnectors/TemplateInterface.js"),
 	templateConnectors: templateConnectors
 };

@@ -3,7 +3,7 @@ class Route {
 		route,
 		method,
 		controller,
-		controllerFunction = 'serve',
+		controllerFunction = "serve",
 		middlewares = [],
 		websocket = false
 	) {
@@ -15,14 +15,14 @@ class Route {
 		this.websocket = websocket;
 	}
 	serve(request, response) {
-		let requestBody = '';
-		if (['POST', 'PUT', 'UPDATE'].indexOf(request.method) === -1) {
+		let requestBody = "";
+		if (["POST", "PUT", "UPDATE"].indexOf(request.method) === -1) {
 			return this.runController(request, response);
 		} else {
-			request.on('data', (chunk) => {
+			request.on("data", (chunk) => {
 				requestBody += chunk.toString();
 			});
-			request.on('end', () => {
+			request.on("end", () => {
 				request.rawBody = requestBody;
 				return this.runController(request, response);
 			});
@@ -60,9 +60,9 @@ class Route {
 		);
 	}
 	urlIsMatching(request) {
-		let routeService = require('./services/RouteService.js'),
-			urlParts = routeService.trimURL(request.url).split('/'),
-			routeParts = routeService.trimURL(this.route).split('/'),
+		let routeService = require("./services/RouteService.js"),
+			urlParts = routeService.trimURL(request.url).split("/"),
+			routeParts = routeService.trimURL(this.route).split("/"),
 			output = true;
 		for (let i in urlParts) {
 			if (i < routeParts.length) {
@@ -84,9 +84,9 @@ class Route {
 		return output;
 	}
 	getRouteVariableNames() {
-		let routeParts = require('./services/RouteService.js')
+		let routeParts = require("./services/RouteService.js")
 				.trimURL(this.route)
-				.split('/'),
+				.split("/"),
 			output = {};
 		for (let i in routeParts) {
 			let isRouteVariable =
@@ -111,13 +111,13 @@ class Route {
 	}
 	getRoute(trim = false) {
 		return trim
-			? require('./services/RouteService.js').trimURL(this.route)
+			? require("./services/RouteService.js").trimURL(this.route)
 			: this.route;
 	}
 	static get(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'GET',
+			"GET",
 			controller,
 			controllerFunction,
 			middlewares
@@ -126,7 +126,7 @@ class Route {
 	static post(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'POST',
+			"POST",
 			controller,
 			controllerFunction,
 			middlewares
@@ -135,7 +135,7 @@ class Route {
 	static put(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'PUT',
+			"PUT",
 			controller,
 			controllerFunction,
 			middlewares
@@ -144,7 +144,7 @@ class Route {
 	static update(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'UPDATE',
+			"UPDATE",
 			controller,
 			controllerFunction,
 			middlewares
@@ -153,7 +153,7 @@ class Route {
 	static delete(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'DELETE',
+			"DELETE",
 			controller,
 			controllerFunction,
 			middlewares
@@ -162,7 +162,7 @@ class Route {
 	static websocket(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			'GET',
+			"GET",
 			controller,
 			controllerFunction,
 			middlewares,
@@ -172,8 +172,8 @@ class Route {
 }
 
 Route.routeVariableSeparators = {
-	start: '{',
-	end: '}'
+	start: "{",
+	end: "}"
 };
 
 module.exports = Route;

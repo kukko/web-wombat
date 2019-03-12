@@ -5,12 +5,12 @@ class TemplateInterface {
 	}
 	render(filePath, options, writeToResponse, endResponse) {
 		throw new Error(
-			'You must implement the render method in your TemplateConnector.'
+			"You must implement the render method in your TemplateConnector."
 		);
 	}
 	getDefaultFileExtension() {
 		throw new Error(
-			'You must implement getDefaultFileExtension method in your TemplateConnector.'
+			"You must implement getDefaultFileExtension method in your TemplateConnector."
 		);
 	}
 	get viewFolder() {

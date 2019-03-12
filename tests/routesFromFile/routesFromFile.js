@@ -1,27 +1,27 @@
-let { WombatServer } = require('../../index.js');
+let { WombatServer } = require("../../index.js");
 
 WombatServer.withoutDatabase()
 	.setUnsecure()
 	.init((port) => {
-		require('http')
-			.get('http://localhost:' + port, (response) => {
+		require("http")
+			.get("http://localhost:" + port, (response) => {
 				if (response.statusCode !== 200) {
-					throw new Error('Request returned other code than 200.');
+					throw new Error("Request returned other code than 200.");
 				}
-				let data = '';
-				response.on('data', (chunk) => {
+				let data = "";
+				response.on("data", (chunk) => {
 					data += chunk;
 				});
-				response.on('end', () => {
-					if (data === 'Foo!') {
-						console.log('Request from file test completed!');
+				response.on("end", () => {
+					if (data === "Foo!") {
+						console.log("Request from file test completed!");
 						process.exit();
 					} else {
-						throw new Error('Request returned wrong response.');
+						throw new Error("Request returned wrong response.");
 					}
 				});
 			})
-			.on('error', (error) => {
+			.on("error", (error) => {
 				console.log(error);
 				process.exit(1);
 			});

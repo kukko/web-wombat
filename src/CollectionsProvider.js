@@ -1,22 +1,22 @@
-let { lstatSync, readdirSync } = require('fs');
-let { join, dirname } = require('path');
+let { lstatSync, readdirSync } = require("fs");
+let { join, dirname } = require("path");
 
 class CollectionsProvider {
 	static get collections() {
-		if (typeof this._collections !== 'undefined') {
+		if (typeof this._collections !== "undefined") {
 			return this._collections;
 		}
 		let output = {},
 			collectionsDir = join(
 				dirname(require.main.filename),
-				'/collections'
+				"/collections"
 			),
 			collections = this.getDirectories(collectionsDir);
 		for (let i in collections) {
 			let tempCollection = require(join(
 				collectionsDir,
 				collections[i],
-				collections[i] + '.js'
+				collections[i] + ".js"
 			));
 			output[tempCollection.collectionName] = tempCollection;
 		}

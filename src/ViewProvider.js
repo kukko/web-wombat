@@ -1,10 +1,10 @@
-let TemplateInterface = require('./TemplateConnectors/TemplateInterface.js');
+let TemplateInterface = require("./TemplateConnectors/TemplateInterface.js");
 
 class ViewProvider {
 	constructor(request, response, connector) {
 		this.request = request;
 		this.response = response;
-		if (typeof connector !== 'undefined') {
+		if (typeof connector !== "undefined") {
 			this.setConnector(connector);
 		} else {
 			this.connector = new ViewProvider.defaultConnector(
@@ -14,29 +14,29 @@ class ViewProvider {
 		}
 	}
 	setConnector(connector) {
-		if (typeof connector === 'undefined') {
+		if (typeof connector === "undefined") {
 			return false;
 		}
 		let connectorObj = new connector(this.request, this.response);
 		if (!(connectorObj instanceof TemplateInterface)) {
 			throw new Error(
-				'The ' +
+				"The " +
 					connector.constructor.name +
-					' is not extending the TemplateInterface class.'
+					" is not extending the TemplateInterface class."
 			);
 		}
 		this.connector = connectorObj;
 		return true;
 	}
 	static setDefaultConnector(connector) {
-		if (typeof connector === 'undefined') {
+		if (typeof connector === "undefined") {
 			return false;
 		}
 		if (!(new connector() instanceof TemplateInterface)) {
 			throw new Error(
-				'The ' +
+				"The " +
 					connector.constructor.name +
-					' is not extending the TemplateInterface class.'
+					" is not extending the TemplateInterface class."
 			);
 		}
 		this.defaultConnector = connector;
@@ -48,8 +48,8 @@ class ViewProvider {
 					ViewProvider.path.dirname(require.main.filename),
 					ViewProvider.subfolder
 				),
-				'resources',
-				'views'
+				"resources",
+				"views"
 			),
 			viewPath = ViewProvider.path.join(viewFolder, filePath),
 			viewExtension = ViewProvider.path.extname(viewPath);
@@ -69,12 +69,12 @@ class ViewProvider {
 	}
 }
 
-ViewProvider.defaultConnector = require('./TemplateConnectors/BladeConnector/BladeConnector.js');
+ViewProvider.defaultConnector = require("./TemplateConnectors/BladeConnector/BladeConnector.js");
 
-ViewProvider.setSubfolder('.');
+ViewProvider.setSubfolder(".");
 
-if (typeof ViewProvider.path === 'undefined') {
-	ViewProvider.path = require('path');
+if (typeof ViewProvider.path === "undefined") {
+	ViewProvider.path = require("path");
 }
 
 module.exports = ViewProvider;

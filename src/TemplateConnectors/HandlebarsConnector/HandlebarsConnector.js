@@ -1,15 +1,15 @@
-let TemplateInterface = require('../TemplateInterface.js');
+let TemplateInterface = require("../TemplateInterface.js");
 
 class HandlebarsConnector extends TemplateInterface {
 	getDefaultFileExtension() {
-		return '.handlebars';
+		return ".handlebars";
 	}
 	render(filePath, options, writeToResponse = true, endResponse = true) {
 		return new Promise((resolve, reject) => {
-			let template = HandlebarsConnector.readFileSync(filePath, 'utf8');
+			let template = HandlebarsConnector.readFileSync(filePath, "utf8");
 			if (writeToResponse) {
-				if (!this.response.hasHeader('Content-type')) {
-					this.response.setHeader('Content-type', 'text/html');
+				if (!this.response.hasHeader("Content-type")) {
+					this.response.setHeader("Content-type", "text/html");
 				}
 				return new Promise((resolve, reject) => {
 					try {
@@ -19,7 +19,7 @@ class HandlebarsConnector extends TemplateInterface {
 						if (endResponse) {
 							this.response.end(html);
 						} else {
-							this.response.write(html, 'utf8');
+							this.response.write(html, "utf8");
 						}
 						resolve(html);
 					} catch (e) {
@@ -43,10 +43,10 @@ class HandlebarsConnector extends TemplateInterface {
 	}
 }
 
-HandlebarsConnector.handlebars = require('handlebars');
+HandlebarsConnector.handlebars = require("handlebars");
 
-if (typeof HandlebarsConnector.readFileSync === 'undefined') {
-	let { readFileSync } = require('fs');
+if (typeof HandlebarsConnector.readFileSync === "undefined") {
+	let { readFileSync } = require("fs");
 	HandlebarsConnector.readFileSync = readFileSync;
 }
 
