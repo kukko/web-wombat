@@ -1,0 +1,5 @@
+- let actionRoute = RouteService.getRouteByAlias(routeAliasBase + '.store')
+form(action=actionRoute method="POST")
+	foreach documentStructure as field
+		!!{field.toString(true)}
+	button(type="submit") Send

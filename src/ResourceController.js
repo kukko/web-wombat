@@ -21,8 +21,21 @@ class ResourceController extends BaseController {
 				this.resourceView("index", data);
 			});
 	}
-	create() {}
-	store() {}
+	create() {
+		this.resourceView("create");
+	}
+	store() {
+		if (this.getCollection().getDocument().validateDocument(this.request.body)){
+			this.getCollection().createDocument(this.request.body).then((id) => {
+				this.redirect(RouteService.getRouteByAlias(this.routeAliasBase + '.show', {
+					id: id
+				}));
+			});
+		}
+		else{
+			this.response.end('NOT VALID DOCUMENT!');
+		}
+	}
 	show() {
 		this.getCollection().collection.findOne(
 			{
@@ -119,7 +132,10 @@ class ResourceController extends BaseController {
 			}
 		);
 	}
-	resourceView(viewName, data) {
+	resourceView(viewName, data = {}) {
+		if (typeof data.documentStructure === 'undefined'){
+			data.documentStructure = this.getCollection().getDocument().getStructure();
+		}
 		this.view(
 			"resource/" + this.constructor.name + "/" + viewName,
 			data

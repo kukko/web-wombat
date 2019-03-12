@@ -17,6 +17,9 @@ class BaseField {
 		this._type = type;
 		return this;
 	}
+	get type(){
+		return this._type;
+	}
 	setShowable(showable = false) {
 		this._showable = showable;
 		return this;
@@ -35,13 +38,16 @@ class BaseField {
 		this._required = required;
 		return this;
 	}
+	get required(){
+		return this._required;
+	}
 	setValue(value) {
 		this._value = value;
 		return this;
 	}
 	get value(){
 		if (this.showable){
-			return this._value;
+			return typeof this._value !== 'undefined' ? this._value : '';
 		}
 	}
 	setLabel(label){
@@ -49,6 +55,9 @@ class BaseField {
 	}
 	get label(){
 		return typeof this._label !== 'undefined' ? this._label : this.name;
+	}
+	validate(){
+		return typeof this.value === this.type && (!this.required || (this.required && typeof this.value !== 'undefined' && this.value !== ''));
 	}
 	toString(){
 		return this.label + ': ' + this.value;

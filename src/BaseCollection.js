@@ -34,6 +34,15 @@ class BaseCollection {
 	}
 	static runAfterCreate() {}
 	static getDocument() {}
+	static createDocument(document){
+		return new Promise((resolve, reject) => {
+			this.collection.insertOne(document).then((document) => {
+				resolve(document.insertedId);
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	}
 	static updateDocument(id, values) {
 		let structure = this.getDocument().getStructure(),
 			newValues = {};

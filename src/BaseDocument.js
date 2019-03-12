@@ -6,7 +6,7 @@ class BaseDocument {
 		if (typeof values !== 'undefined'){
 			for (let fieldName in values){
 				let field = this.getFieldByName(fieldName);
-				if (typeof field !== 'undefined'){
+				if (typeof field !== 'undefined' && typeof values[fieldName] !== 'undefined'){
 					field.setValue(values[fieldName]);
 				}
 			}
@@ -29,6 +29,17 @@ class BaseDocument {
 				return this.structure[i];
 			}
 		}
+	}
+	static validateDocument(values){
+		let fields = this.getStructure(values),
+			output = true;
+		for (let fieldIndex in fields){
+			output = output && fields[fieldIndex].validate();
+			if (!output){
+				break;
+			}
+		}
+		return output;
 	}
 }
 
