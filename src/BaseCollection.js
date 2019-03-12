@@ -49,6 +49,18 @@ class BaseCollection {
 			$set:newValues
 		});
 	}
+	static deleteDocument(id){
+		return new Promise((resolve, reject) => {
+			this.collection.deleteOne({
+				_id: ObjectId(id)
+			}, (error, result) => {
+				if (error){
+					reject(error);
+				}
+				resolve(result.result.ok === 1);
+			});
+		});
+	}
 }
 
 module.exports = BaseCollection;

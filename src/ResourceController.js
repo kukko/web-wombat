@@ -92,7 +92,33 @@ class ResourceController extends BaseController {
 			}
 		);
 	}
-	destroy() {}
+	destroy() {
+		this.getCollection().collection.findOne(
+			{
+				_id: ObjectId(this.request.routeVariables.id)
+			},
+			(error, result) => {
+				if (error) {
+					console.log(error);
+					this.response.statusCode = 500;
+					this.response.end("500");
+				}
+				if (result !== null){
+					let deleteResult = this.getCollection().deleteDocument(this.request.routeVariables.id).then((rowDeleted) => {
+						if (rowDeleted){
+							this.redirect(RouteService.getRouteByAlias(this.routeAliasBase + '.index'));
+						}
+						else{
+							this.response.end('CAN\'T DELETE!');
+						}
+					});
+				}
+				else{
+					this.response.end('NOT EXISTING DOCUMENT!');
+				}
+			}
+		);
+	}
 	resourceView(viewName, data) {
 		this.view(
 			"resource/" + this.constructor.name + "/" + viewName,

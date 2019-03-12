@@ -21,7 +21,8 @@ table
 						|
 							Edit
 					- let deleteRoute = RouteService.getRouteByAlias(routeAliasBase + '.destroy', {id:element._id})
-					form(action=deleteRoute, method="DELETE")
+					form(action=deleteRoute, method="POST")
+						!!{FormBuilder.formMethodInput('DELETE')}
 						button(type="submit")
 							|
 								Delete
