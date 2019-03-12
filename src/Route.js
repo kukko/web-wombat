@@ -19,18 +19,7 @@ class Route {
 		this.routeAliasBase = routeAliasBase;
 	}
 	serve(request, response) {
-		let requestBody = "";
-		if (["POST", "PUT", "UPDATE"].indexOf(request.method) === -1) {
-			return this.runController(request, response);
-		} else {
-			request.on("data", chunk => {
-				requestBody += chunk.toString();
-			});
-			request.on("end", () => {
-				request.rawBody = requestBody;
-				return this.runController(request, response);
-			});
-		}
+		return this.runController(request, response);
 	}
 	serveWebSocket(request, socket, head) {
 		new this.controller(request, socket, head);

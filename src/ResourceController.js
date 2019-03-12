@@ -1,5 +1,6 @@
 let BaseController = require("./BaseController.js"),
-	{ ObjectId } = require("mongodb");
+	{ ObjectId } = require("mongodb"),
+	RouteService = require('./services/RouteService.js');
 
 class ResourceController extends BaseController {
 	setRouteAliasBase(routeAliasBase) {
@@ -22,7 +23,30 @@ class ResourceController extends BaseController {
 	}
 	create() {}
 	store() {}
-	show() {}
+	show() {
+		this.getCollection().collection.findOne(
+			{
+				_id: ObjectId(this.request.routeVariables.id)
+			},
+			(error, result) => {
+				if (error) {
+					console.log(error);
+					this.response.statusCode = 500;
+					this.response.end("500");
+				}
+				if (result !== null){
+					let data = {
+						element: result,
+						documentStructure: this.getCollection().getDocument().getStructure(result)
+					};
+					this.resourceView("show", data);
+				}
+				else{
+					this.response.end('NOT EXISTING DOCUMENT!');
+				}
+			}
+		);
+	}
 	edit() {
 		this.getCollection().collection.findOne(
 			{
@@ -34,15 +58,40 @@ class ResourceController extends BaseController {
 					this.response.statusCode = 500;
 					this.response.end("500");
 				}
-				let data = {
-					element: result,
-					documentStructure: this.getCollection().getDocument().getStructure(result)
-				};
-				this.resourceView("edit", data);
+				if (result !== null){
+					let data = {
+						element: result,
+						documentStructure: this.getCollection().getDocument().getStructure(result)
+					};
+					this.resourceView("edit", data);
+				}
+				else{
+					this.response.end('NOT EXISTING DOCUMENT!');
+				}
 			}
 		);
 	}
-	update() {}
+	update() {
+		this.getCollection().collection.findOne(
+			{
+				_id: ObjectId(this.request.routeVariables.id)
+			},
+			(error, result) => {
+				if (error) {
+					console.log(error);
+					this.response.statusCode = 500;
+					this.response.end("500");
+				}
+				if (result !== null){
+					result = this.getCollection().updateDocument(this.request.routeVariables.id, this.request.body);
+					this.redirect(RouteService.getRouteByAlias(this.routeAliasBase + '.index'));
+				}
+				else{
+					this.response.end('NOT EXISTING DOCUMENT!');
+				}
+			}
+		);
+	}
 	destroy() {}
 	resourceView(viewName, data) {
 		this.view(

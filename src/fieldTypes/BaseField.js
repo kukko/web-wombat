@@ -1,8 +1,9 @@
 class BaseField {
-	constructor(name, type, showable, required) {
+	constructor(name, type, showable, editable, required) {
 		this.setName(name);
 		this.setType(type);
 		this.setShowable(showable);
+		this.setEditable(editable);
 		this.setRequired(required);
 	}
 	setName(name) {
@@ -22,6 +23,13 @@ class BaseField {
 	}
 	get showable(){
 		return this._showable;
+	}
+	setEditable(editable = false){
+		this._editable = editable;
+		return this;
+	}
+	get editable(){
+		return this._editable;
 	}
 	setRequired(required = true) {
 		this._required = required;

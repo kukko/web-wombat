@@ -1,2 +1,6 @@
-foreach documentStructure as field
-	!!{field.toString(true)}
+- let actionRoute = RouteService.getRouteByAlias(routeAliasBase + '.update', {id:element._id})
+form(action=actionRoute method="POST")
+	!!{FormBuilder.formMethodInput('PUT')}
+	foreach documentStructure as field
+		!!{field.toString(true)}
+	button(type="submit") Send

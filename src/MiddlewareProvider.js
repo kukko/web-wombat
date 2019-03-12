@@ -1,6 +1,24 @@
 class MiddlewareProvider {
+	static runMiddlewares(request, response, callback, middlewares, i = 0){
+		if (i < middlewares.length) {
+			return middlewares[i].run(request, response, () => {
+				return this.runMiddlewares(
+					request,
+					response,
+					callback,
+					middlewares,
+					i + 1
+				);
+			});
+		} else {
+			return callback(request, response);
+		}
+	}
 	static getWebMiddlewares() {
-		return [];
+		return [
+			this.getMiddleware('BodyParserMiddleware'),
+			this.getMiddleware('FormMethodParserMiddleware')
+		];
 	}
 	static getMiddleware(name) {
 		if (typeof this.middlewares[name] !== 'undefined') {
