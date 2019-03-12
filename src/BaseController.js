@@ -33,7 +33,7 @@ class BaseController {
 		);
 	}
 	view(filePath, options, writeToResponse = true, endResponse = true) {
-		let viewProviderObj = new BaseController.viewProvider(
+		let viewProviderObj = new BaseController.ViewProvider(
 			this.request,
 			this.response,
 			this.viewConnector
@@ -71,8 +71,8 @@ if (typeof BaseController.middlewareProvider === "undefined") {
 	BaseController.middlewareProvider = require("./MiddlewareProvider.js");
 }
 
-if (typeof BaseController.viewProvider === "undefined") {
-	BaseController.viewProvider = require("./ViewProvider.js");
+if (typeof BaseController.ViewProvider === "undefined") {
+	BaseController.ViewProvider = require("./ViewProvider.js");
 }
 
 module.exports = BaseController;

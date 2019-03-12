@@ -13,33 +13,34 @@ class ViewProvider {
 			);
 		}
 	}
-	setConnector(connector) {
-		if (typeof connector === "undefined") {
+	setConnector(Connector) {
+		if (typeof Connector === "undefined") {
 			return false;
 		}
-		let connectorObj = new connector(this.request, this.response);
+		let connectorObj = new Connector(this.request, this.response);
 		if (!(connectorObj instanceof TemplateInterface)) {
 			throw new Error(
 				"The " +
-					connector.constructor.name +
+					connectorObj.constructor.name +
 					" is not extending the TemplateInterface class."
 			);
 		}
 		this.connector = connectorObj;
 		return true;
 	}
-	static setDefaultConnector(connector) {
-		if (typeof connector === "undefined") {
+	static setDefaultConnector(Connector) {
+		if (typeof Connector === "undefined") {
 			return false;
 		}
-		if (!(new connector() instanceof TemplateInterface)) {
+		let connectorObj = new Connector();
+		if (!(connectorObj instanceof TemplateInterface)) {
 			throw new Error(
 				"The " +
-					connector.constructor.name +
+					connectorObj.constructor.name +
 					" is not extending the TemplateInterface class."
 			);
 		}
-		this.defaultConnector = connector;
+		this.defaultConnector = Connector;
 		return true;
 	}
 	getView(filePath, options, writeToResponse = true, endResponse = true) {

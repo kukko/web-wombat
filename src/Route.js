@@ -9,7 +9,7 @@ class Route {
 	) {
 		this.route = route;
 		this.method = method;
-		this.controller = controller;
+		this.Controller = controller;
 		this.controllerFunction = controllerFunction;
 		this.middlewares = middlewares;
 		this.websocket = websocket;
@@ -29,11 +29,11 @@ class Route {
 		}
 	}
 	serveWebSocket(request, socket, head) {
-		new this.controller(request, socket, head);
+		new this.Controller(request, socket, head);
 	}
 	runController(request, response) {
 		return this.runMiddlewares(request, response, [
-			...this.controller.allMiddlewares,
+			...this.Controller.allMiddlewares,
 			...this.middlewares
 		]);
 	}
@@ -48,7 +48,7 @@ class Route {
 				);
 			});
 		} else {
-			let controller = new this.controller(request, response);
+			let controller = new this.Controller(request, response);
 			return controller[this.controllerFunction](request, response);
 		}
 	}
