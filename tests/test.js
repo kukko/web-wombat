@@ -21,13 +21,15 @@ let { lstatSync, readdirSync } = require("fs"),
 				testResult.status === 0 && testResult.stderr.length === 0,
 			resultSymbol = successful ? "✓" : "✗",
 			outputColor = successful ? "\x1b[32m" : "\x1b[31m";
-		console.log(outputColor + testName + " [" + resultSymbol + "]\x1b[0m");
+		logger.log(outputColor + testName + " [" + resultSymbol + "]\x1b[0m");
 		if (!successful) {
-			console.log(testResult.stdout.toString("utf8"));
-			console.log(testResult.stderr.toString("utf8"));
+			logger.log(testResult.stdout.toString("utf8"));
+			logger.log(testResult.stderr.toString("utf8"));
 		}
 		successfulTests += successful ? 1 : 0;
-	};
+	},
+	{ Console } = require('console'),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
 
 for (let testIndex in tests) {
 	let test = tests[testIndex];
@@ -49,7 +51,7 @@ if (successfulTests === tests.length) {
 	resultColor = "\x1b[31m";
 	exitCode = 1;
 }
-console.log(
+logger.log(
 	resultColor +
 		"Test results: " +
 		successfulTests +

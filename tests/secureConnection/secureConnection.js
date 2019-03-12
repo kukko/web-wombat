@@ -1,4 +1,7 @@
-let { WombatServer, Route } = require("../../index.js");
+let { WombatServer, Route } = require("../../index.js"),
+	{ Console } = require('console'),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
+
 WombatServer.withoutDatabase()
 	.setRoutes([
 		Route.get(
@@ -24,27 +27,27 @@ WombatServer.withoutDatabase()
 			require("http")
 				.get("http://localhost:" + port + "/unsecure", (response) => {
 					if (response.statusCode === 200) {
-						console.log("Unsecure connection test completed!");
+						logger.log("Unsecure connection test completed!");
 						finish();
 					} else {
 						throw new Error("Can't establish unsecure connection!");
 					}
 				})
 				.on("error", (error) => {
-					console.log(error);
+					logger.log(error);
 					process.exit(1);
 				});
 			require("https")
 				.get("https://localhost/secure", (response) => {
 					if (response.statusCode === 200) {
-						console.log("Secure connection test completed!");
+						logger.log("Secure connection test completed!");
 						finish();
 					} else {
 						throw new Error("Can't establish secure connection!");
 					}
 				})
 				.on("error", (error) => {
-					console.log(error);
+					logger.log(error);
 					process.exit(1);
 				});
 		});

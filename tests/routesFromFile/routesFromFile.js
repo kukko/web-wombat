@@ -1,4 +1,6 @@
-let { WombatServer } = require("../../index.js");
+let { WombatServer } = require("../../index.js"),
+	{ Console } = require('console'),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
 
 WombatServer.withoutDatabase()
 	.setUnsecure()
@@ -14,7 +16,7 @@ WombatServer.withoutDatabase()
 				});
 				response.on("end", () => {
 					if (data === "Foo!") {
-						console.log("Request from file test completed!");
+						logger.log("Request from file test completed!");
 						process.exit();
 					} else {
 						throw new Error("Request returned wrong response.");
@@ -22,7 +24,7 @@ WombatServer.withoutDatabase()
 				});
 			})
 			.on("error", (error) => {
-				console.log(error);
+				logger.log(error);
 				process.exit(1);
 			});
 	});

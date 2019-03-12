@@ -1,4 +1,7 @@
-let { WombatServer, Route } = require("../../index.js");
+let { WombatServer, Route } = require("../../index.js"),
+	{ Console } = require('console'),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
+
 WombatServer.withoutDatabase()
 	.setRoutes([
 		Route.get(
@@ -18,29 +21,29 @@ WombatServer.withoutDatabase()
 		});
 		ws.on("connect", (connection) => {
 			connection.on("error", (error) => {
-				console.log(error);
+				logger.log(error);
 				process.exit(1);
 			});
 			connection.on("message", (message) => {
-				console.log("Server => Client: " + message.utf8Data);
+				logger.log("Server => Client: " + message.utf8Data);
 			});
 			connection.on("close", () => {
-				console.log("Client: connection closed!");
+				logger.log("Client: connection closed!");
 				process.exit();
 			});
-			console.log("Connection connected!");
+			logger.log("Connection connected!");
 			setInterval(() => {
 				if (connection.socket.writable) {
 					connection.send("foo");
 				} else {
-					console.log("AJJJAJJJ!!!");
+					logger.log("AJJJAJJJ!!!");
 				}
 			}, 100);
 			setInterval(() => {
 				if (connection.socket.writable) {
 					connection.ping();
 				} else {
-					console.log("Te ezt már biza nem!");
+					logger.log("Te ezt már biza nem!");
 				}
 			}, 1000);
 			setTimeout(() => {
@@ -57,11 +60,11 @@ WombatServer.withoutDatabase()
 		});
 		ws2.on("connect", (connection) => {
 			connection.on("error", (error) => {
-				console.log(error);
+				logger.log(error);
 				process.exit(1);
 			});
 			connection.on("message", (message) => {
-				console.log("Server => Client 2: " + message.utf8Data);
+				logger.log("Server => Client 2: " + message.utf8Data);
 			});
 			setTimeout(() => {
 				connection.close();

@@ -63,5 +63,5 @@ module.exports = {
 	middlewares: middlewares,
 	BaseCollection: require("./src/BaseCollection.js"),
 	TemplateInterface: require("./src/TemplateConnectors/TemplateInterface.js"),
-	templateConnectors: templateConnectors
+	templateConnectors
 };

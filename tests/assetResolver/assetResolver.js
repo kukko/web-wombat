@@ -1,4 +1,6 @@
-let { WombatServer } = require("../../index.js");
+let { WombatServer } = require("../../index.js"),
+	{ Console } = require('console'),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
 
 WombatServer.withoutDatabase()
 	.setUnsecure()
@@ -23,12 +25,12 @@ WombatServer.withoutDatabase()
 					data += chunk;
 				});
 				response.on("end", () => {
-					console.log("Existing asset request finished!");
+					logger.log("Existing asset request finished!");
 					finishTest();
 				});
 			}
 		).on("error", (error) => {
-			console.log(error);
+			logger.log(error);
 			process.exit(1);
 		});
 		http.get(
@@ -42,12 +44,12 @@ WombatServer.withoutDatabase()
 					data += chunk;
 				});
 				response.on("end", () => {
-					console.log("Missing asset request finished!");
+					logger.log("Missing asset request finished!");
 					finishTest();
 				});
 			}
 		).on("error", (error) => {
-			console.log(error);
+			logger.log(error);
 			process.exit(1);
 		});
 	});

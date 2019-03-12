@@ -3,7 +3,9 @@ let DatabaseHolder = require("./DatabaseHolder.js"),
 	BaseController = require("./BaseController.js"),
 	ViewProvider = require("./ViewProvider.js"),
 	WebMiddlewares = require("./MiddlewareProvider.js").getWebMiddlewares(),
-	TemplateInterface = require("./TemplateConnectors/TemplateInterface.js");
+	TemplateInterface = require("./TemplateConnectors/TemplateInterface.js"),
+	{ Console } = require('console'),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
 
 class WombatServer {
 	static init(callback) {
@@ -29,7 +31,7 @@ class WombatServer {
 					this.listen(callback);
 				})
 				.catch((error) => {
-					console.log(error);
+					logger.log(error);
 				});
 		} else {
 			this.listen(callback);
@@ -103,32 +105,32 @@ class WombatServer {
 					this.serve
 				)
 				.on("listening", () => {
-					console.log("Listening on 443!");
+					logger.log("Listening on 443!");
 					finish();
 				})
 				.on("upgrade", this.serveWebSocket)
 				.on("error", (error) => {
-					console.log(error);
+					logger.log(error);
 					throw error;
 				})
 				.on("clientError", (error) => {
-					console.log(error);
+					logger.log(error);
 				})
 				.listen(443);
 		}
 		let server = require("http").createServer(this.serve);
 		server
 			.on("listening", () => {
-				console.log("Listening on " + this.port + "!");
+				logger.log("Listening on " + this.port + "!");
 				finish();
 			})
 			.on("upgrade", this.serveWebSocket)
 			.on("error", (error) => {
-				console.log(error);
+				logger.log(error);
 				throw error;
 			})
 			.on("clientError", (error) => {
-				console.log(error);
+				logger.log(error);
 			})
 			.listen(this.port);
 	}
