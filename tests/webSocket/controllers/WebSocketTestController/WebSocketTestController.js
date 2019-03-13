@@ -1,6 +1,5 @@
 let { WebSocketController } = require("../../../../index.js"),
-	{ Console } = require("console"),
-	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
+	logger = require('../../../../src/Logger.js');
 
 class WebSocketTestController extends WebSocketController {
 	onMessage(message) {

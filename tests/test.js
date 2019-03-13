@@ -1,8 +1,7 @@
 let { lstatSync, readdirSync } = require("fs"),
 	{ join, dirname, resolve } = require("path"),
 	{ spawnSync } = require("child_process"),
-	{ Console } = require("console"),
-	logger = new Console({ stdout: process.stdout, stderr: process.stderr }),
+	logger = require('../src/Logger.js'),
 	testsFolder = dirname(__filename),
 	ignoredTests =
 		typeof process.env.TRAVIS === "undefined"

@@ -1,7 +1,6 @@
 let { WombatServer, Route, templateConnectors } = require("../../index.js"),
 	HandlebarsController = require("./controllers/HandlebarsController/HandlebarsController.js"),
-	{ Console } = require("console"),
-	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
+	logger = require('../../src/Logger.js');
 
 WombatServer.withoutDatabase()
 	.setRoutes([

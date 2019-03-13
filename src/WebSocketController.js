@@ -1,8 +1,7 @@
 let BaseController = require("./BaseController.js"),
 	DatabaseHolder = require("./DatabaseHolder.js"),
 	WebSocketClientService = require("./WebSocketClientService.js"),
-	{ Console } = require("console"),
-	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
+	logger = require('./Logger.js');
 
 class WebSocketController extends BaseController {
 	constructor(request, socket, head) {
