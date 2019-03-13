@@ -17,7 +17,15 @@ WombatServer.withoutDatabase()
 				if (completedRequests === totalRequests) {
 					process.exit();
 				}
-			};
+			},
+			sentString = "";
+		for (let i = 0; i < 8; i++) {
+			let chars =
+				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+			sentString += chars.charAt(
+				Math.floor(Math.random() * chars.length)
+			);
+		}
 		let request = require("http")
 			.request(
 				{
@@ -47,14 +55,6 @@ WombatServer.withoutDatabase()
 				logger.log(error);
 				process.exit(1);
 			});
-		let sentString = "";
-		for (let i = 0; i < 8; i++) {
-			let chars =
-				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-			sentString += chars.charAt(
-				Math.floor(Math.random() * chars.length)
-			);
-		}
 		request.write("foo=" + sentString);
 		request.end();
 		require("http")

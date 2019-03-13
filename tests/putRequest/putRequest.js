@@ -10,6 +10,14 @@ WombatServer.withoutDatabase()
 		)
 	])
 	.init((port) => {
+		let sentString = "";
+		for (let i = 0; i < 8; i++) {
+			let chars =
+				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+			sentString += chars.charAt(
+				Math.floor(Math.random() * chars.length)
+			);
+		}
 		let request = require("http").request(
 			{
 				host: "localhost",
@@ -37,14 +45,6 @@ WombatServer.withoutDatabase()
 		request.on("error", (error) => {
 			process.exit();
 		});
-		let sentString = "";
-		for (let i = 0; i < 8; i++) {
-			let chars =
-				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-			sentString += chars.charAt(
-				Math.floor(Math.random() * chars.length)
-			);
-		}
 		request.write("foo=" + sentString);
 		request.end();
 	});
