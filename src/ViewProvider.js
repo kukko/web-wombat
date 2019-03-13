@@ -7,7 +7,7 @@ class ViewProvider {
 		if (typeof connector !== "undefined") {
 			this.setConnector(connector);
 		} else {
-			this.connector = new ViewProvider.defaultConnector(
+			this.connector = new ViewProvider.DefaultConnector(
 				request,
 				response
 			);
@@ -40,7 +40,7 @@ class ViewProvider {
 					" is not extending the TemplateInterface class."
 			);
 		}
-		this.defaultConnector = Connector;
+		this.DefaultConnector = Connector;
 		return true;
 	}
 	getView(filePath, options, writeToResponse = true, endResponse = true) {
@@ -70,7 +70,7 @@ class ViewProvider {
 	}
 }
 
-ViewProvider.defaultConnector = require("./TemplateConnectors/BladeConnector/BladeConnector.js");
+ViewProvider.DefaultConnector = require("./TemplateConnectors/BladeConnector/BladeConnector.js");
 
 ViewProvider.setSubfolder(".");
 

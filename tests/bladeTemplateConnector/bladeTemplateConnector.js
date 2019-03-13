@@ -19,13 +19,13 @@ WombatServer.withoutDatabase()
 	])
 	.init((port) => {
 		let totalRequests = 2,
-			completedRequests = 0;
-		completeRequest = () => {
-			completedRequests++;
-			if (completedRequests === totalRequests) {
-				process.exit();
-			}
-		};
+			completedRequests = 0,
+			completeRequest = () => {
+				completedRequests++;
+				if (completedRequests === totalRequests) {
+					process.exit();
+				}
+			};
 		let request = require("http")
 			.request(
 				{

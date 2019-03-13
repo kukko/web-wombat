@@ -181,8 +181,8 @@ class WombatServer {
 			route.serveWebSocket(request, socket, head);
 		}
 	}
-	static setTemplateConnector(connector) {
-		if (!(new connector() instanceof TemplateInterface)) {
+	static setTemplateConnector(Connector) {
+		if (!(new Connector() instanceof TemplateInterface)) {
 			throw new Error(
 				"The " +
 					connector.constructor.name +
