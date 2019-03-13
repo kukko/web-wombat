@@ -1,5 +1,5 @@
 let { WombatServer, Route, templateConnectors } = require("../../index.js"),
-	logger = require('../../src/Logger.js');
+	logger = require("../../src/Logger.js");
 
 WombatServer.withoutDatabase()
 	.setRoutes([

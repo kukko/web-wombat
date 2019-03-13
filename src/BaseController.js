@@ -1,5 +1,5 @@
 let DatabaseHolder = require("./DatabaseHolder.js"),
-	logger = require('./Logger.js');
+	logger = require("./Logger.js");
 
 class BaseController {
 	constructor(request, response) {

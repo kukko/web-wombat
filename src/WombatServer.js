@@ -4,7 +4,7 @@ let DatabaseHolder = require("./DatabaseHolder.js"),
 	ViewProvider = require("./ViewProvider.js"),
 	WebMiddlewares = require("./MiddlewareProvider.js").getWebMiddlewares(),
 	TemplateInterface = require("./TemplateConnectors/TemplateInterface.js"),
-	logger = require('./Logger.js');
+	logger = require("./Logger.js");
 
 class WombatServer {
 	static init(callback) {

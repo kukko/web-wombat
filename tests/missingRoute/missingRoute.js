@@ -1,5 +1,5 @@
 let { WombatServer } = require("../../index.js"),
-	logger = require('../../src/Logger.js');
+	logger = require("../../src/Logger.js");
 
 WombatServer.withoutDatabase()
 	.setUnsecure()
