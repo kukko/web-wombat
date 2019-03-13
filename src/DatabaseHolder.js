@@ -46,19 +46,19 @@ class DatabaseHolder {
 								? database
 								: dbConfig.database
 						);
+						let collectionCreated = (collection) => {
+							createdCollections++;
+							if (
+								createdCollections + failedCollectionCreation >=
+								this.collectionCNT
+							) {
+								resolve(true);
+							}
+						};
 						for (let collectionName in this.collections) {
 							this.collections[collectionName]
 								.create(this.db)
-								.then((collection) => {
-									createdCollections++;
-									if (
-										createdCollections +
-											failedCollectionCreation >=
-										this.collectionCNT
-									) {
-										resolve(true);
-									}
-								});
+								.then(collectionCreated);
 						}
 					} else {
 						reject(error);
