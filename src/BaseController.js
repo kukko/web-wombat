@@ -66,7 +66,7 @@ class BaseController {
 		return [];
 	}
 
-	redirect(url){
+	redirect(url) {
 		this.response.statusCode = 302;
 		this.response.setHeader('Location', url);
 		this.response.end();

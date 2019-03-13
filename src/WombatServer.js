@@ -47,6 +47,9 @@ class WombatServer {
 		this.port = port;
 		return this;
 	}
+	static getPort() {
+		return this.port;
+	}
 	static setRoutes(routes) {
 		RouteService.setRoutes(routes);
 		return this;
@@ -132,8 +135,13 @@ class WombatServer {
 			})
 			.listen(this.port);
 	}
-	static serveWithMiddlewares(request, response){
-		MiddlewareProvider.runMiddlewares(request, response, this.serve, MiddlewareProvider.getWebMiddlewares);
+	static serveWithMiddlewares(request, response) {
+		MiddlewareProvider.runMiddlewares(
+			request,
+			response,
+			this.serve,
+			MiddlewareProvider.getWebMiddlewares
+		);
 	}
 	static serve(request, response) {
 		let serveRequest = (request, response) => {
@@ -154,7 +162,10 @@ class WombatServer {
 						filePath =
 							request.url.indexOf('?') === -1
 								? request.url
-								: request.url.substr(0, request.url.indexOf('?')),
+								: request.url.substr(
+										0,
+										request.url.indexOf('?')
+								  ),
 						resourcePath = path.join(
 							path.dirname(require.main.filename),
 							filePath
@@ -168,7 +179,9 @@ class WombatServer {
 							resourcePath
 						);
 						response.writeHead(200, responseHeaders);
-						fileSystem.createReadStream(resourcePath).pipe(response);
+						fileSystem
+							.createReadStream(resourcePath)
+							.pipe(response);
 					} else {
 						response.writeHead(404);
 						response.end('404');
@@ -176,13 +189,18 @@ class WombatServer {
 				}
 			}
 		};
-		let requestBody = "";
-		request.on("data", chunk => {
+		let requestBody = '';
+		request.on('data', (chunk) => {
 			requestBody += chunk.toString();
 		});
-		request.on("end", () => {
+		request.on('end', () => {
 			request.rawBody = requestBody;
-			MiddlewareProvider.runMiddlewares(request, response, serveRequest, MiddlewareProvider.getWebMiddlewares());
+			MiddlewareProvider.runMiddlewares(
+				request,
+				response,
+				serveRequest,
+				MiddlewareProvider.getWebMiddlewares()
+			);
 		});
 	}
 	static serveWebSocket(request, socket, head) {

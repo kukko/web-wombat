@@ -1,5 +1,5 @@
-let BaseController = require("./BaseController.js"),
-	{ ObjectId } = require("mongodb"),
+let BaseController = require('./BaseController.js'),
+	{ ObjectId } = require('mongodb'),
 	RouteService = require('./services/RouteService.js');
 
 class ResourceController extends BaseController {
@@ -13,26 +13,36 @@ class ResourceController extends BaseController {
 				if (error) {
 					console.log(error);
 					this.response.statusCode = 500;
-					this.response.end("500");
+					this.response.end('500');
 				}
 				let data = {
 					elements: result
 				};
-				this.resourceView("index", data);
+				this.resourceView('index', data);
 			});
 	}
 	create() {
-		this.resourceView("create");
+		this.resourceView('create');
 	}
 	store() {
-		if (this.getCollection().getDocument().validateDocument(this.request.body)){
-			this.getCollection().createDocument(this.request.body).then((id) => {
-				this.redirect(RouteService.getRouteByAlias(this.routeAliasBase + '.show', {
-					id: id
-				}));
-			});
-		}
-		else{
+		if (
+			this.getCollection()
+				.getDocument()
+				.validateDocument(this.request.body)
+		) {
+			this.getCollection()
+				.createDocument(this.request.body)
+				.then((id) => {
+					this.redirect(
+						RouteService.getRouteByAlias(
+							this.routeAliasBase + '.show',
+							{
+								id: id
+							}
+						)
+					);
+				});
+		} else {
 			this.response.end('NOT VALID DOCUMENT!');
 		}
 	}
@@ -45,16 +55,17 @@ class ResourceController extends BaseController {
 				if (error) {
 					console.log(error);
 					this.response.statusCode = 500;
-					this.response.end("500");
+					this.response.end('500');
 				}
-				if (result !== null){
+				if (result !== null) {
 					let data = {
 						element: result,
-						documentStructure: this.getCollection().getDocument().getStructure(result)
+						documentStructure: this.getCollection()
+							.getDocument()
+							.getStructure(result)
 					};
-					this.resourceView("show", data);
-				}
-				else{
+					this.resourceView('show', data);
+				} else {
 					this.response.end('NOT EXISTING DOCUMENT!');
 				}
 			}
@@ -69,16 +80,17 @@ class ResourceController extends BaseController {
 				if (error) {
 					console.log(error);
 					this.response.statusCode = 500;
-					this.response.end("500");
+					this.response.end('500');
 				}
-				if (result !== null){
+				if (result !== null) {
 					let data = {
 						element: result,
-						documentStructure: this.getCollection().getDocument().getStructure(result)
+						documentStructure: this.getCollection()
+							.getDocument()
+							.getStructure(result)
 					};
-					this.resourceView("edit", data);
-				}
-				else{
+					this.resourceView('edit', data);
+				} else {
 					this.response.end('NOT EXISTING DOCUMENT!');
 				}
 			}
@@ -93,13 +105,19 @@ class ResourceController extends BaseController {
 				if (error) {
 					console.log(error);
 					this.response.statusCode = 500;
-					this.response.end("500");
+					this.response.end('500');
 				}
-				if (result !== null){
-					result = this.getCollection().updateDocument(this.request.routeVariables.id, this.request.body);
-					this.redirect(RouteService.getRouteByAlias(this.routeAliasBase + '.index'));
-				}
-				else{
+				if (result !== null) {
+					result = this.getCollection().updateDocument(
+						this.request.routeVariables.id,
+						this.request.body
+					);
+					this.redirect(
+						RouteService.getRouteByAlias(
+							this.routeAliasBase + '.index'
+						)
+					);
+				} else {
 					this.response.end('NOT EXISTING DOCUMENT!');
 				}
 			}
@@ -114,42 +132,48 @@ class ResourceController extends BaseController {
 				if (error) {
 					console.log(error);
 					this.response.statusCode = 500;
-					this.response.end("500");
+					this.response.end('500');
 				}
-				if (result !== null){
-					let deleteResult = this.getCollection().deleteDocument(this.request.routeVariables.id).then((rowDeleted) => {
-						if (rowDeleted){
-							this.redirect(RouteService.getRouteByAlias(this.routeAliasBase + '.index'));
-						}
-						else{
-							this.response.end('CAN\'T DELETE!');
-						}
-					});
-				}
-				else{
+				if (result !== null) {
+					let deleteResult = this.getCollection()
+						.deleteDocument(this.request.routeVariables.id)
+						.then((rowDeleted) => {
+							if (rowDeleted) {
+								this.redirect(
+									RouteService.getRouteByAlias(
+										this.routeAliasBase + '.index'
+									)
+								);
+							} else {
+								this.response.end("CAN'T DELETE!");
+							}
+						});
+				} else {
 					this.response.end('NOT EXISTING DOCUMENT!');
 				}
 			}
 		);
 	}
 	resourceView(viewName, data = {}) {
-		if (typeof data.documentStructure === 'undefined'){
-			data.documentStructure = this.getCollection().getDocument().getStructure();
+		if (typeof data.documentStructure === 'undefined') {
+			data.documentStructure = this.getCollection()
+				.getDocument()
+				.getStructure();
 		}
 		this.view(
-			"resource/" + this.constructor.name + "/" + viewName,
+			'resource/' + this.constructor.name + '/' + viewName,
 			data
-		).catch(error => {
-			let { resolve, join } = require("path");
+		).catch((error) => {
+			let { resolve, join } = require('path');
 			this.view(
 				resolve(
 					__dirname,
-					join("resources", "views", "resource", viewName)
+					join('resources', 'views', 'resource', viewName)
 				),
 				data
-			).catch(error => {
+			).catch((error) => {
 				console.log(error);
-				this.response.end("MISSING RESOURCE VIEW!");
+				this.response.end('MISSING RESOURCE VIEW!');
 			});
 		});
 	}
@@ -161,7 +185,7 @@ class ResourceController extends BaseController {
 		throw new Error(
 			"Not implemented 'getCollection' attribute getter method in class: " +
 				this.constructor.name +
-				"!"
+				'!'
 		);
 	}
 }

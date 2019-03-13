@@ -27,7 +27,9 @@
     "pug": "^2.0.3"
   },
   "devDependencies": {
+    "cheerio": "^1.0.0-rc.2",
     "prettier": "^1.16.4",
+    "request": "^2.88.0",
     "websocket": "^1.0.28"
   }
 }

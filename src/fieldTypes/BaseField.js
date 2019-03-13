@@ -17,52 +17,60 @@ class BaseField {
 		this._type = type;
 		return this;
 	}
-	get type(){
+	get type() {
 		return this._type;
 	}
 	setShowable(showable = false) {
 		this._showable = showable;
 		return this;
 	}
-	get showable(){
+	get showable() {
 		return this._showable;
 	}
-	setEditable(editable = false){
+	setEditable(editable = false) {
 		this._editable = editable;
 		return this;
 	}
-	get editable(){
+	get editable() {
 		return this._editable;
 	}
 	setRequired(required = true) {
 		this._required = required;
 		return this;
 	}
-	get required(){
+	get required() {
 		return this._required;
 	}
 	setValue(value) {
 		this._value = value;
 		return this;
 	}
-	get value(){
-		if (this.showable){
+	get value() {
+		if (this.showable) {
 			return typeof this._value !== 'undefined' ? this._value : '';
 		}
 	}
-	setLabel(label){
+	setLabel(label) {
 		this._label = label;
 	}
-	getLabel(){
+	getLabel() {
 		return this._label;
 	}
-	get label(){
-		return typeof this.getLabel() !== 'undefined' ? this.getLabel() : this.name;
+	get label() {
+		return typeof this.getLabel() !== 'undefined'
+			? this.getLabel()
+			: this.name;
 	}
-	validate(){
-		return typeof this.value === this.type && (!this.required || (this.required && typeof this.value !== 'undefined' && this.value !== ''));
+	validate() {
+		return (
+			typeof this.value === this.type &&
+			(!this.required ||
+				(this.required &&
+					typeof this.value !== 'undefined' &&
+					this.value !== ''))
+		);
 	}
-	toString(){
+	toString() {
 		return this.label + ': ' + this.value;
 	}
 }

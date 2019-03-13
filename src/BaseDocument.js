@@ -1,9 +1,9 @@
 class BaseDocument {
 	static getStructure(values) {
-		if (typeof this.structure === "undefined") {
+		if (typeof this.structure === 'undefined') {
 			this.createStructure();
 		}
-		if (typeof values !== "undefined") {
+		if (typeof values !== 'undefined') {
 			let output = [];
 			for (let i in this.structure) {
 				output.push(
@@ -16,8 +16,8 @@ class BaseDocument {
 			for (let fieldName in values) {
 				let field = this.getFieldByName(fieldName, output);
 				if (
-					typeof field !== "undefined" &&
-					typeof values[fieldName] !== "undefined"
+					typeof field !== 'undefined' &&
+					typeof values[fieldName] !== 'undefined'
 				) {
 					field.setValue(values[fieldName]);
 				}
@@ -36,7 +36,7 @@ class BaseDocument {
 		return this;
 	}
 	static getFieldByName(name, fields) {
-		if (typeof fields === 'undefined'){
+		if (typeof fields === 'undefined') {
 			fields = this.structure;
 		}
 		for (let i in fields) {

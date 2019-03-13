@@ -21,12 +21,11 @@ WombatServer.withoutDatabase()
 					data += chunk;
 				});
 				response.on('end', () => {
-					if (data === "<h1>" + sentString + "</h1>") {
+					if (data === '<h1>' + sentString + '</h1>') {
 						console.log('Put request test completed!');
-					}
-					else{
+					} else {
 						throw new Error(
-							"Received response is not containing the sent string!"
+							'Received response is not containing the sent string!'
 						);
 					}
 					process.exit();
@@ -36,14 +35,14 @@ WombatServer.withoutDatabase()
 		request.on('error', (error) => {
 			process.exit();
 		});
-		let sentString = "";
+		let sentString = '';
 		for (let i = 0; i < 8; i++) {
 			let chars =
-				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 			sentString += chars.charAt(
 				Math.floor(Math.random() * chars.length)
 			);
 		}
-		request.write("foo=" + sentString);
+		request.write('foo=' + sentString);
 		request.end();
 	});

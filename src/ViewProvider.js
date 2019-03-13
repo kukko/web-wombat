@@ -47,15 +47,19 @@ class ViewProvider {
 	getView(filePath, options, writeToResponse = true, endResponse = true) {
 		let { isAbsolute, resolve, join } = require('path'),
 			isAbsolutePath = isAbsolute(filePath),
-			viewFolder = isAbsolutePath ? resolve(__dirname, join('resources', 'views')) : ViewProvider.path.join(
-				ViewProvider.path.resolve(
-					ViewProvider.path.dirname(require.main.filename),
-					ViewProvider.subfolder
-				),
-				'resources',
-				'views'
-			),
-			viewPath = isAbsolutePath ? filePath : ViewProvider.path.join(viewFolder, filePath),
+			viewFolder = isAbsolutePath
+				? resolve(__dirname, join('resources', 'views'))
+				: ViewProvider.path.join(
+						ViewProvider.path.resolve(
+							ViewProvider.path.dirname(require.main.filename),
+							ViewProvider.subfolder
+						),
+						'resources',
+						'views'
+				  ),
+			viewPath = isAbsolutePath
+				? filePath
+				: ViewProvider.path.join(viewFolder, filePath),
 			viewExtension = ViewProvider.path.extname(viewPath);
 		this.connector.viewFolder = viewFolder;
 		if (viewExtension.length === 0) {

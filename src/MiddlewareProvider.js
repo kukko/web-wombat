@@ -1,5 +1,5 @@
 class MiddlewareProvider {
-	static runMiddlewares(request, response, callback, middlewares, i = 0){
+	static runMiddlewares(request, response, callback, middlewares, i = 0) {
 		if (i < middlewares.length) {
 			return middlewares[i].run(request, response, () => {
 				return this.runMiddlewares(

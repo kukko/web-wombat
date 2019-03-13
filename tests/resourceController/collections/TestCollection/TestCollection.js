@@ -1,11 +1,11 @@
-let { BaseCollection } = require("../../../../index.js"),
+let { BaseCollection } = require('../../../../index.js'),
 	TestDocument = require('./TestDocument.js');
 
 class TestCollection extends BaseCollection {
 	static get collectionName() {
-		return "test";
+		return 'test';
 	}
-	static getDocument(){
+	static getDocument() {
 		return TestDocument;
 	}
 }

@@ -30,18 +30,16 @@ WombatServer.withoutDatabase()
 			});
 			console.log('Connection connected!');
 			setInterval(() => {
-				if (connection.socket.writable){
+				if (connection.socket.writable) {
 					connection.send('foo');
-				}
-				else{
+				} else {
 					console.log('AJJJAJJJ!!!');
 				}
 			}, 100);
 			setInterval(() => {
-				if (connection.socket.writable){
+				if (connection.socket.writable) {
 					connection.ping();
-				}
-				else{
+				} else {
 					console.log('Te ezt már biza nem!');
 				}
 			}, 1000);
