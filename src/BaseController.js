@@ -1,4 +1,6 @@
-let DatabaseHolder = require("./DatabaseHolder.js");
+let DatabaseHolder = require("./DatabaseHolder.js"),
+	{ Console } = require("console"),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
 
 class BaseController {
 	constructor(request, response) {
@@ -28,7 +30,7 @@ class BaseController {
 		});
 	}
 	serve() {
-		console.warn(
+		logger.warn(
 			"Not implemented 'serve' method in class: " + this.name + "!"
 		);
 	}

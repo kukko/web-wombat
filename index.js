@@ -60,7 +60,7 @@ module.exports = {
 	WebSocketController: require("./src/WebSocketController.js"),
 	Route: require("./src/Route.js"),
 	BaseMiddleware: require("./src/middlewares/BaseMiddleware.js"),
-	middlewares: middlewares,
+	middlewares,
 	BaseCollection: require("./src/BaseCollection.js"),
 	TemplateInterface: require("./src/TemplateConnectors/TemplateInterface.js"),
 	templateConnectors

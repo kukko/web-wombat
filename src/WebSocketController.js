@@ -1,6 +1,8 @@
 let BaseController = require("./BaseController.js"),
 	DatabaseHolder = require("./DatabaseHolder.js"),
-	WebSocketClientService = require("./WebSocketClientService.js");
+	WebSocketClientService = require("./WebSocketClientService.js"),
+	{ Console } = require("console"),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
 
 class WebSocketController extends BaseController {
 	constructor(request, socket, head) {
@@ -24,11 +26,12 @@ class WebSocketController extends BaseController {
 					)
 			],
 			protocolsHeader = this.request.headers["sec-websocket-protocol"],
-			protocols = protocolsHeader
-				? protocolsHeader.split(",").map((protocol) => {
-						return protocol.trim();
-				  })
-				: [];
+			protocols = [];
+		if (protocolsHeader) {
+			protocols = protocolsHeader.split(",").map((protocol) => {
+				return protocol.trim();
+			});
+		}
 		if (protocols.length > 0) {
 			responseHeaders.push(
 				"Sec-WebSocket-Protocol: " + protocols.join(",")
@@ -113,7 +116,7 @@ class WebSocketController extends BaseController {
 	onMessage(message) {}
 	onClose() {}
 	onError(error) {
-		console.log(error);
+		logger.log(error);
 	}
 	send(message) {
 		this.sendMessage(this.socket, message);

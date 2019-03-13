@@ -1,4 +1,6 @@
-let { WombatServer, Route, templateConnectors } = require("../../index.js");
+let { WombatServer, Route, templateConnectors } = require("../../index.js"),
+	{ Console } = require("console"),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
 
 WombatServer.withoutDatabase()
 	.setRoutes([
@@ -28,7 +30,7 @@ WombatServer.withoutDatabase()
 			.request(
 				{
 					host: "localhost",
-					port: port,
+					port,
 					path: "/existingView",
 					method: "POST"
 				},
@@ -39,7 +41,7 @@ WombatServer.withoutDatabase()
 					});
 					response.on("end", () => {
 						if (data === "<h1>" + sentString + "</h1>") {
-							console.log("Existing view test completed!");
+							logger.log("Existing view test completed!");
 						} else {
 							throw new Error(
 								"Received response is not containing the sent string!"
@@ -50,7 +52,7 @@ WombatServer.withoutDatabase()
 				}
 			)
 			.on("error", (error) => {
-				console.log(error);
+				logger.log(error);
 				process.exit(1);
 			});
 		let sentString = "";
@@ -76,7 +78,7 @@ WombatServer.withoutDatabase()
 					});
 					response.on("end", () => {
 						if (data === "VIEW ERROR!") {
-							console.log("Not existing view test completed!");
+							logger.log("Not existing view test completed!");
 						} else {
 							throw new Error(
 								"Not existing view request returned with wrong response!"
@@ -87,7 +89,7 @@ WombatServer.withoutDatabase()
 				}
 			)
 			.on("error", (error) => {
-				console.log(error);
+				logger.log(error);
 				process.exit(1);
 			});
 	});

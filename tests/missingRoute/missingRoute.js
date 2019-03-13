@@ -1,4 +1,7 @@
-let { WombatServer } = require("../../index.js");
+let { WombatServer } = require("../../index.js"),
+	{ Console } = require("console"),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
+
 WombatServer.withoutDatabase()
 	.setUnsecure()
 	.setRoutes([])
@@ -13,12 +16,12 @@ WombatServer.withoutDatabase()
 					data += chunk;
 				});
 				response.on("end", () => {
-					console.log("Response: " + data);
+					logger.log("Response: " + data);
 					process.exit();
 				});
 			})
 			.on("error", (error) => {
-				console.log(error);
+				logger.log(error);
 				process.exit(1);
 			});
 	});

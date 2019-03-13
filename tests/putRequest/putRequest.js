@@ -1,4 +1,7 @@
-let { WombatServer, Route } = require("../../index.js");
+let { WombatServer, Route } = require("../../index.js"),
+	{ Console } = require("console"),
+	logger = new Console({ stdout: process.stdout, stderr: process.stderr });
+
 WombatServer.withoutDatabase()
 	.setUnsecure()
 	.setRoutes([
@@ -11,7 +14,7 @@ WombatServer.withoutDatabase()
 		let request = require("http").request(
 			{
 				host: "localhost",
-				port: port,
+				port,
 				path: "/",
 				method: "PUT"
 			},
@@ -22,7 +25,7 @@ WombatServer.withoutDatabase()
 				});
 				response.on("end", () => {
 					if (data === "<h1>" + sentString + "</h1>") {
-						console.log("Put request test completed!");
+						logger.log("Put request test completed!");
 					} else {
 						throw new Error(
 							"Received response is not containing the sent string!"
