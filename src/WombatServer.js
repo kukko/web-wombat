@@ -182,14 +182,15 @@ class WombatServer {
 		}
 	}
 	static setTemplateConnector(Connector) {
-		if (!(new Connector() instanceof TemplateInterface)) {
+		let connectorObj = new Connector();
+		if (!(connectorObj instanceof TemplateInterface)) {
 			throw new Error(
 				"The " +
-					connector.constructor.name +
+					connectorObj.constructor.name +
 					" is not extending the TemplateInterface class."
 			);
 		}
-		ViewProvider.setDefaultConnector(connector);
+		ViewProvider.setDefaultConnector(Connector);
 		return this;
 	}
 }
