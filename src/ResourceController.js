@@ -1,7 +1,7 @@
 let BaseController = require("./BaseController.js"),
 	{ ObjectId } = require("mongodb"),
 	RouteService = require("./services/RouteService.js"),
-	logger = require('./Logger.js');
+	logger = require("./Logger.js");
 
 class ResourceController extends BaseController {
 	setRouteAliasBase(routeAliasBase) {
