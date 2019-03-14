@@ -50,7 +50,7 @@ class ResourceController extends BaseController {
 	show() {
 		this.getCollection().collection.findOne(
 			{
-				_id: ObjectId(this.request.routeVariables.id)
+				_id: new ObjectId(this.request.routeVariables.id)
 			},
 			(error, result) => {
 				if (error) {
@@ -75,7 +75,7 @@ class ResourceController extends BaseController {
 	edit() {
 		this.getCollection().collection.findOne(
 			{
-				_id: ObjectId(this.request.routeVariables.id)
+				_id: new ObjectId(this.request.routeVariables.id)
 			},
 			(error, result) => {
 				if (error) {
