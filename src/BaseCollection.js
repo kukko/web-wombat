@@ -57,7 +57,7 @@ class BaseCollection {
 		}
 		this.collection.updateOne(
 			{
-				_id: ObjectId(id)
+				_id: new ObjectId(id)
 			},
 			{
 				$set: newValues
