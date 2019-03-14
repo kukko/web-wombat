@@ -59,12 +59,17 @@ class BaseController {
 	static get baseMiddlewares() {
 		return [
 			this.getMiddleware("CookieParserMiddleware"),
-			this.getMiddleware("BodyParserMiddleware"),
 			this.getMiddleware("RouteVariableParserMiddleware")
 		];
 	}
 	static get middlewares() {
 		return [];
+	}
+
+	redirect(url) {
+		this.response.statusCode = 302;
+		this.response.setHeader("Location", url);
+		this.response.end();
 	}
 }
 

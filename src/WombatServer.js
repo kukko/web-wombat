@@ -2,7 +2,7 @@ let DatabaseHolder = require("./DatabaseHolder.js"),
 	RouteService = require("./services/RouteService.js"),
 	BaseController = require("./BaseController.js"),
 	ViewProvider = require("./ViewProvider.js"),
-	WebMiddlewares = require("./MiddlewareProvider.js").getWebMiddlewares(),
+	MiddlewareProvider = require("./MiddlewareProvider.js"),
 	TemplateInterface = require("./TemplateConnectors/TemplateInterface.js"),
 	logger = require("./Logger.js");
 
@@ -47,6 +47,9 @@ class WombatServer {
 	static setPort(port) {
 		this.port = port;
 		return this;
+	}
+	static getPort() {
+		return this.port;
 	}
 	static setRoutes(routes) {
 		RouteService.setRoutes(routes);
@@ -133,45 +136,73 @@ class WombatServer {
 			})
 			.listen(this.port);
 	}
+	static serveWithMiddlewares(request, response) {
+		MiddlewareProvider.runMiddlewares(
+			request,
+			response,
+			this.serve,
+			MiddlewareProvider.getWebMiddlewares
+		);
+	}
 	static serve(request, response) {
-		let route = RouteService.getRoute(request);
-		if (typeof route !== "undefined") {
-			request.route = route;
-			route.serve(request, response);
-		} else {
-			let path = require("path");
-			if (path.extname(request.url).length === 0) {
-				response.statusCode = 404;
-				let controller = new BaseController(request, response);
-				controller.view("404", {}).catch((error) => {
-					response.end("404");
-				});
+		let serveRequest = (request, response) => {
+			let route = RouteService.getRoute(request);
+			if (typeof route !== "undefined") {
+				request.route = route;
+				route.serve(request, response);
 			} else {
-				let fileSystem = require("fs"),
-					filePath =
-						request.url.indexOf("?") === -1
-							? request.url
-							: request.url.substr(0, request.url.indexOf("?")),
-					resourcePath = path.join(
-						path.dirname(require.main.filename),
-						filePath
-					);
-				if (fileSystem.existsSync(resourcePath)) {
-					let responseHeaders = {};
-					if (typeof this.mime === "undefined") {
-						this.mime = require("mime");
-					}
-					responseHeaders["Content-type"] = this.mime.getType(
-						resourcePath
-					);
-					response.writeHead(200, responseHeaders);
-					fileSystem.createReadStream(resourcePath).pipe(response);
+				let path = require("path");
+				if (path.extname(request.url).length === 0) {
+					response.statusCode = 404;
+					let controller = new BaseController(request, response);
+					controller.view("404", {}).catch((error) => {
+						response.end("404");
+					});
 				} else {
-					response.writeHead(404);
-					response.end("404");
+					let fileSystem = require("fs"),
+						filePath =
+							request.url.indexOf("?") === -1
+								? request.url
+								: request.url.substr(
+										0,
+										request.url.indexOf("?")
+								  ),
+						resourcePath = path.join(
+							path.dirname(require.main.filename),
+							filePath
+						);
+					if (fileSystem.existsSync(resourcePath)) {
+						let responseHeaders = {};
+						if (typeof this.mime === "undefined") {
+							this.mime = require("mime");
+						}
+						responseHeaders["Content-type"] = this.mime.getType(
+							resourcePath
+						);
+						response.writeHead(200, responseHeaders);
+						fileSystem
+							.createReadStream(resourcePath)
+							.pipe(response);
+					} else {
+						response.writeHead(404);
+						response.end("404");
+					}
 				}
 			}
-		}
+		};
+		let requestBody = "";
+		request.on("data", (chunk) => {
+			requestBody += chunk.toString();
+		});
+		request.on("end", () => {
+			request.rawBody = requestBody;
+			MiddlewareProvider.runMiddlewares(
+				request,
+				response,
+				serveRequest,
+				MiddlewareProvider.getWebMiddlewares()
+			);
+		});
 	}
 	static serveWebSocket(request, socket, head) {
 		let route = RouteService.getRoute(request);

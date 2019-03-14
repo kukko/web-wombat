@@ -1,3 +1,5 @@
+let ResourceController = require("./ResourceController.js");
+
 class Route {
 	constructor(
 		route,
@@ -5,7 +7,8 @@ class Route {
 		controller,
 		controllerFunction = "serve",
 		middlewares = [],
-		websocket = false
+		websocket = false,
+		routeAliasBase = ""
 	) {
 		this.route = route;
 		this.method = method;
@@ -13,20 +16,10 @@ class Route {
 		this.controllerFunction = controllerFunction;
 		this.middlewares = middlewares;
 		this.websocket = websocket;
+		this.routeAliasBase = routeAliasBase;
 	}
 	serve(request, response) {
-		let requestBody = "";
-		if (["POST", "PUT", "UPDATE"].indexOf(request.method) === -1) {
-			return this.runController(request, response);
-		} else {
-			request.on("data", (chunk) => {
-				requestBody += chunk.toString();
-			});
-			request.on("end", () => {
-				request.rawBody = requestBody;
-				return this.runController(request, response);
-			});
-		}
+		return this.runController(request, response);
 	}
 	serveWebSocket(request, socket, head) {
 		new this.Controller(request, socket, head);
@@ -38,7 +31,7 @@ class Route {
 		]);
 	}
 	runMiddlewares(request, response, middlewares, i = 0) {
-		if (i < middlewares.length - 1) {
+		if (i < middlewares.length) {
 			return middlewares[i].run(request, response, () => {
 				return this.runMiddlewares(
 					request,
@@ -49,6 +42,9 @@ class Route {
 			});
 		} else {
 			let controller = new this.Controller(request, response);
+			if (controller instanceof ResourceController) {
+				controller.setRouteAliasBase(this.routeAliasBase);
+			}
 			return controller[this.controllerFunction](request, response);
 		}
 	}
@@ -114,6 +110,45 @@ class Route {
 			? require("./services/RouteService.js").trimURL(this.route)
 			: this.route;
 	}
+	as(alias) {
+		this.alias = alias;
+		return this;
+	}
+	toString(parameters) {
+		let output = this.route,
+			routeParameters = output.match(
+				new RegExp(
+					Route.routeVariableSeparators.start +
+						"[^" +
+						Route.routeVariableSeparators.start +
+						Route.routeVariableSeparators.end +
+						"]+" +
+						Route.routeVariableSeparators.end,
+					"g"
+				)
+			);
+		if (routeParameters !== null) {
+			for (let i in routeParameters) {
+				let variableName = routeParameters[i]
+					.replace(Route.routeVariableSeparators.start, "")
+					.replace(Route.routeVariableSeparators.end, "");
+				if (typeof parameters[variableName] === "undefined") {
+					throw new Error(
+						"Required parameter '" +
+							variableName +
+							"' for route '" +
+							this.alias +
+							"' is not present!"
+					);
+				}
+				output = output.replace(
+					new RegExp(routeParameters[i], "g"),
+					parameters[variableName]
+				);
+			}
+		}
+		return output;
+	}
 	static get(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
@@ -168,6 +203,74 @@ class Route {
 			middlewares,
 			true
 		);
+	}
+	static resources(route, controller, middlewares) {
+		let baseAlias = route.replace(/^\/+|\/+$/g, "").replace(/\//g, ".");
+		return [
+			new Route(
+				route,
+				"GET",
+				controller,
+				"index",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".index"),
+			new Route(
+				route + "/create",
+				"GET",
+				controller,
+				"create",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".create"),
+			new Route(
+				route,
+				"POST",
+				controller,
+				"store",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".store"),
+			new Route(
+				route + "/{id}",
+				"GET",
+				controller,
+				"show",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".show"),
+			new Route(
+				route + "/{id}/edit",
+				"GET",
+				controller,
+				"edit",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".edit"),
+			new Route(
+				route + "/{id}",
+				"PUT",
+				controller,
+				"update",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".update"),
+			new Route(
+				route + "/{id}",
+				"DELETE",
+				controller,
+				"destroy",
+				middlewares,
+				false,
+				baseAlias
+			).as(baseAlias + ".destroy")
+		];
 	}
 }
 

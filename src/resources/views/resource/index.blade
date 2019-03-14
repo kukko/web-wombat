@@ -1,0 +1,37 @@
+table
+	thead
+		tr
+			th
+				|
+					ID
+			foreach documentStructure as field
+				th #{field.label}
+			th
+				|
+					Methods
+	tbody
+		foreach elements as element
+			tr
+				td #{element._id}
+				foreach documentStructure as field
+					td #{element[field.name]}
+				td
+					- let showRoute = RouteService.getRouteByAlias(routeAliasBase + '.show', {id:element._id})
+					a(href=showRoute)
+						|
+							Show
+					- let editRoute = RouteService.getRouteByAlias(routeAliasBase + '.edit', {id:element._id})
+					a(href=editRoute)
+						|
+							Edit
+					- let deleteRoute = RouteService.getRouteByAlias(routeAliasBase + '.destroy', {id:element._id})
+					form(action=deleteRoute, method="POST")
+						!!{FormBuilder.formMethodInput('DELETE')}
+						button(type="submit")
+							|
+								Delete
+	tfoot
+		tr
+			td
+				- let createRoute = RouteService.getRouteByAlias(routeAliasBase + '.create')
+				a(href=createRoute) Create new
