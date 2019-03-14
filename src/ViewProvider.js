@@ -48,17 +48,20 @@ class ViewProvider {
 	getView(filePath, options, writeToResponse = true, endResponse = true) {
 		let { isAbsolute, resolve, join } = require("path"),
 			isAbsolutePath = isAbsolute(filePath),
-			viewFolder = isAbsolutePath
-				? resolve(__dirname, join("resources", "views"))
-				: ViewProvider.path.join(
-						ViewProvider.path.resolve(
-							ViewProvider.path.dirname(require.main.filename),
-							ViewProvider.subfolder
-						),
-						"resources",
-						"views"
-				  ),
-			viewPath = isAbsolutePath
+			viewFolder;
+		if (isAbsolutePath) {
+			viewFolder = resolve(__dirname, join("resources", "views"));
+		} else {
+			viewFolder = ViewProvider.path.join(
+				ViewProvider.path.resolve(
+					ViewProvider.path.dirname(require.main.filename),
+					ViewProvider.subfolder
+				),
+				"resources",
+				"views"
+			);
+		}
+		let viewPath = isAbsolutePath
 				? filePath
 				: ViewProvider.path.join(viewFolder, filePath),
 			viewExtension = ViewProvider.path.extname(viewPath);

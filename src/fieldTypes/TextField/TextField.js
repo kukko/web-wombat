@@ -16,13 +16,13 @@ class TextField extends BaseField {
 	toString(editable) {
 		if (editable) {
 			return (
-				'<input type="text" name="' +
+				"<input type='text' name='" +
 				this.name +
-				'" placeholder="' +
+				"' placeholder='" +
 				this.placeholder +
-				'" value="' +
+				"' value='" +
 				this.value +
-				'">'
+				"'>"
 			);
 		}
 		return super.toString();

@@ -26,10 +26,10 @@ class WombatServer {
 		}
 		if (this.connectToDatabase) {
 			DatabaseHolder.connect()
-				.then((databaseResult) => {
+				.then(databaseResult => {
 					this.listen(callback);
 				})
-				.catch((error) => {
+				.catch(error => {
 					logger.log(error);
 				});
 		} else {
@@ -111,11 +111,11 @@ class WombatServer {
 					finish();
 				})
 				.on("upgrade", this.serveWebSocket)
-				.on("error", (error) => {
+				.on("error", error => {
 					logger.log(error);
 					throw error;
 				})
-				.on("clientError", (error) => {
+				.on("clientError", error => {
 					logger.log(error);
 				})
 				.listen(443);
@@ -127,11 +127,11 @@ class WombatServer {
 				finish();
 			})
 			.on("upgrade", this.serveWebSocket)
-			.on("error", (error) => {
+			.on("error", error => {
 				logger.log(error);
 				throw error;
 			})
-			.on("clientError", (error) => {
+			.on("clientError", error => {
 				logger.log(error);
 			})
 			.listen(this.port);
@@ -155,22 +155,24 @@ class WombatServer {
 				if (path.extname(request.url).length === 0) {
 					response.statusCode = 404;
 					let controller = new BaseController(request, response);
-					controller.view("404", {}).catch((error) => {
+					controller.view("404", {}).catch(error => {
 						response.end("404");
 					});
 				} else {
 					let fileSystem = require("fs"),
-						filePath =
-							request.url.indexOf("?") === -1
-								? request.url
-								: request.url.substr(
-										0,
-										request.url.indexOf("?")
-								  ),
-						resourcePath = path.join(
-							path.dirname(require.main.filename),
-							filePath
+						filePath;
+					if (request.url.indexOf("?") === -1) {
+						filePath = request.url;
+					} else {
+						filePath = request.url.substr(
+							0,
+							request.url.indexOf("?")
 						);
+					}
+					let resourcePath = path.join(
+						path.dirname(require.main.filename),
+						filePath
+					);
 					if (fileSystem.existsSync(resourcePath)) {
 						let responseHeaders = {};
 						if (typeof this.mime === "undefined") {
@@ -191,7 +193,7 @@ class WombatServer {
 			}
 		};
 		let requestBody = "";
-		request.on("data", (chunk) => {
+		request.on("data", chunk => {
 			requestBody += chunk.toString();
 		});
 		request.on("end", () => {

@@ -68,7 +68,7 @@ class BaseCollection {
 		return new Promise((resolve, reject) => {
 			this.collection.deleteOne(
 				{
-					_id: ObjectId(id)
+					_id: new ObjectId(id)
 				},
 				(error, result) => {
 					if (error) {

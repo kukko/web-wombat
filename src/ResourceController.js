@@ -1,6 +1,7 @@
 let BaseController = require("./BaseController.js"),
 	{ ObjectId } = require("mongodb"),
-	RouteService = require("./services/RouteService.js");
+	RouteService = require("./services/RouteService.js"),
+	logger = require('./Logger.js');
 
 class ResourceController extends BaseController {
 	setRouteAliasBase(routeAliasBase) {
@@ -11,7 +12,7 @@ class ResourceController extends BaseController {
 			.collection.find({})
 			.toArray((error, result) => {
 				if (error) {
-					console.log(error);
+					logger.log(error);
 					this.response.statusCode = 500;
 					this.response.end("500");
 				}
@@ -37,7 +38,7 @@ class ResourceController extends BaseController {
 						RouteService.getRouteByAlias(
 							this.routeAliasBase + ".show",
 							{
-								id: id
+								id
 							}
 						)
 					);
@@ -53,7 +54,7 @@ class ResourceController extends BaseController {
 			},
 			(error, result) => {
 				if (error) {
-					console.log(error);
+					logger.log(error);
 					this.response.statusCode = 500;
 					this.response.end("500");
 				}
@@ -78,7 +79,7 @@ class ResourceController extends BaseController {
 			},
 			(error, result) => {
 				if (error) {
-					console.log(error);
+					logger.log(error);
 					this.response.statusCode = 500;
 					this.response.end("500");
 				}
@@ -103,7 +104,7 @@ class ResourceController extends BaseController {
 			},
 			(error, result) => {
 				if (error) {
-					console.log(error);
+					logger.log(error);
 					this.response.statusCode = 500;
 					this.response.end("500");
 				}
@@ -126,11 +127,11 @@ class ResourceController extends BaseController {
 	destroy() {
 		this.getCollection().collection.findOne(
 			{
-				_id: ObjectId(this.request.routeVariables.id)
+				_id: new ObjectId(this.request.routeVariables.id)
 			},
 			(error, result) => {
 				if (error) {
-					console.log(error);
+					logger.log(error);
 					this.response.statusCode = 500;
 					this.response.end("500");
 				}
@@ -172,7 +173,7 @@ class ResourceController extends BaseController {
 				),
 				data
 			).catch((error) => {
-				console.log(error);
+				logger.log(error);
 				this.response.end("MISSING RESOURCE VIEW!");
 			});
 		});
