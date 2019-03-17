@@ -3,6 +3,6 @@ module.exports = {
 	password: "",
 	host: "localhost",
 	port: 27017,
-	database: "web-wombat-test",
+	database: "mydb_test",
 	authSource: ""
 };
