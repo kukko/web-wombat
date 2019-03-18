@@ -96,5 +96,6 @@ module.exports = {
 	CollectionsProvider: require("./src/CollectionsProvider.js"),
 	TemplateInterface: require("./src/TemplateConnectors/TemplateInterface.js"),
 	templateConnectors,
-	FormBuilder: require("./src/FormBuilder.js")
+	FormBuilder: require("./src/FormBuilder.js"),
+	DatabaseInterface: require('./src/DatabaseConnectors/DatabaseInterface.js')
 };
