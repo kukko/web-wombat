@@ -33,12 +33,12 @@ class ResourceController extends BaseController {
 		) {
 			this.getCollection()
 				.createDocument(this.request.body)
-				.then((id) => {
+				.then((document) => {
 					this.redirect(
 						RouteService.getRouteByAlias(
 							this.routeAliasBase + ".show",
 							{
-								id
+								id: document.getId()
 							}
 						)
 					);
@@ -109,7 +109,7 @@ class ResourceController extends BaseController {
 					this.response.end("500");
 				}
 				if (result !== null) {
-					result = this.getCollection().updateDocument(
+					result = this.getCollection().updateDocumentById(
 						this.request.routeVariables.id,
 						this.request.body
 					);
@@ -137,9 +137,9 @@ class ResourceController extends BaseController {
 				}
 				if (result !== null) {
 					let deleteResult = this.getCollection()
-						.deleteDocument(this.request.routeVariables.id)
-						.then((rowDeleted) => {
-							if (rowDeleted) {
+						.deleteDocumentById(this.request.routeVariables.id)
+						.then((deletedRowCnt) => {
+							if (deletedRowCnt > 0) {
 								this.redirect(
 									RouteService.getRouteByAlias(
 										this.routeAliasBase + ".index"

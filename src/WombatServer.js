@@ -225,6 +225,10 @@ class WombatServer {
 		ViewProvider.setDefaultConnector(Connector);
 		return this;
 	}
+	static setDatabaseConnector(Connector) {
+		DatabaseHolder.setDatabaseConnector(Connector);
+		return this;
+	}
 }
 
 WombatServer.port = 8888;

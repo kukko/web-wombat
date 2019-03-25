@@ -81,6 +81,33 @@ for (let i in fieldTypeFolders) {
 	));
 }
 
+let databaseConnectors = {},
+	databaseConnectorsFolder = resolve(__dirname, "./src/DatabaseConnectors"),
+	databaseConnectorFolders = readdirSync(databaseConnectorsFolder)
+		.map((folder) => {
+			return {
+				parentFolder: databaseConnectorsFolder,
+				databaseConnectorFolder: folder
+			};
+		})
+		.filter((source) => {
+			return lstatSync(
+				join(source.parentFolder, source.databaseConnectorFolder)
+			).isDirectory();
+		})
+		.map((fieldType) => {
+			return fieldType.databaseConnectorFolder;
+		});
+
+for (let i in databaseConnectorFolders) {
+	let databaseConnectorName = databaseConnectorFolders[i];
+	databaseConnectors[databaseConnectorName] = require(join(
+		databaseConnectorsFolder,
+		databaseConnectorName,
+		databaseConnectorName + ".js"
+	));
+}
+
 module.exports = {
 	WombatServer: require("./src/WombatServer.js"),
 	BaseController: require("./src/BaseController.js"),
@@ -97,5 +124,6 @@ module.exports = {
 	TemplateInterface: require("./src/TemplateConnectors/TemplateInterface.js"),
 	templateConnectors,
 	FormBuilder: require("./src/FormBuilder.js"),
-	DatabaseInterface: require('./src/DatabaseConnectors/DatabaseInterface.js')
+	DatabaseInterface: require("./src/DatabaseConnectors/DatabaseInterface.js"),
+	databaseConnectors
 };

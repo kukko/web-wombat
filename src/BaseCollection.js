@@ -1,12 +1,16 @@
-let { ObjectId } = require("mongodb");
+let DatabaseHolder = require("./DatabaseHolder.js"),
+	{ ObjectId } = require("mongodb");
 
 class BaseCollection {
-	static get name() {
+	static get collectionName() {
 		throw new Error(
-			"Not implemented 'name' attribute getter method in class: " +
+			"Not implemented 'collectionName' attribute getter method in class: " +
 				this.name +
 				"!"
 		);
+	}
+	static set collection(collection) {
+		this._collection = collection;
 	}
 	static get collection() {
 		return typeof this._collection !== "undefined"
@@ -16,68 +20,44 @@ class BaseCollection {
 	static create(db) {
 		return new Promise((resolve, reject) => {
 			if (typeof this._collection === "undefined") {
-				db.createCollection(
-					this.collectionName,
-					(error, collection) => {
-						if (!error) {
-							this._collection = collection;
-							resolve(this.collection);
-						} else {
-							reject(error);
-						}
-					}
-				);
+				this.connector
+					.createCollection(db, this.collectionName)
+					.then((collection) => {
+						this.collection = collection;
+						resolve(this.collection);
+					});
 			} else {
-				resolve(this._collection);
+				reject(this._collection);
 			}
 		});
 	}
 	static runAfterCreate() {}
-	static getDocument() {}
+	static getDocumentById(id) {
+		return this.connector.findById(this.collection, id);
+	}
+	static getDocument(conditions) {
+		return this.connector.find(this.collection, conditions);
+	}
 	static createDocument(document) {
-		return new Promise((resolve, reject) => {
-			this.collection
-				.insertOne(document)
-				.then((document) => {
-					resolve(document.insertedId);
-				})
-				.catch((error) => {
-					reject(error);
-				});
-		});
+		return this.connector.insertOne(this.collection, document);
 	}
-	static updateDocument(id, values) {
-		let structure = this.getDocument().getStructure(),
-			newValues = {};
-		for (let fieldIndex in structure) {
-			let field = structure[fieldIndex];
-			if (typeof values[field.name] !== "undefined") {
-				newValues[field.name] = values[field.name];
-			}
-		}
-		this.collection.updateOne(
-			{
-				_id: new ObjectId(id)
-			},
-			{
-				$set: newValues
-			}
-		);
+	static createDocuments(document) {
+		return this.connector.insert(this.collection, [document]);
 	}
-	static deleteDocument(id) {
-		return new Promise((resolve, reject) => {
-			this.collection.deleteOne(
-				{
-					_id: new ObjectId(id)
-				},
-				(error, result) => {
-					if (error) {
-						reject(error);
-					}
-					resolve(result.result.ok === 1);
-				}
-			);
-		});
+	static updateDocumentById(id, values) {
+		return this.connector.updateById(this.collection, id, values);
+	}
+	static updateDocument(conditions, values) {
+		return this.connector.update(this.collection, values, conditions);
+	}
+	static deleteDocument(conditions) {
+		return this.connector.delete(this.collection, conditions);
+	}
+	static deleteDocumentById(id) {
+		return this.connector.deleteById(this.collection, id);
+	}
+	static get connector() {
+		return DatabaseHolder.getDatabaseConnector();
 	}
 }
 
