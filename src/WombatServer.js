@@ -51,6 +51,13 @@ class WombatServer {
 	static getPort() {
 		return this.port;
 	}
+	static setSecurePort(securePort) {
+		this.securePort = securePort;
+		return this;
+	}
+	static getSecurePort() {
+		return this.securePort;
+	}
 	static setRoutes(routes) {
 		RouteService.setRoutes(routes);
 		return this;
@@ -106,7 +113,9 @@ class WombatServer {
 				.on("clientError", (error) => {
 					logger.log(error);
 				})
-				.listen(443);
+				.listen({
+					port:this.getSecurePort()
+				});
 		}
 		let server = require("http").createServer(this.serve);
 		server
@@ -122,7 +131,9 @@ class WombatServer {
 			.on("clientError", (error) => {
 				logger.log(error);
 			})
-			.listen(this.port);
+			.listen({
+				port:this.getPort()
+			});
 	}
 	static serveWithMiddlewares(request, response) {
 		MiddlewareProvider.runMiddlewares(
@@ -249,7 +260,9 @@ class WombatServer {
 	}
 }
 
-WombatServer.port = 8888;
+WombatServer.setPort(8888);
+
+WombatServer.setSecurePort(443);
 
 WombatServer.connectToDatabase = true;
 
