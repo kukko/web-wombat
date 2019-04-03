@@ -6,7 +6,7 @@ let { lstatSync, readdirSync } = require("fs"),
 	ignoredTests =
 		typeof process.env.TRAVIS === "undefined"
 			? []
-			: ["secureConnection", "webSocket"],
+			: ["certificateFromDifferentSource", "secureConnection", "webSocket"],
 	tests = readdirSync(resolve(testsFolder, "./")).filter((test) => {
 		return (
 			lstatSync(resolve(testsFolder, join("./", test))).isDirectory() &&

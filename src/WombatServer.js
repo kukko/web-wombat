@@ -84,20 +84,8 @@ class WombatServer {
 			};
 		if (this.secureConnection) {
 			process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-			let { readFileSync } = require("fs"),
-				{ resolve, dirname, join } = require("path"),
-				privateKey = readFileSync(
-					resolve(
-						dirname(require.main.filename),
-						join("config", "secureKey", "key.pem")
-					)
-				).toString(),
-				certificate = readFileSync(
-					resolve(
-						dirname(require.main.filename),
-						join("config", "secureKey", "certificate.pem")
-					)
-				).toString();
+			let privateKey = this.getCertificate("privateKey"),
+				certificate = this.getCertificate("certificate");
 			let https = require("https")
 				.createServer(
 					{
@@ -223,6 +211,40 @@ class WombatServer {
 			);
 		}
 		ViewProvider.setDefaultConnector(Connector);
+		return this;
+	}
+	static getCertificate(part){
+		if (typeof this.certificate === "undefined" || (typeof part === "undefined" || typeof this.certificate[part] === "undefined")){
+			let { readFileSync } = require("fs"),
+				{ resolve, dirname, join } = require("path");
+			this.certificate = {};
+			if (typeof part === "undefined" || part === "privateKey"){
+				this.certificate["privateKey"] = readFileSync(
+					resolve(
+						dirname(require.main.filename),
+						join("config", "secureKey", "key.pem")
+					)
+				).toString();
+			}
+			if (typeof part === "undefined" || part === "certificate"){
+				this.certificate["certificate"] = readFileSync(
+					resolve(
+						dirname(require.main.filename),
+						join("config", "secureKey", "certificate.pem")
+					)
+				).toString();
+			}
+		}
+		return typeof part === "undefined" ? this.certificate : this.certificate[part];
+	}
+	static setCertificate(certificate){
+		if (typeof certificate.privateKey === "undefined"){
+			throw new Error("The `privateKey` property didn't setted in the certificate.");
+		}
+		if (typeof certificate.certificate === "undefined"){
+			throw new Error("The `certificate` property didn't setted in the certificate.");
+		}
+		this.certificate = certificate;
 		return this;
 	}
 }
