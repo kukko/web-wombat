@@ -37,7 +37,7 @@ WombatServer.withoutDatabase()
 					process.exit(1);
 				});
 			require("https")
-				.get("https://localhost/secure", (response) => {
+				.get("https://localhost:" + WombatServer.getSecurePort() + "/secure", (response) => {
 					if (response.statusCode === 200) {
 						logger.log("Secure connection test completed!");
 						finish();
