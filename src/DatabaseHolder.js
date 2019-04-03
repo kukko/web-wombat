@@ -55,10 +55,14 @@ class DatabaseHolder {
 								resolve(true);
 							}
 						};
-						for (let collectionName in this.collections) {
-							this.collections[collectionName]
-								.create(this.db)
-								.then(collectionCreated);
+						if (Object.keys(this.collections).length > 0) {
+							for (let collectionName in this.collections) {
+								this.collections[collectionName]
+									.create(this.db)
+									.then(collectionCreated);
+							}
+						} else {
+							resolve(true);
 						}
 					} else {
 						reject(error);
