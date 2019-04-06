@@ -60,22 +60,21 @@ class Route {
 			urlParts = routeService.trimURL(request.url).split("/"),
 			routeParts = routeService.trimURL(this.route).split("/"),
 			output = true;
+		if (urlParts.length !== routeParts.length){
+			return false;
+		}
 		for (let i in urlParts) {
-			if (i < routeParts.length) {
-				let isRouteVariable =
-					routeParts[i].substring(
-						0,
-						Route.routeVariableSeparators.start.length
-					) === Route.routeVariableSeparators.start &&
-					routeParts[i].substring(
-						routeParts[i].length -
-							Route.routeVariableSeparators.end.length,
-						routeParts[i].length
-					) === Route.routeVariableSeparators.end;
-				output &= urlParts[i] === routeParts[i] || isRouteVariable;
-			} else {
-				return false;
-			}
+			let isRouteVariable =
+				routeParts[i].substring(
+					0,
+					Route.routeVariableSeparators.start.length
+				) === Route.routeVariableSeparators.start &&
+				routeParts[i].substring(
+					routeParts[i].length -
+						Route.routeVariableSeparators.end.length,
+					routeParts[i].length
+				) === Route.routeVariableSeparators.end;
+			output &= urlParts[i] === routeParts[i] || isRouteVariable;
 		}
 		return output;
 	}
