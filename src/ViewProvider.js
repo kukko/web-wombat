@@ -45,7 +45,7 @@ class ViewProvider {
 		this.DefaultConnector = Connector;
 		return true;
 	}
-	getView(filePath, options, writeToResponse = true, endResponse = true) {
+	getView(filePath, options = {}, writeToResponse = true, endResponse = true) {
 		let { isAbsolute, resolve, join } = require("path"),
 			isAbsolutePath = isAbsolute(filePath),
 			viewFolder;
