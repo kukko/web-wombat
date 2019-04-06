@@ -87,6 +87,7 @@ module.exports = {
 	ResourceController: require("./src/ResourceController.js"),
 	WebSocketController: require("./src/WebSocketController.js"),
 	Route: require("./src/Route.js"),
+	RouteService: require("./src/services/RouteService.js"),
 	BaseMiddleware: require("./src/middlewares/BaseMiddleware.js"),
 	middlewares,
 	BaseCollection: require("./src/BaseCollection.js"),
