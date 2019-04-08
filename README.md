@@ -106,7 +106,7 @@ You can add middlewares to be run specific for each route, by specifying an `arr
 Route with middlewares:
 ```javascript
 Route.get('/profile', require('../controllers/UserController/UserController.js'), 'showSelf', [
-	MiddlewareProvider.getMiddleware('AuthenticationMiddleware')
+	MiddlewareProvider.getMiddleware('JwtAuthenticationMiddleware')
 ])
 ```
 

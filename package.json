@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/kukko/web-wombat#readme",
   "dependencies": {
+    "bcrypt": "^3.0.5",
     "blade": "^3.3.1",
     "cookie": "^0.3.1",
     "handlebars": "^4.1.0",

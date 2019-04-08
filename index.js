@@ -97,5 +97,11 @@ module.exports = {
 	CollectionsProvider: require("./src/CollectionsProvider.js"),
 	TemplateInterface: require("./src/TemplateConnectors/TemplateInterface.js"),
 	templateConnectors,
-	FormBuilder: require("./src/FormBuilder.js")
+	FormBuilder: require("./src/FormBuilder.js"),
+	AuthenticationService: require("./src/services/AuthenticationService/AuthenticationService.js"),
+	AuthenticationSourceInterface: require("./src/services/AuthenticationService/AuthenticationSourceInterface.js"),
+	authenticationSources: {
+		DatabaseAuthenticationSource: require("./src/services/AuthenticationService/AuthenticationSources/DatabaseAuthenticationSource.js"),
+		MemoryAuthenticationSource: require("./src/services/AuthenticationService/AuthenticationSources/MemoryAuthenticationSource.js")
+	}
 };

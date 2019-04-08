@@ -34,7 +34,11 @@ class BaseCollection {
 			}
 		});
 	}
-	static runAfterCreate() {}
+	static runAfterCreate() {
+		return new Promise((resolve, reject) => {
+			resolve();
+		});
+	}
 	static getDocument() {}
 	static createDocument(document) {
 		return new Promise((resolve, reject) => {
