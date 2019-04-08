@@ -1,9 +1,9 @@
 let { ObjectId } = require("mongodb");
 
 class BaseCollection {
-	static get name() {
+	static get collectionName() {
 		throw new Error(
-			"Not implemented 'name' attribute getter method in class: " +
+			"Not implemented 'collectionName' attribute getter method in class: " +
 				this.name +
 				"!"
 		);
@@ -21,7 +21,9 @@ class BaseCollection {
 					(error, collection) => {
 						if (!error) {
 							this._collection = collection;
-							resolve(this.collection);
+							this.runAfterCreate().then((result) => {
+								resolve(this.collection);
+							});
 						} else {
 							reject(error);
 						}
