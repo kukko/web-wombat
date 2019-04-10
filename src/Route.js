@@ -14,9 +14,23 @@ class Route {
 		this.method = method;
 		this.Controller = controller;
 		this.controllerFunction = controllerFunction;
-		this.middlewares = middlewares;
+		this.setMiddlewares(middlewares);
 		this.websocket = websocket;
 		this.routeAliasBase = routeAliasBase;
+	}
+	setRoute(route){
+		this.route = route;
+		return this;
+	}
+	getRoute(){
+		return this.route;
+	}
+	setMiddlewares(middlewares){
+		this.middlewares = middlewares;
+		return this;
+	}
+	getMiddlewares(){
+		return this.middlewares;
 	}
 	serve(request, response) {
 		return this.runController(request, response);
@@ -27,7 +41,7 @@ class Route {
 	runController(request, response) {
 		return this.runMiddlewares(request, response, [
 			...this.Controller.allMiddlewares,
-			...this.middlewares
+			...this.getMiddlewares()
 		]);
 	}
 	runMiddlewares(request, response, middlewares, i = 0) {
@@ -53,7 +67,7 @@ class Route {
 			this.urlIsMatching(request) &&
 			request.method === this.method &&
 			request.upgrade === this.websocket
-		);
+		) ? this : false;
 	}
 	urlIsMatching(request) {
 		let routeService = require("./services/RouteService.js"),

@@ -13,8 +13,9 @@ class RouteService {
 				}
 				continue;
 			}
-			if (routes[i].isMatching(request)) {
-				return routes[i];
+			let route = routes[i].isMatching(request);
+			if (route) {
+				return route;
 			}
 		}
 	}
