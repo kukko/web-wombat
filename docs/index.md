@@ -1,9 +1,9 @@
 # web-wombat
 Framework for web services with NodeJS.
 
-[Routing](./routes/routing.md)
-[Route](./routing/route.md)
-[RouteGroup](./routing/routeGroup.md)
+* [Routing](./routing/routing.md)
+	- [Route](./routing/route.md)
+	- [RouteGroup](./routing/routeGroup.md)
 
 [![Build Status](https://travis-ci.org/kukko/web-wombat.svg?branch=master)](https://travis-ci.org/kukko/web-wombat)
 
