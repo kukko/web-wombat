@@ -1,11 +1,11 @@
 # web-wombat
 Framework for web services with NodeJS.
 
+[![Build Status](https://travis-ci.org/kukko/web-wombat.svg?branch=master)](https://travis-ci.org/kukko/web-wombat)
+
 * [Routing](./routing/routing.md)
 	- [Route](./routing/route.md)
 	- [RouteGroup](./routing/routeGroup.md)
-
-[![Build Status](https://travis-ci.org/kukko/web-wombat.svg?branch=master)](https://travis-ci.org/kukko/web-wombat)
 
 With web-wombat, you can easily set up a simple webserver in 1-2 minutes. You can also set up a WebSocket server in one minute.
 

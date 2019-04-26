@@ -89,3 +89,11 @@ You can pass any controller class, but it is recommended to pass a class which e
 An array with the middlewares which will be runned before the controller's self middlewares, when an appropriate request is received.
 
 If not specified, it will have the same default value as the `Route` class' constructor.
+
+## Other public methods
+
+### as(alias)
+With this method, you can set a string as alias for an instance of the `Route` class.
+
+**alias**
+String to be used as alias.
