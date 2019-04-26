@@ -12,44 +12,66 @@ You can access these variables in middlewares and controllers from the request o
 ### constructor(route, method, controller, [controllerFunction = "serve", middlewares = [], websocket = false, routeAliasBase = ""])
 
 **route**
+
 The URL where a request is received, the routes' middlewares and controller will be executed.
 
+
 **method**
+
 The HTTP method which is required to run the route.
 
+
 **controller**
+
 The controller class which will be runned when an appropriate request is received.
 
+
 **controllerFunction**
+
 The method which will be runned from the controller class when an appropriate request is received.
 
+
 **middlewares**
+
 An array with the middlewares which will be runned before the controller's self middlewares, when an appropriate request is received.
 
+
 **websocket**
+
 A variable which will indicate how this route will receive websocket connections.
 
+
 **routeAliasBase**
+
 This parameter is only take effect if a `ResourceController` is given in the controller parameter.
+
 
 ### get(route, controller, [controllerFunction, middlewares])
 Returns a Route object, which will match requests with GET HTTP method.
 
 **route**
+
 The URL where a request is received, the routes' middlewares and controller will be executed.
 
+
 **controller**
+
 The controller class which will be runned when an appropriate request is received.
 
+
 **controllerFunction**
+
 The method which will be runned from the controller class when an appropriate request is received.
 
 If not specified, it will have the same default value as the `Route` class' constructor.
 
+
 **middlewares**
+
 An array with the middlewares which will be runned before the controller's self middlewares, when an appropriate request is received.
 
 If not specified, it will have the same default value as the `Route` class' constructor.
+
 
 ### post(route, controller, [controllerFunction, middlewares])
 Returns a Route object, which will match requests with POST HTTP method.
@@ -80,15 +102,21 @@ Have the same signature as the `get` factory method.
 Returns an array of instances of the Route class. With this factory method, you can easily create a REST service, which will be able to list, create, fetch, edit and delete entities.
 
 **route**
+
 The prefix of the routes which will be returned by the method.
 
+
 **controller**
+
 You can pass any controller class, but it is recommended to pass a class which extends the `ResourceController` class.
 
+
 **middlewares**
+
 An array with the middlewares which will be runned before the controller's self middlewares, when an appropriate request is received.
 
 If not specified, it will have the same default value as the `Route` class' constructor.
+
 
 ## Other public methods
 
@@ -96,4 +124,5 @@ If not specified, it will have the same default value as the `Route` class' cons
 With this method, you can set a string as alias for an instance of the `Route` class.
 
 **alias**
+
 String to be used as alias.
