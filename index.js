@@ -1,31 +1,5 @@
 let { lstatSync, readdirSync } = require("fs"),
-	{ join, dirname, resolve } = require("path"),
-	middlewares = {},
-	middlewaresFolder = resolve(__dirname, "./src/middlewares"),
-	middlewareFolders = readdirSync(middlewaresFolder)
-		.map((folder) => {
-			return {
-				parentFolder: middlewaresFolder,
-				middlewareFolder: folder
-			};
-		})
-		.filter((source) => {
-			return lstatSync(
-				join(source.parentFolder, source.middlewareFolder)
-			).isDirectory();
-		})
-		.map((collection) => {
-			return collection.middlewareFolder;
-		});
-
-for (let i in middlewareFolders) {
-	let middlewareName = middlewareFolders[i];
-	middlewares[middlewareName] = require(join(
-		middlewaresFolder,
-		middlewareName,
-		middlewareName + ".js"
-	));
-}
+	{ join, dirname, resolve } = require("path");
 
 let templateConnectors = {},
 	templateConnectorsFolder = resolve(__dirname, "./src/TemplateConnectors"),
@@ -90,7 +64,7 @@ module.exports = {
 	RouteGroup: require("./src/RouteGroup.js"),
 	RouteService: require("./src/services/RouteService.js"),
 	BaseMiddleware: require("./src/middlewares/BaseMiddleware.js"),
-	middlewares,
+	MiddlewareProvider: require("./src/MiddlewareProvider.js"),
 	BaseCollection: require("./src/BaseCollection.js"),
 	BaseDocument: require("./src/BaseDocument.js"),
 	BaseField: require("./src/fieldTypes/BaseField.js"),
