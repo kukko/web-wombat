@@ -24,28 +24,36 @@ class MiddlewareProvider {
 		if (typeof this.middlewares[name] !== "undefined") {
 			return this.middlewares[name];
 		}
-		let { existsSync } = require("fs"),
-			{ join, dirname } = require("path"),
+		let { join, dirname } = require("path"),
+			middlewareRoute = join(
+				dirname(require.main.filename),
+				"middlewares",
+				name,
+				name + ".js"
+			),
+			middleware;
+		if (middleware = this.requireMiddleware(middlewareRoute)) {
+			return (this.middlewares[name] = middleware);
+		} else {
 			middlewareRoute = join(
 				__dirname,
 				"./middlewares",
 				name,
 				name + ".js"
 			);
-		if (existsSync(middlewareRoute)) {
-			return (this.middlewares[name] = require(middlewareRoute));
-		} else {
-			middlewareRoute = join(
-				dirname(require.main.filename),
-				"middlewares",
-				name,
-				name + ".js"
-			);
-			if (existsSync(middlewareRoute)) {
+			if (middleware = this.requireMiddleware(middlewareRoute)) {
 				return (this.middlewares[name] = require(middlewareRoute));
 			} else {
 				throw new Error("Middleware (" + name + ") missing!");
 			}
+		}
+	}
+	static requireMiddleware(path){
+		let { existsSync } = require("fs");
+		if (existsSync(path)) {
+			return require(path);
+		} else {
+			return false;
 		}
 	}
 	static getAllMiddlewares(reload = false){
