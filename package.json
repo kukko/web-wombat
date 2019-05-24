@@ -17,6 +17,16 @@
     "url": "https://github.com/kukko/web-wombat/issues"
   },
   "homepage": "https://github.com/kukko/web-wombat#readme",
+  "keywords": [
+    "web",
+    "framework",
+    "rest",
+    "restful",
+    "app",
+    "api",
+    "websocket",
+    "wombat"
+  ],
   "dependencies": {
     "bcrypt": "^3.0.5",
     "blade": "^3.3.1",
