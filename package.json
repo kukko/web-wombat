@@ -28,19 +28,19 @@
     "wombat"
   ],
   "dependencies": {
-    "bcrypt": "^3.0.5",
+    "bcrypt": "^3.0.6",
     "blade": "^3.3.1",
     "cookie": "^0.3.1",
-    "handlebars": "^4.1.0",
+    "handlebars": "^4.1.2",
     "jsonwebtoken": "^8.5.1",
-    "mime": "^2.4.0",
-    "mongodb": "^3.1.13",
+    "mime": "^2.4.4",
+    "mongodb": "^3.2.7",
     "mustache": "^3.0.1",
     "pug": "^2.0.3"
   },
   "devDependencies": {
-    "cheerio": "^1.0.0-rc.2",
-    "prettier": "^1.16.4",
+    "cheerio": "^1.0.0-rc.3",
+    "prettier": "^1.18.2",
     "request": "^2.88.0",
     "websocket": "^1.0.28"
   }
