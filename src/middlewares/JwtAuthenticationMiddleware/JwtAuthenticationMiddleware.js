@@ -12,7 +12,6 @@ class JwtAuthenticationMiddleware extends BaseMiddleware {
 			token = request.cookies["jwt"];
 		try {
 			request.user = jwt.verify(token, signKey);
-			console.log(request.user);
 			next();
 		} catch (e) {
 			let ViewProvider = require("../../ViewProvider.js"),
