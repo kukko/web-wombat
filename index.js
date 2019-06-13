@@ -1,60 +1,6 @@
 let { lstatSync, readdirSync } = require("fs"),
 	{ join, dirname, resolve } = require("path");
 
-let templateConnectors = {},
-	templateConnectorsFolder = resolve(__dirname, "./src/TemplateConnectors"),
-	templateConnectorFolders = readdirSync(templateConnectorsFolder)
-		.map((folder) => {
-			return {
-				parentFolder: templateConnectorsFolder,
-				templateConnectorFolder: folder
-			};
-		})
-		.filter((source) => {
-			return lstatSync(
-				join(source.parentFolder, source.templateConnectorFolder)
-			).isDirectory();
-		})
-		.map((collection) => {
-			return collection.templateConnectorFolder;
-		});
-
-for (let i in templateConnectorFolders) {
-	let templateConnectorName = templateConnectorFolders[i];
-	templateConnectors[templateConnectorName] = require(join(
-		templateConnectorsFolder,
-		templateConnectorName,
-		templateConnectorName + ".js"
-	));
-}
-
-let fieldTypes = {},
-	fieldTypesFolder = resolve(__dirname, "./src/fieldTypes"),
-	fieldTypeFolders = readdirSync(fieldTypesFolder)
-		.map((folder) => {
-			return {
-				parentFolder: fieldTypesFolder,
-				fieldTypeFolder: folder
-			};
-		})
-		.filter((source) => {
-			return lstatSync(
-				join(source.parentFolder, source.fieldTypeFolder)
-			).isDirectory();
-		})
-		.map((fieldType) => {
-			return fieldType.fieldTypeFolder;
-		});
-
-for (let i in fieldTypeFolders) {
-	let fieldTypeName = fieldTypeFolders[i];
-	fieldTypes[fieldTypeName] = require(join(
-		fieldTypesFolder,
-		fieldTypeName,
-		fieldTypeName + ".js"
-	));
-}
-
 module.exports = {
 	WombatServer: require("./src/WombatServer.js"),
 	BaseController: require("./src/BaseController.js"),
@@ -68,10 +14,18 @@ module.exports = {
 	BaseCollection: require("./src/BaseCollection.js"),
 	BaseDocument: require("./src/BaseDocument.js"),
 	BaseField: require("./src/fieldTypes/BaseField.js"),
-	fieldTypes,
+	fieldTypes: {
+		TextField: require("./src/fieldTypes/TextField/TextField.js")
+	},
 	CollectionsProvider: require("./src/CollectionsProvider.js"),
 	TemplateInterface: require("./src/TemplateConnectors/TemplateInterface.js"),
-	templateConnectors,
+	templateConnectors: {
+		BladeConnector: require("./src/TemplateConnectors/BladeConnector/BladeConnector.js"),
+		HandlebarsConnector: require("./src/TemplateConnectors/HandlebarsConnector/HandlebarsConnector.js"),
+		HTMLConnector: require("./src/TemplateConnectors/HTMLConnector/HTMLConnector.js"),
+		MustacheConnector: require("./src/TemplateConnectors/MustacheConnector/MustacheConnector.js"),
+		PugConnector: require("./src/TemplateConnectors/PugConnector/PugConnector.js")
+	},
 	FormBuilder: require("./src/FormBuilder.js"),
 	AuthenticationService: require("./src/services/AuthenticationService/AuthenticationService.js"),
 	AuthenticationSourceInterface: require("./src/services/AuthenticationService/AuthenticationSourceInterface.js"),

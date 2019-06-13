@@ -22,8 +22,10 @@ class Route {
 		this.route = route;
 		return this;
 	}
-	getRoute(){
-		return this.route;
+	getRoute(trim = false) {
+		return trim
+			? require("./services/RouteService.js").trimURL(this.route)
+			: this.route;
 	}
 	setMiddlewares(middlewares){
 		this.middlewares = middlewares;
@@ -117,11 +119,6 @@ class Route {
 			}
 		}
 		return output;
-	}
-	getRoute(trim = false) {
-		return trim
-			? require("./services/RouteService.js").trimURL(this.route)
-			: this.route;
 	}
 	as(alias) {
 		this.alias = alias;
