@@ -1,6 +1,6 @@
 # Route
 
-With the route class, you can define a controller for a URL, to be runned, when a request is received to the specified route.
+With the `Route` class, you can define a controller for a URL, to be runned, when a request is received to the specified route.
 
 ## Route variables
 You can create routes which contains variable parts. the variable parts need to encase the part with braces. The variable name will be the same as the string between the braces.
