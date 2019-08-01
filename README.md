@@ -5,6 +5,9 @@ Framework for web services with NodeJS.
 
 With web-wombat, you can easily set up a simple webserver in 1-2 minutes. You can also set up a WebSocket server in one minute.
 
+For documentation see the GitHub pages site of project on the following link.
+[https://kukko.github.io/web-wombat/](https://kukko.github.io/web-wombat/)
+
 ## Create new project with web-wombat
 ```bash
 mkdir wombat-project
