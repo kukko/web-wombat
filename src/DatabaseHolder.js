@@ -36,7 +36,8 @@ class DatabaseHolder {
 			require("mongodb").MongoClient.connect(
 				connectionString,
 				{
-					useNewUrlParser: true
+					useNewUrlParser: true,
+					useUnifiedTopology: true
 				},
 				(error, connection) => {
 					if (!error) {

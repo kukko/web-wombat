@@ -31,17 +31,17 @@
     "bcrypt": "^3.0.6",
     "blade": "^3.3.1",
     "cookie": "^0.3.1",
-    "handlebars": "^4.1.2",
+    "handlebars": "^4.2.0",
     "jsonwebtoken": "^8.5.1",
     "mime": "^2.4.4",
-    "mongodb": "^3.2.7",
-    "mustache": "^3.0.1",
-    "pug": "^2.0.3"
+    "mongodb": "^3.3.2",
+    "mustache": "^3.0.3",
+    "pug": "^2.0.4"
   },
   "devDependencies": {
     "cheerio": "^1.0.0-rc.3",
     "prettier": "^1.18.2",
     "request": "^2.88.0",
-    "websocket": "^1.0.28"
+    "websocket": "^1.0.29"
   }
 }
