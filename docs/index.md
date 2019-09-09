@@ -6,6 +6,7 @@ Framework for web services with NodeJS.
 * [Routing](./routing/routing.md)
 	- [Route](./routing/route.md)
 	- [RouteGroup](./routing/routeGroup.md)
+* [Controllers](./controllers/controllers.md)
 
 With web-wombat, you can easily set up a simple webserver in 1-2 minutes. You can also set up a WebSocket server in one minute.
 
