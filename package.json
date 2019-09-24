@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "e2e-test": "node tests/endToEndTests/test.js",
-    "test": "npm run e2e-test",
+    "unit-test": "mocha tests/unitTests/",
+    "test": "npm run unit-test && npm run e2e-test",
     "prettify": "prettier --trailing-coma --write --use-tabs --tab-width 4 --arrow-parens always \"**/*.js\""
   },
   "repository": {
