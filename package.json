@@ -4,7 +4,8 @@
   "description": "Framework for web services.",
   "main": "src/index.js",
   "scripts": {
-    "test": "node tests/test.js",
+    "e2e-test": "node tests/endToEndTests/test.js",
+    "test": "npm run e2e-test",
     "prettify": "prettier --trailing-coma --write --use-tabs --tab-width 4 --arrow-parens always \"**/*.js\""
   },
   "repository": {
@@ -39,7 +40,9 @@
     "pug": "^2.0.4"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "cheerio": "^1.0.0-rc.3",
+    "mocha": "^6.2.0",
     "prettier": "^1.18.2",
     "request": "^2.88.0",
     "websocket": "^1.0.29"
