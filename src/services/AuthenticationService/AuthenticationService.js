@@ -2,7 +2,7 @@ let AuthenticationSourceInterface = require("./AuthenticationSourceInterface.js"
 
 class AuthenticationService{
 	static setAuthenticationSource(AuthSource){
-		if (!(new AuthSource() instanceof AuthenticationSourceInterface)){
+		if (!(AuthSource.prototype instanceof AuthenticationSourceInterface)){
 			throw new Error("The provided authentication source is not implementing AuthenticationSourceInterface.");
 		}
 		this.authSource = AuthSource;
