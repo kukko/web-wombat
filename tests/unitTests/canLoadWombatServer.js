@@ -3,87 +3,87 @@ let assert = require('chai').assert;
 describe('Can load components from package', () => {
 	let webWombat = require("../../index.js");
 	it('WombatServer is loaded', () => {
-		assert.typeOf(webWombat.WombatServer, "function");
+		assert.isFunction(webWombat.WombatServer);
 	});
 	it('BaseController is loaded', () => {
-		assert.typeOf(webWombat.BaseController, "function");
+		assert.isFunction(webWombat.BaseController);
 	});
 	it('ResourceController is loaded', () => {
-		assert.typeOf(webWombat.ResourceController, "function");
+		assert.isFunction(webWombat.ResourceController);
 	});
 	it('WebSocketController is loaded', () => {
-		assert.typeOf(webWombat.WebSocketController, "function");
+		assert.isFunction(webWombat.WebSocketController);
 	});
 	it('Route is loaded', () => {
-		assert.typeOf(webWombat.Route, "function");
+		assert.isFunction(webWombat.Route);
 	});
 	it('RouteGroup is loaded', () => {
-		assert.typeOf(webWombat.RouteGroup, "function");
+		assert.isFunction(webWombat.RouteGroup);
 	});
 	it('RouteService is loaded', () => {
-		assert.typeOf(webWombat.RouteService, "function");
+		assert.isFunction(webWombat.RouteService);
 	});
 	it('BaseMiddleware is loaded', () => {
-		assert.typeOf(webWombat.BaseMiddleware, "function");
+		assert.isFunction(webWombat.BaseMiddleware);
 	});
 	it('MiddlewareProvider is loaded', () => {
-		assert.typeOf(webWombat.MiddlewareProvider, "function");
+		assert.isFunction(webWombat.MiddlewareProvider);
 	});
 	it('BaseCollection is loaded', () => {
-		assert.typeOf(webWombat.BaseCollection, "function");
+		assert.isFunction(webWombat.BaseCollection);
 	});
 	it('BaseDocument is loaded', () => {
-		assert.typeOf(webWombat.BaseDocument, "function");
+		assert.isFunction(webWombat.BaseDocument);
 	});
 	it('BaseField is loaded', () => {
-		assert.typeOf(webWombat.BaseField, "function");
+		assert.isFunction(webWombat.BaseField);
 	});
 	it('Built in field types are loaded', () => {
-		assert.typeOf(webWombat.fieldTypes, "object");
+		assert.isObject(webWombat.fieldTypes);
 	});
 	it('TextField field type is loaded', () => {
-		assert.typeOf(webWombat.fieldTypes.TextField, "function");
+		assert.isFunction(webWombat.fieldTypes.TextField);
 	});
 	it('CollectionsProvider is loaded', () => {
-		assert.typeOf(webWombat.CollectionsProvider, "function");
+		assert.isFunction(webWombat.CollectionsProvider);
 	});
 	it('TemplateInterface is loaded', () => {
-		assert.typeOf(webWombat.TemplateInterface, "function");
+		assert.isFunction(webWombat.TemplateInterface);
 	});
 	it('Built in template connectors are loaded', () => {
-		assert.typeOf(webWombat.templateConnectors, "object");
+		assert.isObject(webWombat.templateConnectors);
 	});
 	it('Blade template connector is loaded', () => {
-		assert.typeOf(webWombat.templateConnectors.BladeConnector, "function");
+		assert.isFunction(webWombat.templateConnectors.BladeConnector);
 	});
 	it('Handlebars template connector is loaded', () => {
-		assert.typeOf(webWombat.templateConnectors.HandlebarsConnector, "function");
+		assert.isFunction(webWombat.templateConnectors.HandlebarsConnector);
 	});
 	it('HTML template connector is loaded', () => {
-		assert.typeOf(webWombat.templateConnectors.HTMLConnector, "function");
+		assert.isFunction(webWombat.templateConnectors.HTMLConnector);
 	});
 	it('Mustache template connector is loaded', () => {
-		assert.typeOf(webWombat.templateConnectors.MustacheConnector, "function");
+		assert.isFunction(webWombat.templateConnectors.MustacheConnector);
 	});
 	it('Pug template connector is loaded', () => {
-		assert.typeOf(webWombat.templateConnectors.PugConnector, "function");
+		assert.isFunction(webWombat.templateConnectors.PugConnector);
 	});
 	it('FormBuilder is loaded', () => {
-		assert.typeOf(webWombat.FormBuilder, "function");
+		assert.isFunction(webWombat.FormBuilder);
 	});
 	it('AuthenticationService is loaded', () => {
-		assert.typeOf(webWombat.AuthenticationService, "function");
+		assert.isFunction(webWombat.AuthenticationService);
 	});
 	it('AuthenticationSourceInterface is loaded', () => {
-		assert.typeOf(webWombat.AuthenticationSourceInterface, "function");
+		assert.isFunction(webWombat.AuthenticationSourceInterface);
 	});
 	it('Built in authentication sources are loaded', () => {
-		assert.typeOf(webWombat.authenticationSources, "object");
+		assert.isObject(webWombat.authenticationSources);
 	});
 	it('Database authentication source is loaded', () => {
-		assert.typeOf(webWombat.authenticationSources.DatabaseAuthenticationSource, "function");
+		assert.isFunction(webWombat.authenticationSources.DatabaseAuthenticationSource);
 	});
 	it('Memory authentication source is loaded', () => {
-		assert.typeOf(webWombat.authenticationSources.MemoryAuthenticationSource, "function");
+		assert.isFunction(webWombat.authenticationSources.MemoryAuthenticationSource);
 	});
 });
