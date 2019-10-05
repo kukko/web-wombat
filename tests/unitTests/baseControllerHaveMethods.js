@@ -1,4 +1,6 @@
-let assert = require('chai').assert;
+let assert = require('chai').assert,
+	sinon = require('sinon');
+sinon.assert.expose(assert);
 
 describe('BaseController have basic documented methods', () => {
 	let BaseController;
@@ -32,5 +34,30 @@ describe('BaseController have basic documented attributes', () => {
 	});
 	it('Have ViewProvider', () => {
 		assert.isFunction(BaseController.ViewProvider);
+	});
+});
+
+describe('BaseController abstract methods work as expected.', () => {
+	let BaseController = require('../../index.js').BaseController,
+		{ logger } = require('../../index.js'),
+		fakeController,
+		spy;
+	class FakeController extends BaseController{
+	}
+	before(() => {
+		fakeController = new FakeController();
+	});
+	beforeEach(() => {
+		sinon.spy(logger, 'warn');
+	});
+	it('Method serve returns null', () => {
+		assert.isUndefined(fakeController.serve());
+	});
+	it('Method serve works as expected', () => {
+		fakeController.serve();
+		sinon.assert.calledOnce(logger.warn);
+	});
+	afterEach(() => {
+		logger.warn.restore();
 	});
 });
