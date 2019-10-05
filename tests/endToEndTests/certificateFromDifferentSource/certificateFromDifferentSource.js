@@ -15,6 +15,7 @@ let { WombatServer, Route } = require("../../../index.js"),
 	).toString(),
 	request = require("request");
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 WombatServer.setRoutes([
 	Route.get("/", require("./controllers/MainController/MainController.js"))
 ]).withoutDatabase().setSecurePort(4443).setCertificate({

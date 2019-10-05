@@ -1,6 +1,7 @@
 let { WombatServer, Route } = require("../../../index.js"),
 	logger = require("../../../src/Logger.js");
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 WombatServer.withoutDatabase()
 	.setRoutes([
 		Route.get(
