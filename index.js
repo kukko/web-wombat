@@ -32,5 +32,6 @@ module.exports = {
 	authenticationSources: {
 		DatabaseAuthenticationSource: require("./src/services/AuthenticationService/AuthenticationSources/DatabaseAuthenticationSource.js"),
 		MemoryAuthenticationSource: require("./src/services/AuthenticationService/AuthenticationSources/MemoryAuthenticationSource.js")
-	}
+	},
+	logger: require('./src/Logger.js')
 };

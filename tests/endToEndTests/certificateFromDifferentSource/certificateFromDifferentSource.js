@@ -17,11 +17,11 @@ let { WombatServer, Route } = require("../../../index.js"),
 
 WombatServer.setRoutes([
 	Route.get("/", require("./controllers/MainController/MainController.js"))
-]).withoutDatabase().setCertificate({
+]).withoutDatabase().setSecurePort(4443).setCertificate({
 	privateKey,
 	certificate
 }).init((port) => {
-	request.get("https://localhost/", (error, response, body) => {
+	request.get("https://localhost:" + WombatServer.securePort + "/", (error, response, body) => {
 		if (!error){
 			if (body === "OK"){
 				process.exit(0);

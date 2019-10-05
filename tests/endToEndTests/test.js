@@ -3,7 +3,7 @@ let { lstatSync, readdirSync } = require("fs"),
 	{ spawnSync } = require("child_process"),
 	logger = require("../../src/Logger.js"),
 	testsFolder = dirname(__filename),
-	ignoredTests = ["certificateFromDifferentSource", "secureConnection", "webSocket"],
+	ignoredTests = [],
 	tests = readdirSync(resolve(testsFolder, "./")).filter((test) => {
 		return (
 			lstatSync(resolve(testsFolder, join("./", test))).isDirectory() &&

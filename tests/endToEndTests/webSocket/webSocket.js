@@ -12,6 +12,7 @@ WombatServer.withoutDatabase()
 			require("./controllers/WebSocketTestController/WebSocketTestController.js")
 		)
 	])
+	.setSecurePort(4443)
 	.init((port) => {
 		let WebSocketClient = require("websocket").client,
 			ws = new WebSocketClient();
@@ -69,5 +70,5 @@ WombatServer.withoutDatabase()
 				connection.close();
 			}, 500);
 		});
-		ws2.connect("wss://localhost");
+		ws2.connect("wss://localhost:"+WombatServer.getSecurePort());
 	});

@@ -102,7 +102,7 @@ class WombatServer {
 					this.serve
 				)
 				.on("listening", () => {
-					logger.log("Listening on 443!");
+					logger.log("Listening on " + this.getSecurePort() + "!");
 					finish();
 				})
 				.on("upgrade", this.serveWebSocket)
