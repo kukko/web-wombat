@@ -90,7 +90,6 @@ class WombatServer {
 				}
 			};
 		if (this.secureConnection) {
-			process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 			let privateKey = this.getCertificate("privateKey"),
 				certificate = this.getCertificate("certificate");
 			let https = require("https")
