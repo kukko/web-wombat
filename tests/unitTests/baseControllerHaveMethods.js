@@ -40,24 +40,23 @@ describe('BaseController have basic documented attributes', () => {
 describe('BaseController abstract methods work as expected.', () => {
 	let BaseController = require('../../index.js').BaseController,
 		{ logger } = require('../../index.js'),
-		fakeController,
-		spy;
+		fakeController;
 	class FakeController extends BaseController{
 	}
 	before(() => {
 		fakeController = new FakeController();
 	});
 	beforeEach(() => {
-		sinon.spy(logger, 'warn');
+		sinon.replace(logger, 'warn', sinon.spy());
 	});
-	it('Method serve returns null', () => {
+	it('Method serve returns undefined', () => {
 		assert.isUndefined(fakeController.serve());
 	});
-	it('Method serve works as expected', () => {
+	it('Method serve writes warning to the console', () => {
 		fakeController.serve();
 		sinon.assert.calledOnce(logger.warn);
 	});
 	afterEach(() => {
-		logger.warn.restore();
+		sinon.restore();
 	});
 });
