@@ -16,6 +16,9 @@ WombatServer.withoutDatabase()
 		)
 	])
 	.setSecurePort(4443)
+	.setHttpsOptions({
+		rejectUnauthorized: false
+	})
 	.init((port) => {
 		new Promise((resolve, reject) => {
 			let finished = 0,

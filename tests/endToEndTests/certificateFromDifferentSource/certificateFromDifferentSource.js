@@ -21,6 +21,8 @@ WombatServer.setRoutes([
 ]).withoutDatabase().setSecurePort(4443).setCertificate({
 	privateKey,
 	certificate
+}).setHttpsOptions({
+	rejectUnauthorized: false
 }).init((port) => {
 	request.get("https://localhost:" + WombatServer.securePort + "/", (error, response, body) => {
 		if (!error){

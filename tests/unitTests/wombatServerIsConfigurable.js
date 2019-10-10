@@ -49,4 +49,11 @@ describe('Can configure WombatServer.', () => {
 		WombatServer.setSecure();
 		assert.isTrue(WombatServer.secureConnection);
 	});
+	it('Can set options for secure connections listener', () => {
+		let httpsOptions = {
+			rejectUnauthorized: false
+		};
+		WombatServer.setHttpsOptions(httpsOptions);
+		assert.equal(WombatServer.getHttpsOptions(), httpsOptions);
+	});
 });

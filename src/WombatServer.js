@@ -78,6 +78,13 @@ class WombatServer {
 		this.secureConnection = true;
 		return this;
 	}
+	static setHttpsOptions(httpsOptions){
+		this.httpsOptions = httpsOptions;
+		return this;
+	}
+	static getHttpsOptions(){
+		return this.httpsOptions;
+	}
 	static listen(callback) {
 		let listening = 0,
 			finish = () => {
@@ -95,6 +102,7 @@ class WombatServer {
 			let https = require("https")
 				.createServer(
 					{
+						...(typeof this.httpsOptions !== "undefined" ? this.httpsOptions : {}),
 						key: privateKey,
 						cert: certificate
 					},

@@ -14,6 +14,9 @@ WombatServer.withoutDatabase()
 		)
 	])
 	.setSecurePort(4443)
+	.setHttpsOptions({
+		rejectUnauthorized: false
+	})
 	.init((port) => {
 		let WebSocketClient = require("websocket").client,
 			ws = new WebSocketClient();
