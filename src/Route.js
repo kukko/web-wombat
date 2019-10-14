@@ -1,4 +1,6 @@
-let ResourceController = require("./ResourceController.js");
+let ResourceController = require("./ResourceController.js"),
+	BaseMiddleware = require("./middlewares/BaseMiddleware.js"),
+	MiddlewareProvider = require("./MiddlewareProvider.js");
 
 class Route {
 	constructor(
@@ -51,14 +53,17 @@ class Route {
 	}
 	runMiddlewares(request, response, middlewares, i = 0) {
 		if (i < middlewares.length) {
-			return middlewares[i].run(request, response, () => {
+			if (middlewares[i].prototype instanceof BaseMiddleware){
+				middlewares[i] = MiddlewareProvider.buildMiddleware(middlewares[i]);
+			}
+			return middlewares[i].middleware.run(request, response, () => {
 				return this.runMiddlewares(
 					request,
 					response,
 					middlewares,
 					i + 1
 				);
-			});
+			}, middlewares[i].parameters);
 		} else {
 			let controller = new this.Controller(request, response);
 			if (controller instanceof ResourceController) {

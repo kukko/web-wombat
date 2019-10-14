@@ -1,7 +1,7 @@
 class MiddlewareProvider {
 	static runMiddlewares(request, response, callback, middlewares, i = 0) {
 		if (i < middlewares.length) {
-			return middlewares[i].run(request, response, () => {
+			return middlewares[i].middleware.run(request, response, () => {
 				return this.runMiddlewares(
 					request,
 					response,
@@ -9,7 +9,7 @@ class MiddlewareProvider {
 					middlewares,
 					i + 1
 				);
-			});
+			}, middlewares[i].parameters);
 		} else {
 			return callback(request, response);
 		}
@@ -20,9 +20,12 @@ class MiddlewareProvider {
 			this.getMiddleware("FormMethodParserMiddleware")
 		];
 	}
-	static getMiddleware(name) {
+	static getMiddleware(name, parameters) {
+		if (typeof parameters === "undefined"){
+			parameters = {};
+		}
 		if (typeof this.middlewares[name] !== "undefined") {
-			return this.middlewares[name];
+			return this.buildMiddleware(this.middlewares[name], parameters);
 		}
 		let { join, dirname } = require("path"),
 			middlewareRoute = join(
@@ -33,7 +36,7 @@ class MiddlewareProvider {
 			),
 			middleware;
 		if (middleware = this.requireMiddleware(middlewareRoute)) {
-			return (this.middlewares[name] = middleware);
+			return this.buildMiddleware(this.middlewares[name] = middleware, parameters);
 		} else {
 			middlewareRoute = join(
 				__dirname,
@@ -42,11 +45,20 @@ class MiddlewareProvider {
 				name + ".js"
 			);
 			if (middleware = this.requireMiddleware(middlewareRoute)) {
-				return (this.middlewares[name] = require(middlewareRoute));
+				return this.buildMiddleware(this.middlewares[name] = require(middlewareRoute), parameters);
 			} else {
 				throw new Error("Middleware (" + name + ") missing!");
 			}
 		}
+	}
+	static buildMiddleware(middleware, parameters){
+		if (typeof parameters === "undefined"){
+			parameters = {};
+		}
+		return {
+			middleware,
+			parameters
+		};
 	}
 	static requireMiddleware(path){
 		let { existsSync } = require("fs");

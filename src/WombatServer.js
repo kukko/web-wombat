@@ -151,53 +151,6 @@ class WombatServer {
 		);
 	}
 	static serve(request, response) {
-		let serveRequest = (request, response) => {
-			let route = RouteService.getRoute(request);
-			if (typeof route !== "undefined") {
-				request.route = route;
-				route.serve(request, response);
-			} else {
-				let path = require("path");
-				if (path.extname(request.url).length === 0) {
-					response.statusCode = 404;
-					let controller = new BaseController(request, response);
-					controller.view("404", {}).catch((error) => {
-						response.end("404");
-					});
-				} else {
-					let fileSystem = require("fs"),
-						filePath;
-					if (request.url.indexOf("?") === -1) {
-						filePath = request.url;
-					} else {
-						filePath = request.url.substr(
-							0,
-							request.url.indexOf("?")
-						);
-					}
-					let resourcePath = path.join(
-						path.dirname(require.main.filename),
-						filePath
-					);
-					if (fileSystem.existsSync(resourcePath)) {
-						let responseHeaders = {};
-						if (typeof this.mime === "undefined") {
-							this.mime = require("mime");
-						}
-						responseHeaders["Content-type"] = this.mime.getType(
-							resourcePath
-						);
-						response.writeHead(200, responseHeaders);
-						fileSystem
-							.createReadStream(resourcePath)
-							.pipe(response);
-					} else {
-						response.writeHead(404);
-						response.end("404");
-					}
-				}
-			}
-		};
 		let requestBody = "";
 		request.on("data", (chunk) => {
 			requestBody += chunk.toString();
@@ -207,10 +160,57 @@ class WombatServer {
 			MiddlewareProvider.runMiddlewares(
 				request,
 				response,
-				serveRequest,
+				WombatServer.serveRequest,
 				MiddlewareProvider.getWebMiddlewares()
 			);
 		});
+	}
+	static serveRequest(request, response){
+		let route = RouteService.getRoute(request);
+		if (typeof route !== "undefined") {
+			request.route = route;
+			route.serve(request, response);
+		} else {
+			let path = require("path");
+			if (path.extname(request.url).length === 0) {
+				response.statusCode = 404;
+				let controller = new BaseController(request, response);
+				controller.view("404", {}).catch((error) => {
+					response.end("404");
+				});
+			} else {
+				let fileSystem = require("fs"),
+					filePath;
+				if (request.url.indexOf("?") === -1) {
+					filePath = request.url;
+				} else {
+					filePath = request.url.substr(
+						0,
+						request.url.indexOf("?")
+					);
+				}
+				let resourcePath = path.join(
+					path.dirname(require.main.filename),
+					filePath
+				);
+				if (fileSystem.existsSync(resourcePath)) {
+					let responseHeaders = {};
+					if (typeof WombatServer.mime === "undefined") {
+						WombatServer.mime = require("mime");
+					}
+					responseHeaders["Content-type"] = WombatServer.mime.getType(
+						resourcePath
+					);
+					response.writeHead(200, responseHeaders);
+					fileSystem
+						.createReadStream(resourcePath)
+						.pipe(response);
+				} else {
+					response.writeHead(404);
+					response.end("404");
+				}
+			}
+		}
 	}
 	static serveWebSocket(request, socket, head) {
 		let route = RouteService.getRoute(request);
