@@ -2,7 +2,7 @@ let assert = require('chai').assert,
 	sinon = require('sinon');
 sinon.assert.expose(assert);
 
-describe('Middlewares are called', () => {
+describe('Middlewares are called properly', () => {
 	let { WombatServer, Route, BaseController, BaseMiddleware, MiddlewareProvider } = require('../../index.js'),
 		defaultRoutes,
 		request,
