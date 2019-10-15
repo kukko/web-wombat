@@ -2,6 +2,9 @@ let BaseMiddleware = require("../BaseMiddleware.js");
 
 class JwtAuthenticationMiddleware extends BaseMiddleware {
 	static run(request, response, next, params) {
+		if (typeof params['return403ForUnauthenticated'] === "undefined"){
+			params['return403ForUnauthenticated'] = true;
+		}
 		let jwt = require("jsonwebtoken"),
 			{ join, dirname } = require("path"),
 			signKey = require(join(
@@ -16,7 +19,7 @@ class JwtAuthenticationMiddleware extends BaseMiddleware {
 			next();
 		} catch (e) {
 			request.authenticated = false;
-			if (!params['return403ForUnauthenticated']){
+			if (params['return403ForUnauthenticated']){
 				let ViewProvider = require("../../ViewProvider.js"),
 					viewProviderObj = new ViewProvider(request, response);
 				response.statusCode = 403;
