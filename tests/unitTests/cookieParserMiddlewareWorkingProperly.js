@@ -11,7 +11,8 @@ describe('CookieParserMiddleware works expected', () => {
             foo: 'bar'
         };
     before(() => {
-        CookieParserMiddleware = require('../../src/middlewares/CookieParserMiddleware/CookieParserMiddleware.js');
+        let { MiddlewareProvider } = require('../../index.js');
+        CookieParserMiddleware = MiddlewareProvider.getMiddleware('CookieParserMiddleware');
     });
     beforeEach(() => {
 		request = {
@@ -22,6 +23,9 @@ describe('CookieParserMiddleware works expected', () => {
 		};
         response = {};
         next = sinon.spy();
+    });
+    it('Can load CookieParserMiddleware', () => {
+        assert.isObject(CookieParserMiddleware);
     });
     it('The cookies attribute setted for request object when no cookies setted', () => {
         CookieParserMiddleware.run(request, response, next);

@@ -57,7 +57,10 @@ class MiddlewareProvider {
 		}
 		return {
 			middleware,
-			parameters
+			parameters,
+			run: (request, response, next, params) => {
+				return middleware.run(request, response, next, params);
+			}
 		};
 	}
 	static requireMiddleware(path){

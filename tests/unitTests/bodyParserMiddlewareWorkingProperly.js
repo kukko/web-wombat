@@ -24,8 +24,11 @@ describe('BodyParserMiddleware works expected', () => {
         response = {};
         next = sinon.spy();
     });
+    it('Can load BodyParserMiddleware', () => {
+        let { MiddlewareProvider } = require('../../index.js');
+        assert.isObject(MiddlewareProvider.getMiddleware('CookieParserMiddleware'));
+    });
     it('Not set body for get request', () => {
-        let BodyParserMiddleware = require('../../src/middlewares/BodyParserMiddleware/BodyParserMiddleware.js');
         BodyParserMiddleware.run(request, response, next);
         assert.isUndefined(request.body);
     });
