@@ -11,7 +11,8 @@ describe('BodyParserMiddleware works expected', () => {
             foo: 'bar'
         };
     before(() => {
-        BodyParserMiddleware = require('../../src/middlewares/BodyParserMiddleware/BodyParserMiddleware.js');
+        let { MiddlewareProvider } = require('../../index.js');
+        BodyParserMiddleware = MiddlewareProvider.getMiddleware('BodyParserMiddleware');
     });
     beforeEach(() => {
 		request = {
@@ -25,8 +26,7 @@ describe('BodyParserMiddleware works expected', () => {
         next = sinon.spy();
     });
     it('Can load BodyParserMiddleware', () => {
-        let { MiddlewareProvider } = require('../../index.js');
-        assert.isObject(MiddlewareProvider.getMiddleware('CookieParserMiddleware'));
+        assert.isObject(BodyParserMiddleware);
     });
     it('Not set body for get request', () => {
         BodyParserMiddleware.run(request, response, next);
