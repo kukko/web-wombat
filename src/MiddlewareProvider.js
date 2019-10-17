@@ -59,7 +59,7 @@ class MiddlewareProvider {
 			middleware,
 			parameters,
 			run: (request, response, next, params) => {
-				return middleware.run(request, response, next, params);
+				return middleware.run(request, response, next, typeof params !== "undefined" ? params : parameters);
 			}
 		};
 	}
