@@ -6,10 +6,7 @@ describe('FormMethodParserMiddleware works expected', () => {
     let FormMethodParserMiddleware,
         request,
         response,
-        next,
-        data = {
-            foo: 'bar'
-        };
+        next;
     before(() => {
         let { MiddlewareProvider } = require('../../index.js');
         FormMethodParserMiddleware = MiddlewareProvider.getMiddleware('FormMethodParserMiddleware');
@@ -19,8 +16,7 @@ describe('FormMethodParserMiddleware works expected', () => {
 			method: "GET",
 			url: "",
 			upgrade: false,
-            headers: {},
-            rawBody: require('querystring').stringify(data)
+            headers: {}
 		};
         response = {};
         next = sinon.spy();
