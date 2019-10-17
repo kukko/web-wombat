@@ -26,6 +26,7 @@ module.exports = {
 		MustacheConnector: require("./src/TemplateConnectors/MustacheConnector/MustacheConnector.js"),
 		PugConnector: require("./src/TemplateConnectors/PugConnector/PugConnector.js")
 	},
+	ViewProvider: require("./src/ViewProvider.js"),
 	FormBuilder: require("./src/FormBuilder.js"),
 	AuthenticationService: require("./src/services/AuthenticationService/AuthenticationService.js"),
 	AuthenticationSourceInterface: require("./src/services/AuthenticationService/AuthenticationSourceInterface.js"),
