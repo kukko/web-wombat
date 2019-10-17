@@ -2,19 +2,21 @@ let BaseMiddleware = require("../BaseMiddleware.js");
 
 class JwtAuthenticationMiddleware extends BaseMiddleware {
 	static run(request, response, next, params) {
+		if (typeof params['signKey'] === "undefined"){
+			params['signKey'] = require(join(
+				dirname(require.main.filename),
+					"config",
+					"auth.js"
+				)).signKey;
+		}
 		if (typeof params['return403ForUnauthenticated'] === "undefined"){
 			params['return403ForUnauthenticated'] = true;
 		}
 		let jwt = require("jsonwebtoken"),
-			{ join, dirname } = require("path"),
-			signKey = require(join(
-			dirname(require.main.filename),
-				"config",
-				"auth.js"
-			)).signKey,
-			token = request.cookies["jwt"];
+			{ join, dirname } = require("path");
 		try {
-			request.user = jwt.verify(token, signKey);
+			let token = request.cookies["jwt"];
+			request.user = jwt.verify(token, params.signKey);
 			request.authenticated = true;
 			next();
 		} catch (e) {
