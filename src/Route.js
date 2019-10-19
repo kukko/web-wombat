@@ -37,6 +37,16 @@ class Route {
 		return this.middlewares;
 	}
 	serve(request, response) {
+		if (typeof this.redirectRouteAlias !== "undefined"){
+			let RouteService = require('./services/RouteService.js');
+			this.redirectURL = RouteService.getRouteByAlias(this.redirectRouteAlias, request.routeVariables);
+		}
+		if (typeof this.redirectURL !== "undefined"){
+			response.statusCode = 302;
+			response.setHeader("Location", this.redirectURL);
+			response.end();
+			return;
+		}
 		return this.runController(request, response);
 	}
 	serveWebSocket(request, socket, head) {
@@ -130,6 +140,14 @@ class Route {
 	}
 	as(alias) {
 		this.alias = alias;
+		return this;
+	}
+	redirectToURL(url){
+		this.redirectURL = url;
+		return this;
+	}
+	redirectToRoute(routeAlias){
+		this.redirectRouteAlias = routeAlias;
 		return this;
 	}
 	toString(parameters) {
