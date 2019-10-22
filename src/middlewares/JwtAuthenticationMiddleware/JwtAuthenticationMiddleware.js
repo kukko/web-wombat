@@ -1,14 +1,11 @@
-let BaseMiddleware = require("../BaseMiddleware.js");
+let BaseMiddleware = require("../BaseMiddleware.js"),
+	Config = require("../../config/Config.js");
 
 class JwtAuthenticationMiddleware extends BaseMiddleware {
 	static run(request, response, next, params) {
 		if (typeof params['signKey'] === "undefined"){
 			let { join, dirname } = require("path");
-			params['signKey'] = require(join(
-				dirname(require.main.filename),
-					"config",
-					"auth.js"
-				)).signKey;
+			params['signKey'] = Config.GetAuth().signKey;
 		}
 		if (typeof params['return403ForUnauthenticated'] === "undefined"){
 			params['return403ForUnauthenticated'] = true;

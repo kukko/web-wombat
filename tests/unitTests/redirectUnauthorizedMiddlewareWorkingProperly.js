@@ -1,5 +1,5 @@
 let assert = require('chai').assert,
-	sinon = require('sinon');
+    sinon = require('sinon');
 sinon.assert.expose(assert);
 
 describe('RedirectUnauthorizedMiddleware', () => {
@@ -56,26 +56,55 @@ describe('RedirectUnauthorizedMiddleware', () => {
             describe('To route', () => {
                 let WombatServer,
                     defaultRoutes;
-                before(() => {
-                    let WebWombat = require('../../index.js'),
-                        Route = WebWombat.Route;
-                    WombatServer = WebWombat.WombatServer;
-                    defaultRoutes = WombatServer.getRoutes();
-                    WombatServer.setRoutes([
-                        Route.get("/unauthorized").as('unauthorized')
-                    ]);
-                });
-                beforeEach(() => {
-                    RedirectUnauthorizedMiddleware.run(request, response, next, {
-                        ...RedirectUnauthorizedMiddleware.parameters,
-                        redirectRouteAlias: "unauthorized"
+                describe('Without route parameters', () => {
+                    before(() => {
+                        let WebWombat = require('../../index.js'),
+                            Route = WebWombat.Route;
+                        WombatServer = WebWombat.WombatServer;
+                        defaultRoutes = WombatServer.getRoutes();
+                        WombatServer.setRoutes([
+                            Route.get("/unauthorized").as('unauthorized')
+                        ]);
+                    });
+                    beforeEach(() => {
+                        RedirectUnauthorizedMiddleware = MiddlewareProvider.getMiddleware('RedirectUnauthorizedMiddleware', {
+                            redirectRouteAlias: "unauthorized"
+                        });
+                        RedirectUnauthorizedMiddleware.run(request, response);
+                    });
+                    it('Relative URL', () => {
+                        assert.equal(response.setHeader.lastArg, "/unauthorized");
+                    });
+                    after(() => {
+                        WombatServer.setRoutes(defaultRoutes);
                     });
                 });
-                it('Relative URL', () => {
-                    assert.equal(response.setHeader.lastArg, "/unauthorized");
-                });
-                after(() => {
-                    WombatServer.setRoutes(defaultRoutes);
+                describe('With route parameters', () => {
+                    let testRouteParameter = 'bar';
+                    before(() => {
+                        let WebWombat = require('../../index.js'),
+                            Route = WebWombat.Route;
+                        WombatServer = WebWombat.WombatServer;
+                        defaultRoutes = WombatServer.getRoutes();
+                        WombatServer.setRoutes([
+                            Route.get("/unauthorized/{testRouteParameter}").as('unauthorized')
+                        ]);
+                    });
+                    beforeEach(() => {
+                        RedirectUnauthorizedMiddleware = MiddlewareProvider.getMiddleware('RedirectUnauthorizedMiddleware', {
+                            redirectRouteAlias: "unauthorized",
+                            redirectRouteParameters: {
+                                testRouteParameter
+                            }
+                        });
+                        RedirectUnauthorizedMiddleware.run(request, response);
+                    });
+                    it('Relative URL', () => {
+                        assert.equal(response.setHeader.lastArg, "/unauthorized/" + testRouteParameter);
+                    });
+                    after(() => {
+                        WombatServer.setRoutes(defaultRoutes);
+                    });
                 });
             });
         });
