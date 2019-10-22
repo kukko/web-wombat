@@ -13,10 +13,10 @@ class BaseController {
 					if (typeof target.collections[name] !== "undefined") {
 						throw new Error(
 							"Resolved keyword (" +
-								name +
-								") used as collection name for " +
-								target.collections[name].name +
-								"."
+							name +
+							") used as collection name for " +
+							target.collections[name].name +
+							"."
 						);
 					}
 				} else {
@@ -71,10 +71,33 @@ class BaseController {
 		this.response.setHeader("Location", url);
 		this.response.end();
 	}
+	setCookie(name, value) {
+		let newCookies = this.response.getHeader('Set-Cookie'),
+			cookies = [],
+			added = false;
+		for (let index in newCookies){
+			let cookie = BaseController.cookie.parse(newCookies[index]);
+			if (cookie[name] === "undefined"){
+				cookies.push(BaseController.cookie.serialize(name, value));
+				added = true;
+			}
+			else{
+				cookies.push(newCookies[index]);
+			}
+		}
+		if (!added){
+			cookies.push(BaseController.cookie.serialize(name, value));
+		}
+		this.response.setHeader('Set-Cookie', cookies);
+	}
 }
 
 if (typeof BaseController.middlewareProvider === "undefined") {
 	BaseController.middlewareProvider = require("./MiddlewareProvider.js");
+}
+
+if (typeof BaseController.cookie === "undefined") {
+	BaseController.cookie = require("cookie");
 }
 
 if (typeof BaseController.ViewProvider === "undefined") {
