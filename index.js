@@ -8,7 +8,7 @@ module.exports = {
 	WebSocketController: require("./src/WebSocketController.js"),
 	Route: require("./src/Route.js"),
 	RouteGroup: require("./src/RouteGroup.js"),
-	RouteService: require("./src/services/RouteService.js"),
+	RouteService: require("./src/services/RouteService/RouteService.js"),
 	BaseMiddleware: require("./src/middlewares/BaseMiddleware.js"),
 	MiddlewareProvider: require("./src/MiddlewareProvider.js"),
 	BaseCollection: require("./src/BaseCollection.js"),
@@ -34,6 +34,7 @@ module.exports = {
 		DatabaseAuthenticationSource: require("./src/services/AuthenticationService/AuthenticationSources/DatabaseAuthenticationSource.js"),
 		MemoryAuthenticationSource: require("./src/services/AuthenticationService/AuthenticationSources/MemoryAuthenticationSource.js")
 	},
-	logger: require('./src/Logger.js'),
-	Config: require('./src/config/Config.js')
+	logger: require("./src/Logger.js"),
+	Config: require("./src/config/Config.js"),
+	ServiceProvider: require("./src/services/ServiceProvider.js")
 };

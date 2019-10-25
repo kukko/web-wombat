@@ -1,5 +1,5 @@
 let TemplateInterface = require("./TemplateConnectors/TemplateInterface.js"),
-	RouteService = require("./services/RouteService.js"),
+	ServiceProvider = require("./services/ServiceProvider.js"),
 	FormBuilder = require("./FormBuilder.js");
 
 class ViewProvider {
@@ -68,7 +68,7 @@ class ViewProvider {
 		if (viewExtension.length === 0) {
 			viewPath += this.connector.getDefaultFileExtension();
 		}
-		options.RouteService = RouteService;
+		options.RouteService = ServiceProvider.getRouteService();
 		options.FormBuilder = FormBuilder;
 		return this.connector.render(
 			viewPath,

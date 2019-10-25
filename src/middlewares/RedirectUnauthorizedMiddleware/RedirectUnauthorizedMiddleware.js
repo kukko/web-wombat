@@ -16,7 +16,7 @@ class RedirectUnauthorizedMiddleware extends BaseMiddleware {
 				response.end();
 			}
 			else if (isRedirectRouteSetted){
-				let RouteService = require("../../services/RouteService.js"),
+				let RouteService = require("../../services/ServiceProvider.js").getRouteService(),
 					redirectParameters = typeof params.redirectRouteParameters !== "undefined" ? params.redirectRouteParameters : {},
 					redirectURL = RouteService.getRouteByAlias(params.redirectRouteAlias, redirectParameters);
 				response.statusCode = 302;

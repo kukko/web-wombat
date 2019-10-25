@@ -1,5 +1,5 @@
 let DatabaseHolder = require("./DatabaseHolder.js"),
-	RouteService = require("./services/RouteService.js"),
+	RouteService = require("./services/ServiceProvider.js").getRouteService(),
 	BaseController = require("./BaseController.js"),
 	ViewProvider = require("./ViewProvider.js"),
 	MiddlewareProvider = require("./MiddlewareProvider.js"),

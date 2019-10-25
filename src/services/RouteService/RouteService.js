@@ -1,4 +1,5 @@
-let { join, dirname } = require("path");
+let { join, dirname } = require("path"),
+	RouteGroup = require("../../RouteGroup.js");
 
 class RouteService {
 	static getRoute(request, routes) {
@@ -39,11 +40,20 @@ class RouteService {
 			routes = this.getRoutes();
 		}
 		for (let routeIndex in routes) {
-			if (Array.isArray(routes[routeIndex])) {
+			let routesIsArray = Array.isArray(routes[routeIndex]),
+				routesIsGroup = routes[routeIndex] instanceof RouteGroup;
+			if (routesIsArray || routesIsGroup) {
+				let subRoutes;
+				if (routesIsArray){
+					subRoutes = routes[routeIndex];
+				}
+				else if (routesIsGroup){
+					subRoutes = routes[routeIndex].getRoutes();
+				}
 				let output = this.getRouteByAlias(
 					alias,
 					parameters,
-					routes[routeIndex]
+					subRoutes
 				);
 				if (typeof output !== "undefined") {
 					return output;

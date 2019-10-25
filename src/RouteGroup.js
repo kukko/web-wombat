@@ -33,6 +33,9 @@ class RouteGroup{
 	getRoute(){
 		return this.route;
 	}
+	getRoutes(){
+		return this.routes;
+	}
 	setMiddlewares(middlewares){
 		if (typeof this.middlewares === "undefined"){
 			this.middlewares = middlewares;

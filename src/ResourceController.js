@@ -1,6 +1,5 @@
 let BaseController = require("./BaseController.js"),
 	{ ObjectId } = require("mongodb"),
-	RouteService = require("./services/RouteService.js"),
 	logger = require("./Logger.js");
 
 class ResourceController extends BaseController {
@@ -35,7 +34,7 @@ class ResourceController extends BaseController {
 				.createDocument(this.request.body)
 				.then((id) => {
 					this.redirect(
-						RouteService.getRouteByAlias(
+						require("./services/ServiceProvider.js").getRouteService().getRouteByAlias(
 							this.routeAliasBase + ".show",
 							{
 								id
@@ -114,7 +113,7 @@ class ResourceController extends BaseController {
 						this.request.body
 					);
 					this.redirect(
-						RouteService.getRouteByAlias(
+						require("./services/ServiceProvider.js").getRouteService().getRouteByAlias(
 							this.routeAliasBase + ".index"
 						)
 					);
@@ -141,7 +140,7 @@ class ResourceController extends BaseController {
 						.then((rowDeleted) => {
 							if (rowDeleted) {
 								this.redirect(
-									RouteService.getRouteByAlias(
+									require("./services/ServiceProvider.js").getRouteService().getRouteByAlias(
 										this.routeAliasBase + ".index"
 									)
 								);

@@ -26,7 +26,7 @@ class Route {
 	}
 	getRoute(trim = false) {
 		return trim
-			? require("./services/RouteService.js").trimURL(this.route)
+			? require("./services/ServiceProvider.js").getRouteService().trimURL(this.route)
 			: this.route;
 	}
 	setMiddlewares(middlewares){
@@ -38,7 +38,7 @@ class Route {
 	}
 	serve(request, response) {
 		if (typeof this.redirectRouteAlias !== "undefined"){
-			let RouteService = require('./services/RouteService.js');
+			let RouteService = require('./services/ServiceProvider.js').getRouteService();
 			this.redirectURL = RouteService.getRouteByAlias(this.redirectRouteAlias, request.routeVariables);
 		}
 		if (typeof this.redirectURL !== "undefined"){
@@ -90,7 +90,7 @@ class Route {
 		) ? this : false;
 	}
 	urlIsMatching(request) {
-		let routeService = require("./services/RouteService.js"),
+		let routeService = require("./services/ServiceProvider.js").getRouteService(),
 			urlParts = routeService.trimURL(request.url).split("/"),
 			routeParts = routeService.trimURL(this.route).split("/"),
 			output = true;
@@ -113,7 +113,7 @@ class Route {
 		return output;
 	}
 	getRouteVariableNames() {
-		let routeParts = require("./services/RouteService.js")
+		let routeParts = require("./services/ServiceProvider.js").getRouteService()
 				.trimURL(this.route)
 				.split("/"),
 			output = {};
