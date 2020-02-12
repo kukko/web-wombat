@@ -11,7 +11,10 @@ function makeRequest(path, method = "GET", data = {}) {
 				url: "http://localhost:" + WombatServer.getPort() + path,
 				method,
 				form: data,
-				followAllRedirects: true
+				followAllRedirects: true,
+				headers: {
+					"content-type": "text/html"
+				}
 			},
 			(error, storeResponse, body) => {
 				if (error) {

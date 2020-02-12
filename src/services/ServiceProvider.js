@@ -9,17 +9,15 @@ class ServiceProvider{
         return this.services[serviceType];
     }
     static loadService(serviceType){
-        let { join, resolve } = require("path"),
-            servicePath = resolve(
-            __dirname,
-            join(serviceType, serviceType + ".js")
-        );
+        let { join, resolve, relative } = require("path"),
+            servicePath = "./" + serviceType + "/" + serviceType + ".js";
         this.services[serviceType] = require(servicePath);
-    } 
+    }
+    static clearCache(){
+        this.services = {};
+    }
 }
 
-if (typeof ServiceProvider.services === "undefined"){
-    ServiceProvider.services = {};
-}
+ServiceProvider.services = {};
 
 module.exports = ServiceProvider;

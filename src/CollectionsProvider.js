@@ -22,6 +22,9 @@ class CollectionsProvider {
 		}
 		return (this._collections = output);
 	}
+	static getCollection(collectionName){
+		return this.collections[collectionName].collection;
+	}
 	static isDirectory(source) {
 		return lstatSync(
 			join(source.parentFolder, source.collectionFolder)

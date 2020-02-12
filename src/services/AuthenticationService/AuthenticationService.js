@@ -12,8 +12,6 @@ class AuthenticationService{
 	}
 }
 
-if (typeof AuthenticationService.authSource === "undefined"){
-	AuthenticationService.setAuthenticationSource(require("./AuthenticationSources/DatabaseAuthenticationSource.js"));
-}
+AuthenticationService.setAuthenticationSource(require("./AuthenticationSources/DatabaseAuthenticationSource.js"));
 
 module.exports = AuthenticationService;

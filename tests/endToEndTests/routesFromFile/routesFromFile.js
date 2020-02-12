@@ -5,7 +5,12 @@ WombatServer.withoutDatabase()
 	.setUnsecure()
 	.init((port) => {
 		require("http")
-			.get("http://localhost:" + port, (response) => {
+			.get("http://localhost:" + port,
+			{
+				headers: {
+					"content-type": "text/html"
+				}
+			}, (response) => {
 				if (response.statusCode !== 200) {
 					throw new Error("Request returned other code than 200.");
 				}

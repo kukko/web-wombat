@@ -2,6 +2,12 @@ let { join, dirname } = require("path"),
 	RouteGroup = require("../../RouteGroup.js");
 
 class RouteService {
+	static getRoutes() {
+		return this.routes;
+	}
+	static setRoutes(routes) {
+		this.routes = routes;
+	}
 	static getRoute(request, routes) {
 		if (typeof routes === "undefined") {
 			routes = this.routes;
@@ -29,12 +35,6 @@ class RouteService {
 		}
 		return url;
 	}
-	static setRoutes(routes) {
-		this.routes = routes;
-	}
-	static getRoutes() {
-		return this.routes;
-	}
 	static getRouteByAlias(alias, parameters, routes) {
 		if (typeof routes === "undefined") {
 			routes = this.getRoutes();
@@ -47,7 +47,7 @@ class RouteService {
 				if (routesIsArray){
 					subRoutes = routes[routeIndex];
 				}
-				else if (routesIsGroup){
+				if (routesIsGroup){
 					subRoutes = routes[routeIndex].getRoutes();
 				}
 				let output = this.getRouteByAlias(

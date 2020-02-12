@@ -7,6 +7,7 @@ class MemoryAuthenticationSource extends AuthenticationSourceInterface{
 			let user = this.getUsers().find((userRecord) => {
 				return userRecord[this.getIdentificationField()] === username;
 			});
+			user = user ? user : null;
 			if (user){
 				if (user[this.getAuthenticationField()] === password){
 					resolve(user);
@@ -35,9 +36,6 @@ class MemoryAuthenticationSource extends AuthenticationSourceInterface{
 		return this;
 	}
 	static addUser(user){
-		if (typeof this.users === "undefined"){
-			this.users = [];
-		}
 		if (typeof user[this.getIdentificationField()] === "undefined"){
 			throw new Error("This user don't have the `" + this.getIdentificationField() + "` attribute.");
 		}
@@ -68,16 +66,8 @@ class MemoryAuthenticationSource extends AuthenticationSourceInterface{
 	}
 }
 
-if (typeof MemoryAuthenticationSource.getUsers() === "undefined"){
-	MemoryAuthenticationSource.setUsers([]);
-}
-
-if (typeof MemoryAuthenticationSource.getIdentificationField() === "undefined"){
-	MemoryAuthenticationSource.setIdentificationField("username");
-}
-
-if (typeof MemoryAuthenticationSource.getAuthenticationField() === "undefined"){
-	MemoryAuthenticationSource.setAuthenticationField("password");
-}
+MemoryAuthenticationSource.setUsers([]);
+MemoryAuthenticationSource.setIdentificationField("username");
+MemoryAuthenticationSource.setAuthenticationField("password");
 
 module.exports = MemoryAuthenticationSource;

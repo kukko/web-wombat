@@ -39,7 +39,10 @@ WombatServer.withoutDatabase()
 					host: "localhost",
 					port,
 					path: "/existingView",
-					method: "POST"
+					method: "POST",
+					headers: {
+						"content-type": "text/html"
+					}
 				},
 				(response) => {
 					let data = "";
@@ -67,6 +70,11 @@ WombatServer.withoutDatabase()
 		require("http")
 			.get(
 				"http://localhost:" + port + "/notExistingView",
+				{
+					headers: {
+						"content-type": "text/html"
+					}
+				},
 				(response) => {
 					if (response.statusCode !== 200) {
 						throw new Error("Not existing route!");

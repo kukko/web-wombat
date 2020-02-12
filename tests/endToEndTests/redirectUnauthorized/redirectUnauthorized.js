@@ -17,6 +17,9 @@ WombatServer.setUnsecure().init(() => {
 		form: {
 			username: "foo",
 			password: "bar"
+		},
+		headers: {
+			"content-type": "text/html"
 		}
 	}, (error, response, body) => {
 		let token = body;
@@ -25,7 +28,10 @@ WombatServer.setUnsecure().init(() => {
 			cookieJar.setCookie(request.cookie("jwt=" + token), "http://localhost:"+WombatServer.getPort());
 			request.get({
 				url: "http://localhost:" + WombatServer.getPort() + "/userArea",
-				jar: cookieJar
+				jar: cookieJar,
+				headers: {
+					"content-type": "text/html"
+				}
 			}, (error, response, body) => {
 				if (body === "AUTHORIZED"){
 					finishTest();
@@ -40,7 +46,10 @@ WombatServer.setUnsecure().init(() => {
 		}
 	});
 	request.get({
-		url: "http://localhost:" + WombatServer.getPort() + "/userArea"
+		url: "http://localhost:" + WombatServer.getPort() + "/userArea",
+		headers: {
+			"content-type": "text/html"
+		}
 	}, (error, response, body) => {
 		if (body === "UNAUTHORIZED"){
 			finishTest();

@@ -151,19 +151,12 @@ class WombatServer {
 		);
 	}
 	static serve(request, response) {
-		let requestBody = "";
-		request.on("data", (chunk) => {
-			requestBody += chunk.toString();
-		});
-		request.on("end", () => {
-			request.rawBody = requestBody;
-			MiddlewareProvider.runMiddlewares(
-				request,
-				response,
-				WombatServer.serveRequest,
-				MiddlewareProvider.getWebMiddlewares()
-			);
-		});
+		MiddlewareProvider.runMiddlewares(
+			request,
+			response,
+			WombatServer.serveRequest,
+			MiddlewareProvider.getWebMiddlewares()
+		);
 	}
 	static serveRequest(request, response){
 		let route = RouteService.getRoute(request);

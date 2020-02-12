@@ -16,6 +16,7 @@ class MiddlewareProvider {
 	}
 	static getWebMiddlewares() {
 		return [
+			this.getMiddleware("FormDataParserMiddleware"),
 			this.getMiddleware("BodyParserMiddleware"),
 			this.getMiddleware("FormMethodParserMiddleware")
 		];

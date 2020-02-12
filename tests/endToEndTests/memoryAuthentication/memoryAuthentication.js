@@ -74,7 +74,8 @@ WombatServer.withoutDatabase().setUnsecure().init(() => {
 			password: "wrongPassword"
 		}
 	}, (error, response, body) => {
-		if (body.length === 0){
+		body = JSON.parse(body);
+		if (body === null){
 			console.log("Wrong auhentication test finished!");
 			finishTest();
 		}

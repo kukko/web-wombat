@@ -13,7 +13,12 @@ WombatServer.withoutDatabase()
 					process.exit(0);
 				}
 			};
-		request.post("http://localhost:" + WombatServer.getPort() + "/user/login", (error, response, body) => {
+		request.post("http://localhost:" + WombatServer.getPort() + "/user/login",
+		{
+			headers: {
+				"content-type": "text/html"
+			}
+		}, (error, response, body) => {
 			if (!error){
 				finishTest(body);
 			}
@@ -22,7 +27,12 @@ WombatServer.withoutDatabase()
 				process.exit(1);
 			}
 		});
-		request.get("http://localhost:" + WombatServer.getPort() + "/user/logout", (error, response, body) => {
+		request.get("http://localhost:" + WombatServer.getPort() + "/user/logout",
+		{
+			headers: {
+				"content-type": "text/html"
+			}
+		}, (error, response, body) => {
 			if (!error){
 				finishTest(body);
 			}
@@ -31,7 +41,12 @@ WombatServer.withoutDatabase()
 				process.exit(1);
 			}
 		});
-		request.get("http://localhost:" + WombatServer.getPort() + "/user/admin/edit", (error, response, body) => {
+		request.get("http://localhost:" + WombatServer.getPort() + "/user/admin/edit",
+		{
+			headers: {
+				"content-type": "text/html"
+			}
+		}, (error, response, body) => {
 			if (!error){
 				finishTest(body);
 			}
@@ -40,7 +55,12 @@ WombatServer.withoutDatabase()
 				process.exit(1);
 			}
 		});
-		request.delete("http://localhost:" + WombatServer.getPort() + "/user/admin/delete", (error, response, body) => {
+		request.delete("http://localhost:" + WombatServer.getPort() + "/user/admin/delete",
+		{
+			headers: {
+				"content-type": "text/html"
+			}
+		}, (error, response, body) => {
 			if (!error){
 				finishTest(body);
 			}

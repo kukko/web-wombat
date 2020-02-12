@@ -29,7 +29,12 @@ WombatServer.withoutDatabase()
 					}
 				};
 			require("http")
-				.get("http://localhost:" + port + "/unsecure", (response) => {
+				.get("http://localhost:" + port + "/unsecure",
+				{
+					headers: {
+						"content-type": "text/html"
+					}
+				}, (response) => {
 					if (response.statusCode === 200) {
 						logger.log("Unsecure connection test completed!");
 						finish();
@@ -42,7 +47,12 @@ WombatServer.withoutDatabase()
 					process.exit(1);
 				});
 			require("https")
-				.get("https://localhost:" + WombatServer.getSecurePort() + "/secure", (response) => {
+				.get("https://localhost:" + WombatServer.getSecurePort() + "/secure",
+				{
+					headers: {
+						"content-type": "text/html"
+					}
+				}, (response) => {
 					if (response.statusCode === 200) {
 						logger.log("Secure connection test completed!");
 						finish();
