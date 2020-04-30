@@ -23,6 +23,7 @@ class BladeConnector extends TemplateInterface {
 							} else {
 								this.response.write(html, "utf8");
 							}
+							resolve(html);
 						} else {
 							reject(error);
 						}

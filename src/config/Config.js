@@ -9,12 +9,7 @@ class Config {
         return Config[configType];
     }
     static LoadConfig(configType) {
-        let { join, dirname } = require("path");
-        return require(join(
-            dirname(require.main.filename),
-            "config",
-            configType + ".js"
-        ));
+        return require("./" + configType + ".js");
     }
 }
 
