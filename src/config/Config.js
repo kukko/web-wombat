@@ -9,8 +9,15 @@ class Config {
         return Config[configType];
     }
     static LoadConfig(configType) {
-        return require("./" + configType + ".js");
+        return require(this.join(this.folder, configType + ".js"));
+    }
+    static setConfigFolder(folder){
+        this.folder = folder;
     }
 }
+
+Config.folder = __dirname;
+let { join } = require('path');
+Config.join = join;
 
 module.exports = Config;

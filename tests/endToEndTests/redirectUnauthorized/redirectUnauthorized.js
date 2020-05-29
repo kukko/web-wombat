@@ -1,6 +1,8 @@
-let { WombatServer, AuthenticationService, authenticationSources } = require("../../../index.js"),
-	request = require("request");
+let { WombatServer, AuthenticationService, authenticationSources, Config } = require("../../../index.js"),
+	request = require("request"),
+	{ join } = require("path");
 
+Config.setConfigFolder(join(__dirname, 'config'));
 AuthenticationService.setAuthenticationSource(authenticationSources.DatabaseAuthenticationSource);
 
 let completedTests = 0,

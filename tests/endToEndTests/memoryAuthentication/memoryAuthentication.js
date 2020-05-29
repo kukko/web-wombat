@@ -29,16 +29,14 @@ if (authenticationSources.MemoryAuthenticationSource.getUsers().length !== 2){
 	throw new Error("The getUsers method's return value didn't have two element.");
 }
 
-try{
-	authenticationSources.MemoryAuthenticationSource.addUser({
-		username: "foo",
-		password: "bar"
-	});
+authenticationSources.MemoryAuthenticationSource.addUser({
+	username: "foo",
+	password: "bar"
+}).then(() => {
 	throw new Error("The authentication source didn't throw an error when tried to add a user with a username which is already exists.");
-}
-catch (e){
+}).catch((error) => {
 	// The authentication source throwed an error, because a user with the same username have been already added.
-}
+});
 
 AuthenticationService.setAuthenticationSource(authenticationSources.MemoryAuthenticationSource);
 

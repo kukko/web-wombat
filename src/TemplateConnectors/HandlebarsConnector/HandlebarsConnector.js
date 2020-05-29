@@ -5,16 +5,16 @@ class HandlebarsConnector extends TemplateInterface {
 		return ".handlebars";
 	}
 	render(filePath, options, writeToResponse = true, endResponse = true) {
-		let template = HandlebarsConnector.readFileSync(filePath, "utf8");
 		if (writeToResponse) {
 			if (!this.response.hasHeader("Content-type")) {
 				this.response.setHeader("Content-type", "text/html");
 			}
 			return new Promise((resolve, reject) => {
 				try {
-					let html = HandlebarsConnector.handlebars.compile(
-						template
-					)(options);
+					let template = HandlebarsConnector.readFileSync(filePath, "utf8"),
+						html = HandlebarsConnector.handlebars.compile(
+							template
+						)(options);
 					if (endResponse) {
 						this.response.end(html);
 					} else {
@@ -28,6 +28,7 @@ class HandlebarsConnector extends TemplateInterface {
 		} else {
 			return new Promise((resolve, reject) => {
 				try {
+					let template = HandlebarsConnector.readFileSync(filePath, "utf8");
 					resolve(
 						HandlebarsConnector.handlebars.compile(template)(
 							options

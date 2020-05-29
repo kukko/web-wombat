@@ -5,17 +5,17 @@ class MustacheConnector extends TemplateInterface {
 		return ".mst";
 	}
 	render(filePath, options, writeToResponse = true, endResponse = true) {
-		let template = MustacheConnector.readFileSync(filePath, "utf8");
 		if (writeToResponse) {
 			if (!this.response.hasHeader("Content-type")) {
 				this.response.setHeader("Content-type", "text/html");
 			}
 			return new Promise((resolve, reject) => {
 				try {
-					let html = MustacheConnector.mustache.render(
-						template,
-						options
-					);
+					let template = MustacheConnector.readFileSync(filePath, "utf8"),
+						html = MustacheConnector.mustache.render(
+							template,
+							options
+						);
 					if (endResponse) {
 						this.response.end(html);
 					} else {
@@ -29,6 +29,7 @@ class MustacheConnector extends TemplateInterface {
 		} else {
 			return new Promise((resolve, reject) => {
 				try {
+					let template = MustacheConnector.readFileSync(filePath, "utf8");
 					resolve(
 						MustacheConnector.mustache.render(template, options)
 					);

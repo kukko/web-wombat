@@ -1,7 +1,9 @@
-let { WombatServer, Route, MiddlewareProvider } = require("../../../index.js"),
+let { WombatServer, Route, MiddlewareProvider, Config } = require("../../../index.js"),
 	JwtAuthenticationController = require("./controllers/JwtAuthenticationController/JwtAuthenticationController.js"),
-	request = require("request");
+	request = require("request"),
+	{ join } = require("path");
 
+Config.setConfigFolder(join(__dirname, 'config'));
 
 WombatServer.withoutDatabase().setUnsecure().setRoutes([
 	Route.get("/public", JwtAuthenticationController, "public"),
