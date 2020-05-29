@@ -10,6 +10,14 @@ describe('Config', () => {
     it('Can load Config', () => {
         assert.isFunction(Config);
     });
+    describe('Have basic documented attributes', () => {
+        it('join', () => {
+            assert.isFunction(Config.join);
+        });
+        it('folder', () => {
+            assert.isString(Config.folder);
+        });
+    });
     describe('Methods works as expected', () => {
         before(() => {
             Config = proxyquire.load('../../src/config/Config.js', {
@@ -64,6 +72,16 @@ describe('Config', () => {
             it('Returns config correctly', () => {
                 assert.deepEqual(loadedConfig, TestConfig);
             })
-        })
+        });
+        describe('setConfigFolder', () => {
+            let testFolder;
+            before(() => {
+                testFolder = 'foo';
+                Config.setConfigFolder(testFolder);
+            });
+            it('The \'folder\' attribute have been modified correctly', () => {
+                assert.equal(Config.folder, testFolder);
+            });
+        });
     });
 });

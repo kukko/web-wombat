@@ -159,50 +159,55 @@ class WombatServer {
 		);
 	}
 	static serveRequest(request, response){
-		let route = RouteService.getRoute(request);
-		if (typeof route !== "undefined") {
-			request.route = route;
-			route.serve(request, response);
-		} else {
-			let path = require("path");
-			if (path.extname(request.url).length === 0) {
-				response.statusCode = 404;
-				let controller = new BaseController(request, response);
-				controller.view("404", {}).catch((error) => {
-					response.end("404");
-				});
+		try{
+			let route = RouteService.getRoute(request);
+			if (typeof route !== "undefined") {
+				request.route = route;
+				route.serve(request, response);
 			} else {
-				let fileSystem = require("fs"),
-					filePath;
-				if (request.url.indexOf("?") === -1) {
-					filePath = request.url;
+				let path = require("path");
+				if (path.extname(request.url).length === 0) {
+					response.statusCode = 404;
+					let controller = new BaseController(request, response);
+					controller.view("404", {}).catch((error) => {
+						response.end("404");
+					});
 				} else {
-					filePath = request.url.substr(
-						0,
-						request.url.indexOf("?")
-					);
-				}
-				let resourcePath = path.join(
-					path.dirname(require.main.filename),
-					filePath
-				);
-				if (fileSystem.existsSync(resourcePath)) {
-					let responseHeaders = {};
-					if (typeof WombatServer.mime === "undefined") {
-						WombatServer.mime = require("mime");
+					let fileSystem = require("fs"),
+						filePath;
+					if (request.url.indexOf("?") === -1) {
+						filePath = request.url;
+					} else {
+						filePath = request.url.substr(
+							0,
+							request.url.indexOf("?")
+						);
 					}
-					responseHeaders["Content-type"] = WombatServer.mime.getType(
-						resourcePath
+					let resourcePath = path.join(
+						path.dirname(require.main.filename),
+						filePath
 					);
-					response.writeHead(200, responseHeaders);
-					fileSystem
-						.createReadStream(resourcePath)
-						.pipe(response);
-				} else {
-					response.writeHead(404);
-					response.end("404");
+					if (fileSystem.existsSync(resourcePath)) {
+						let responseHeaders = {};
+						if (typeof WombatServer.mime === "undefined") {
+							WombatServer.mime = require("mime");
+						}
+						responseHeaders["Content-type"] = WombatServer.mime.getType(
+							resourcePath
+						);
+						response.writeHead(200, responseHeaders);
+						fileSystem
+							.createReadStream(resourcePath)
+							.pipe(response);
+					} else {
+						response.writeHead(404);
+						response.end("404");
+					}
 				}
 			}
+		}
+		catch (e){
+			WombatServer.errorHandler.handleError(request, response, e);
 		}
 	}
 	static serveWebSocket(request, socket, head) {
@@ -257,6 +262,9 @@ class WombatServer {
 		this.certificate = certificate;
 		return this;
 	}
+	static setErrorHandler(errorHandler){
+		this.errorHandler = errorHandler;
+	}
 }
 
 WombatServer.setPort(8888);
@@ -266,5 +274,7 @@ WombatServer.setSecurePort(443);
 WombatServer.connectToDatabase = true;
 
 WombatServer.secureConnection = true;
+
+WombatServer.errorHandler = require('./ErrorHandlers/ConsoleLoggerErrorHandler/ConsoleLoggerErrorHandler.js');
 
 module.exports = WombatServer;

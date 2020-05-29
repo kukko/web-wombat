@@ -30,7 +30,7 @@ class BaseController {
 	}
 	serve() {
 		logger.warn(
-			"Not implemented 'serve' method in class: " + this.name + "!"
+			"Not implemented 'serve' method in class: " + this.constructor.name + "!"
 		);
 	}
 	view(filePath, options, writeToResponse = true, endResponse = true) {

@@ -36,5 +36,10 @@ module.exports = {
 	},
 	logger: require("./src/Logger.js"),
 	Config: require("./src/config/Config.js"),
-	ServiceProvider: require("./src/services/ServiceProvider.js")
+	ServiceProvider: require("./src/services/ServiceProvider.js"),
+	ErrorHandlerInterface: require('./src/ErrorHandlers/ErrorHandlerInterface.js'),
+	errorHandler: {
+		ConsoleLoggerErrorHandler: require('./src/ErrorHandlers/ConsoleLoggerErrorHandler/ConsoleLoggerErrorHandler.js'),
+		TerminalErrorHandler: require('./src/ErrorHandlers/TerminalErrorHandler/TerminalErrorHandler.js')
+	}
 };
