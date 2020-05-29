@@ -36,19 +36,21 @@ class MemoryAuthenticationSource extends AuthenticationSourceInterface{
 		return this;
 	}
 	static addUser(user){
-		if (typeof user[this.getIdentificationField()] === "undefined"){
-			throw new Error("This user don't have the `" + this.getIdentificationField() + "` attribute.");
-		}
-		if (typeof user[this.getAuthenticationField()] === "undefined"){
-			throw new Error("This user don't have the `" + this.getAuthenticationField() + "` attribute.");
-		}
-		if (this.getUsers().find(((existingUser) => {
-			return existingUser[this.getIdentificationField()] === user[this.getIdentificationField()];
-		}))){
-			throw new Error("A user with the same `" + this.getIdentificationField() + "` attribute exists.");
-		}
-		this.users.push(user);
-		return this;
+		return new Promise((resolve, reject) => {
+			if (typeof user[this.getIdentificationField()] === "undefined"){
+				reject(new Error("This user don't have the `" + this.getIdentificationField() + "` attribute."));
+			}
+			if (typeof user[this.getAuthenticationField()] === "undefined"){
+				reject(new Error("This user don't have the `" + this.getAuthenticationField() + "` attribute."));
+			}
+			if (this.getUsers().find(((existingUser) => {
+				return existingUser[this.getIdentificationField()] === user[this.getIdentificationField()];
+			}))){
+				reject(new Error("A user with the same `" + this.getIdentificationField() + "` attribute exists."));
+			}
+			this.users.push(user);
+			resolve(true);
+		});
 	}
 	static getIdentificationField(){
 		return this.identificationField;

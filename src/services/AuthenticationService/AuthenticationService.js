@@ -10,6 +10,9 @@ class AuthenticationService{
 	static authenticateUser(username, password){
 		return this.authSource.authenticateUser(username, password);
 	}
+	static addUser(user){
+		return this.authSource.addUser(user);
+	}
 }
 
 AuthenticationService.setAuthenticationSource(require("./AuthenticationSources/DatabaseAuthenticationSource.js"));

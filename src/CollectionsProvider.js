@@ -7,20 +7,26 @@ class CollectionsProvider {
 			return this._collections;
 		}
 		let output = {},
-			collectionsDir = join(
-				dirname(require.main.filename),
-				"/collections"
-			),
+			collectionsDir = this.getCollectionsPath(),
 			collections = this.getDirectories(collectionsDir);
 		for (let i in collections) {
-			let tempCollection = require(join(
-				collectionsDir,
-				collections[i],
-				collections[i] + ".js"
-			));
+			let tempCollection = this.loadCollection(collections[i]);
 			output[tempCollection.collectionName] = tempCollection;
 		}
 		return (this._collections = output);
+	}
+	static getCollectionsPath(){
+		return join(
+			dirname(require.main.filename),
+			"/collections"
+		);
+	}
+	static loadCollection(collectionName){
+		return require(join(
+			this.getCollectionsPath(),
+			collectionName,
+			collectionName + ".js"
+		));
 	}
 	static getCollection(collectionName){
 		return this.collections[collectionName].collection;

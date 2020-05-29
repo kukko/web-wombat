@@ -49,5 +49,29 @@ describe('AuthenticationService', () => {
                 });
             });
         });
+        describe('addUser', () => {
+            before(() => {
+                class FakeAuthenticationSourceClass extends AuthenticationSourceInterface{
+                }
+                FakeAuthenticationSourceClass.addUser = sinon.fake();
+                FakeAuthenticationSource = FakeAuthenticationSourceClass;
+                AuthenticationService.setAuthenticationSource(FakeAuthenticationSource);
+            });
+            describe('Uses addUser method of authentication source', () => {
+                let testUser;
+                before(() => {
+                    testUser = {};
+                    AuthenticationService.addUser(testUser);
+                });
+                it('The addUser method of authentication source is called', () => {
+                    sinon.assert.calledOnce(FakeAuthenticationSource.addUser);
+                });
+                it('The addUser method of authentication source is called with right parameters', () => {
+                    assert.deepEqual(FakeAuthenticationSource.addUser.getCall(0).args, [
+                        testUser
+                    ]);
+                });
+            });
+        });
     });
 });

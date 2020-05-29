@@ -28,6 +28,49 @@ class DatabaseAuthenticationSource extends AuthenticationSourceInterface{
 			});
 		});
 	}
+	static addUser(user){
+		return new Promise((resolve, reject) => {
+			let findParameters = {};
+			findParameters[this.getIdentificationField()] = user[this.getIdentificationField()];
+			CollectionsProvider.getCollection(this.getAuthenticationCollection()).findOne(findParameters, (findError, foundUser) => {
+				if (!findError){
+					if (!foundUser){
+						this.hashPassword(user[this.getAuthenticationField()]).then((hash) => {
+							user[this.getAuthenticationField()] = hash;
+							CollectionsProvider.getCollection(this.getAuthenticationCollection()).insertOne(user, (insertError, result) => {
+								if (!insertError){
+									resolve(true);
+								}
+								else{
+									reject(insertError);
+								}
+							});
+						}).catch((hashingError) => {
+							reject(hashingError);
+						});
+					}
+					else{
+						reject(new Error("The username is already in use."));
+					}
+				}
+				else{
+					reject(findError);
+				}
+			});
+		});
+	}
+	static hashPassword(password){
+		return new Promise((resolve, reject) => {
+			this.bcrypt.hash(password, 10, (hashingError, hash) => {
+				if (!hashingError){
+					resolve(hash);
+				}
+				else{
+					reject(hashingError);
+				}
+			});
+		});
+	}
 	static getAuthenticationCollection(){
 		return this.collectionName;
 	}

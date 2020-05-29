@@ -49,31 +49,31 @@ describe('MemoryAuthenticationSource', () => {
                 ]);
             });
             describe('Can not add user', () => {
-                it('Without identification field', () => {
-                    assert.throws(() => {
-                        MemoryAuthenticationSource.addUser({
-                            password: "bar"
-                        });
-                    }, "This user don't have the `username` attribute.");
+                it('Without identification field', (done) => {
+                    MemoryAuthenticationSource.addUser({
+                        password: "bar"
+                    }).catch((error) => {
+                        done(error.message !== "This user don't have the `username` attribute.");
+                    });
                 });
-                it('Without authentication field', () => {
-                    assert.throws(() => {
-                        MemoryAuthenticationSource.addUser({
-                            username: "foo"
-                        });
-                    }, "This user don't have the `password` attribute.");
+                it('Without authentication field', (done) => {
+                    MemoryAuthenticationSource.addUser({
+                        username: "foo"
+                    }).catch((error) => {
+                        done(error.message !== "This user don't have the `password` attribute.");
+                    });
                 });
-                it('When another user with the same identification field is already added', () => {
+                it('When another user with the same identification field is already added', (done) => {
                     MemoryAuthenticationSource.addUser({
                         username: "foo",
                         password: "bar"
                     });
-                    assert.throws(() => {
-                        MemoryAuthenticationSource.addUser({
-                            username: "foo",
-                            password: "bar"
-                        });
-                    }, "A user with the same `username` attribute exists.");
+                    MemoryAuthenticationSource.addUser({
+                        username: "foo",
+                        password: "bar"
+                    }).catch((error) => {
+                        done(error.message !== "A user with the same `username` attribute exists.");
+                    });
                 });
             });
             it('Add user to the authenticable users', () => {

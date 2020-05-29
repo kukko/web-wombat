@@ -3,7 +3,10 @@ let { assert } = require('chai'),
     proxyquire = require('proxyquire').noCallThru();
 
 describe('ServiceProvider', () => {
-    let ServiceProvider = require('../../index.js').ServiceProvider;
+    let ServiceProvider;
+    before(() => {
+        ServiceProvider = require('../../index.js').ServiceProvider;
+    });
     describe('Have attributes', () => {
         before(() => {
             ServiceProvider.clearCache();
@@ -22,7 +25,7 @@ describe('ServiceProvider', () => {
             before(() => {
                 ServiceProvider.clearCache();
                 ServiceProvider.services = {
-                    foo: () => {}
+                    foo: {}
                 };
             });
             it('Cache is not empty before call', () => {

@@ -32,6 +32,9 @@ class BaseDocument {
 	}
 	static buildStructure() {}
 	static addField(field) {
+		if (typeof this.structure === "undefined"){
+			this.createStructure();
+		}
 		this.structure.push(field);
 		return this;
 	}

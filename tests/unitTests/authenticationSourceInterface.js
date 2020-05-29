@@ -9,8 +9,11 @@ describe('AuthenticationSourceInterface', () => {
         FakeAuthenticationSource = FakeAuthenticationSourceClass;
     });
     describe('Abstract methods', () => {
-        it('Method authenticateUser throws error', () => {
+        it('Method \'authenticateUser\' throws error', () => {
             assert.throws(FakeAuthenticationSource.authenticateUser);
+        });
+        it('Method \'addUser\' throws error', () => {
+            assert.throws(FakeAuthenticationSource.addUser);
         });
     });
 });
