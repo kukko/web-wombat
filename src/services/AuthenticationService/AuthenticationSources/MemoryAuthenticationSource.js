@@ -52,6 +52,12 @@ class MemoryAuthenticationSource extends AuthenticationSourceInterface{
 			resolve(true);
 		});
 	}
+	static buildUserObject(username, password){
+		let output = {};
+		output[this.getIdentificationField()] = username;
+		output[this.getAuthenticationField()] = password;
+		return output;
+	}
 	static getIdentificationField(){
 		return this.identificationField;
 	}

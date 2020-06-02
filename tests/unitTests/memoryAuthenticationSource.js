@@ -118,6 +118,40 @@ describe('MemoryAuthenticationSource', () => {
                 });
             });
         });
+        describe('The \'buildUserObject\' method works as expected.', () => {
+            let testUsername,
+                testPassword;
+            beforeEach(() => {
+                testUsername = 'foo';
+                testPassword = 'bar';
+                sinon.spy(MemoryAuthenticationSource, 'getIdentificationField');
+                sinon.spy(MemoryAuthenticationSource, 'getAuthenticationField');
+                MemoryAuthenticationSource.buildUserObject(testUsername, testPassword);
+            });
+            it('Calls \'getIdentificationField\' method', () => {
+                sinon.assert.calledOnce(MemoryAuthenticationSource.getIdentificationField);
+            });
+            it('Calls \'getAuthenticationField\' method', () => {
+                sinon.assert.calledOnce(MemoryAuthenticationSource.getAuthenticationField);
+            });
+            describe('Returns correct value', () => {
+                let testUser;
+                beforeEach(() => {
+                    testUser = {};
+                    testUser[MemoryAuthenticationSource.getIdentificationField()] = testUsername;
+                    testUser[MemoryAuthenticationSource.getAuthenticationField()] = testPassword;
+                });
+                it('Returns object', () => {
+                    assert.isObject(MemoryAuthenticationSource.buildUserObject(testUsername, testPassword));
+                });
+                it('Object attributes are correct', () => {
+                    assert.deepEqual(MemoryAuthenticationSource.buildUserObject(testUsername, testPassword), testUser);
+                });
+            });
+            afterEach(() => {
+                sinon.restore();
+            });
+        });
         afterEach(() => {
             MemoryAuthenticationSource.clearUsers();
         });

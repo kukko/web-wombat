@@ -34,14 +34,14 @@ describe('AuthenticationService', () => {
                 FakeAuthenticationSource = FakeAuthenticationSourceClass;
                 AuthenticationService.setAuthenticationSource(FakeAuthenticationSource);
             });
-            describe('Uses authenticateUser method of authentication source', () => {
+            describe('Uses \'authenticateUser\' method of authentication source', () => {
                 before(() => {
                     AuthenticationService.authenticateUser("foo", "bar");
                 });
-                it('The authenticateUser method of authentication source is called', () => {
+                it('The \'authenticateUser\' method of authentication source is called', () => {
                     sinon.assert.calledOnce(FakeAuthenticationSource.authenticateUser);
                 });
-                it('The authenticateUser method of authentication source is called with right parameters', () => {
+                it('The \'authenticateUser\' method of authentication source is called with right parameters', () => {
                     assert.deepEqual(FakeAuthenticationSource.authenticateUser.getCall(0).args, [
                         'foo',
                         'bar'
@@ -57,18 +57,45 @@ describe('AuthenticationService', () => {
                 FakeAuthenticationSource = FakeAuthenticationSourceClass;
                 AuthenticationService.setAuthenticationSource(FakeAuthenticationSource);
             });
-            describe('Uses addUser method of authentication source', () => {
+            describe('Uses \'addUser\' method of authentication source', () => {
                 let testUser;
                 before(() => {
                     testUser = {};
                     AuthenticationService.addUser(testUser);
                 });
-                it('The addUser method of authentication source is called', () => {
+                it('The \'addUser\' method of authentication source is called', () => {
                     sinon.assert.calledOnce(FakeAuthenticationSource.addUser);
                 });
-                it('The addUser method of authentication source is called with right parameters', () => {
+                it('The \'addUser\' method of authentication source is called with right parameters', () => {
                     assert.deepEqual(FakeAuthenticationSource.addUser.getCall(0).args, [
                         testUser
+                    ]);
+                });
+            });
+        });
+        describe('buildUserObject', () => {
+            before(() => {
+                class FakeAuthenticationSourceClass extends AuthenticationSourceInterface{
+                }
+                FakeAuthenticationSourceClass.buildUserObject = sinon.fake();
+                FakeAuthenticationSource = FakeAuthenticationSourceClass;
+                AuthenticationService.setAuthenticationSource(FakeAuthenticationSource);
+            });
+            describe('Uses \'buildUserObject\' method of authentication source', () => {
+                let testUsername,
+                    testPassword;
+                before(() => {
+                    testUsername = 'foo';
+                    testPassword = 'bar';
+                    AuthenticationService.buildUserObject(testUsername, testPassword);
+                });
+                it('The \'buildUserObject\' method of authentication source is called', () => {
+                    sinon.assert.calledOnce(FakeAuthenticationSource.buildUserObject);
+                });
+                it('The \'buildUserObject\' method of authentication source is called with right parameters', () => {
+                    assert.deepEqual(FakeAuthenticationSource.buildUserObject.getCall(0).args, [
+                        testUsername,
+                        testPassword
                     ]);
                 });
             });

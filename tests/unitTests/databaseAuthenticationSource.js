@@ -192,7 +192,7 @@ describe('DatabaseAuthenticationSource', () => {
                                             });
                                         });
                                     });
-                                    describe('The returned promise resolves', () =>{
+                                    describe('The returned promise resolves', () => {
                                         before(() => {
                                             insertError = false;
                                             insertResult = true;
@@ -206,7 +206,7 @@ describe('DatabaseAuthenticationSource', () => {
                                             });
                                         });
                                     });
-                                    describe('The returned promise rejects', () =>{
+                                    describe('The returned promise rejects', () => {
                                         before(() => {
                                             insertError = true;
                                             insertResult = false;
@@ -283,6 +283,40 @@ describe('DatabaseAuthenticationSource', () => {
                         });
                     });
                 });
+            });
+        });
+        describe('The \'buildUserObject\' method works as expected.', () => {
+            let testUsername,
+                testPassword;
+            beforeEach(() => {
+                testUsername = 'foo';
+                testPassword = 'bar';
+                sinon.spy(DatabaseAuthenticationSource, 'getIdentificationField');
+                sinon.spy(DatabaseAuthenticationSource, 'getAuthenticationField');
+                DatabaseAuthenticationSource.buildUserObject(testUsername, testPassword);
+            });
+            it('Calls \'getIdentificationField\' method', () => {
+                sinon.assert.calledOnce(DatabaseAuthenticationSource.getIdentificationField);
+            });
+            it('Calls \'getAuthenticationField\' method', () => {
+                sinon.assert.calledOnce(DatabaseAuthenticationSource.getAuthenticationField);
+            });
+            describe('Returns correct value', () => {
+                let testUser;
+                beforeEach(() => {
+                    testUser = {};
+                    testUser[DatabaseAuthenticationSource.getIdentificationField()] = testUsername;
+                    testUser[DatabaseAuthenticationSource.getAuthenticationField()] = testPassword;
+                });
+                it('Returns object', () => {
+                    assert.isObject(DatabaseAuthenticationSource.buildUserObject(testUsername, testPassword));
+                });
+                it('Object attributes are correct', () => {
+                    assert.deepEqual(DatabaseAuthenticationSource.buildUserObject(testUsername, testPassword), testUser);
+                });
+            });
+            afterEach(() => {
+                sinon.restore();
             });
         });
         after(() => {

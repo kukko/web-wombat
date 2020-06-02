@@ -59,6 +59,12 @@ class DatabaseAuthenticationSource extends AuthenticationSourceInterface{
 			});
 		});
 	}
+	static buildUserObject(username, password){
+		let output = {};
+		output[this.getIdentificationField()] = username;
+		output[this.getAuthenticationField()] = password;
+		return output;
+	}
 	static hashPassword(password){
 		return new Promise((resolve, reject) => {
 			this.bcrypt.hash(password, 10, (hashingError, hash) => {
