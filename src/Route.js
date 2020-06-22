@@ -108,7 +108,7 @@ class Route {
 						Route.routeVariableSeparators.end.length,
 					routeParts[i].length
 				) === Route.routeVariableSeparators.end;
-			output &= urlParts[i] === routeParts[i] || isRouteVariable;
+			output = output && urlParts[i] === routeParts[i] || isRouteVariable;
 		}
 		return output;
 	}
@@ -242,9 +242,10 @@ class Route {
 	}
 	static resources(route, controller, middlewares) {
 		let baseAlias = route.replace(/^\/+|\/+$/g, "").replace(/\//g, ".");
+		route = route.endsWith('/') ? route.substring(0, route.length - 1) : route;
 		return [
 			new Route(
-				route,
+				route + '/',
 				"GET",
 				controller,
 				"index",
@@ -262,7 +263,7 @@ class Route {
 				baseAlias
 			).as(baseAlias + ".create"),
 			new Route(
-				route,
+				route + '/',
 				"POST",
 				controller,
 				"store",

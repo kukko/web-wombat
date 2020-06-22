@@ -9,8 +9,8 @@
     "test": "npm run unit-test && npm run e2e-test",
     "prettify": "prettier --trailing-coma --write --use-tabs --tab-width 4 --arrow-parens always \"**/*.js\"",
     "code-coverage": "nyc npm run unit-test",
-    "code-coverage-strict": "nyc --check-coverage --statements=85 --branches=45 --functions=90 --lines=85 npm run unit-test",
-    "code-coverage-todo": "nyc --check-coverage --statements=85 --branches=45 --functions=90 --lines=85 --skip-full npm run unit-test"
+    "code-coverage-strict": "nyc --check-coverage --statements=90 --branches=55 --functions=95 --lines=90 npm run unit-test",
+    "code-coverage-todo": "nyc --check-coverage --statements=90 --branches=55 --functions=95 --lines=90 --skip-full npm run unit-test"
   },
   "repository": {
     "type": "git",
