@@ -25,7 +25,13 @@ class BaseCollection {
 								resolve(this.collection);
 							});
 						} else {
-							reject(error);
+							if (error.code === 48){
+								this._collection = db.collection(this.collectionName);
+								resolve(this.collection);
+							}
+							else{
+								reject(error);
+							}
 						}
 					}
 				);
