@@ -2,3 +2,4 @@
 *.sublime-workspace
 node_modules/
 .nyc_output/
+tests/unit-test-report

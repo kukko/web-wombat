@@ -38,7 +38,7 @@ class WebSocketClientService {
 		if (typeof this.clients[webSocketTag][output] === "undefined") {
 			return output;
 		}
-		return this.generateUUID(length);
+		return this.generateUUID(webSocketTag, length);
 	}
 }
 
