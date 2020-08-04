@@ -90,8 +90,9 @@ class Route {
 		) ? this : false;
 	}
 	urlIsMatching(request) {
-		let routeService = require("./services/ServiceProvider.js").getRouteService(),
-			urlParts = routeService.trimURL(request.url).split("/"),
+		let url = request.url.indexOf('?') === -1 ? request.url : request.url.substring(0, request.url.indexOf('?')),
+			routeService = require("./services/ServiceProvider.js").getRouteService(),
+			urlParts = routeService.trimURL(url).split("/"),
 			routeParts = routeService.trimURL(this.route).split("/"),
 			output = true;
 		if (urlParts.length !== routeParts.length){
