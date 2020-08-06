@@ -7,12 +7,25 @@ class InitModule extends ModuleInterface{
         let steps = [
             'CreateAppFolder',
             'InitNpmPackage',
-            'InitGitRepository'
+            'InitGitRepository',
+            {
+                name: 'GitCommit',
+                parameters: [
+                    'Initial commit'
+                ]
+            }
         ];
         for (let i in steps){
-            let StepClass = require(join(__dirname, 'initSteps', steps[i], steps[i])),
+            let isParameterizedStep = typeof steps[i] === "object",
+                stepName = isParameterizedStep ? steps[i].name : steps[i],
+                StepClass = require(join(__dirname, 'initSteps', stepName, stepName)),
                 step = new StepClass();
-            step.run(...parameters);
+            if (isParameterizedStep){
+                step.run(...steps[i].parameters, ...parameters);
+            }
+            else{
+                step.run(...parameters);
+            }
         }
     }
 }
