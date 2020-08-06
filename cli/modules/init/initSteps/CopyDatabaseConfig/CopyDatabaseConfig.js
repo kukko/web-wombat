@@ -11,9 +11,6 @@ class CopyDatabaseConfig extends StepInterface{
                 encoding: 'UTF-8'
             }),
             generatedConfig = sample.replace(/{{appName}}/g, appName);
-        if (!existsSync(outputFolderPath)){
-            mkdirSync(outputFolderPath);
-        }
         writeFileSync(outputFilePath, generatedConfig);
         next();
     }

@@ -6,7 +6,6 @@ class CopyRoutes extends StepInterface{
             { mkdirSync, copyFileSync } = require('fs'),
             routesDirectoryPath = join(process.cwd(), appName, 'routes'),
             routesFilePath = join(routesDirectoryPath, 'routes.js');
-        mkdirSync(routesDirectoryPath);
         copyFileSync(join(__dirname, 'sample'), routesFilePath);
         next();
     }

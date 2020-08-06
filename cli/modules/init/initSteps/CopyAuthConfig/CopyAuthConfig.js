@@ -19,9 +19,6 @@ class CopyAuthConfig extends StepInterface{
                 return output;
             })(),
             generatedConfig = sample.replace(/{{signKey}}/g, signKey);
-        if (!existsSync(outputFolderPath)){
-            mkdirSync(outputFolderPath);
-        }
         writeFileSync(outputFilePath, generatedConfig);
         next();
     }
