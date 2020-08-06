@@ -1,6 +1,6 @@
-let { BaseController } = require('web-wombat');
+let { WebSocketController } = require('web-wombat');
 
-class {{className}} extends BaseController {
+class {{className}} extends WebSocketController {
 	{{methodName}}(request, response) {
 		response.end("The {{className}} controller is working!");
 	}

@@ -3,13 +3,16 @@ let CreationInterface = require('../CreationInterface'),
     { readFileSync, mkdirSync, writeFileSync } = require('fs');
 
 class CreateController extends CreationInterface{
-    run(controllerName){
+    run(controllerName, methodName){
+        if (typeof methodName === "undefined"){
+            methodName = "serve";
+        }
         let className = controllerName.charAt(0).toUpperCase() + controllerName.slice(1) + "Controller",
             sampleFilePath = join(__dirname, 'sample'),
             sample = readFileSync(sampleFilePath, {
                 encoding: 'UTF-8'
             }),
-            generatedClass = sample.replace(/{{className}}/g, className),
+            generatedClass = sample.replace(/{{className}}/g, className).replace(/{{methodName}}/g, methodName),
             outputFolder = join(process.cwd(), "controllers", className),
             outputFile = join(outputFolder, className + ".js");
         mkdirSync(outputFolder, {

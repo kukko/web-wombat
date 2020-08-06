@@ -12,7 +12,9 @@ class CreateModule extends ModuleInterface{
             return file.name;
         });
         if (createScripts.indexOf(toBeCreated) !== -1){
-            let createScriptName = "Create" + toBeCreated.charAt(0).toUpperCase() + toBeCreated.slice(1),
+            let createScriptName = "Create" + toBeCreated.split('-').map((item) => {
+                return item.charAt(0).toUpperCase() + item.slice(1)
+            }).join(''),
                 CreateScriptClass = require(join(__dirname, 'createScripts', toBeCreated, createScriptName)),
                 createScript = new CreateScriptClass();
             createScript.run(...parameters);
