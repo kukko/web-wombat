@@ -6,7 +6,8 @@ class InitModule extends ModuleInterface{
     run(...parameters){
         let steps = [
             'CreateAppFolder',
-            'InitNpmPackage'
+            'InitNpmPackage',
+            'InitGitRepository'
         ];
         for (let i in steps){
             let StepClass = require(join(__dirname, 'initSteps', steps[i], steps[i])),
