@@ -22,7 +22,9 @@ class InitModule extends ModuleInterface{
                     '--enhancement: DEPENDENCIES: Add web-wombat as dependency.'
                 ]
             },
-            'CopyRoutes'
+            'CopyRoutes',
+            'CopyDatabaseConfig',
+            'CopyAuthConfig'
         ];
         this.runSteps(steps, 0, ...parameters);
     }
