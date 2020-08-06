@@ -4,7 +4,10 @@ let ModuleInterface = require('../ModuleInterface.js'),
 
 class InitModule extends ModuleInterface{
     run(...parameters){
-        let steps = [];
+        let steps = [
+            'CreateAppFolder',
+            'InitNpmPackage'
+        ];
         for (let i in steps){
             let StepClass = require(join(__dirname, 'initSteps', steps[i], steps[i])),
                 step = new StepClass();

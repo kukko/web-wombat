@@ -5,7 +5,7 @@ class StepInterface{
 				this.constructor.name +
 				"!"
 		);
-    }
+	}
 }
 
 module.exports = StepInterface;
