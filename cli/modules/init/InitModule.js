@@ -13,6 +13,13 @@ class InitModule extends ModuleInterface{
                 parameters: [
                     'Initial commit'
                 ]
+            },
+            'AddWebWombatAsDependency',
+            {
+                name: 'GitCommit',
+                parameters: [
+                    '--enhancement: DEPENDENCIES: Add web-wombat as dependency.'
+                ]
             }
         ];
         for (let i in steps){
