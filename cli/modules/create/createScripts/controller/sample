@@ -1,0 +1,9 @@
+let { BaseController } = require('web-wombat');
+
+class {{className}} extends BaseController {
+	serve(request, response) {
+		response.end("The {{className}} controller is working!");
+	}
+}
+
+module.exports = {{className}};

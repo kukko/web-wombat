@@ -12,6 +12,9 @@
     "code-coverage-strict": "nyc --exclude=tests/unitTests --check-coverage --statements=65 --branches=55 --functions=65 --lines=65 npm run unit-test",
     "code-coverage-todo": "nyc --exclude=tests/unitTests --check-coverage --statements=65 --branches=55 --functions=65 --lines=65 --skip-full npm run unit-test"
   },
+  "bin": {
+    "web-wombat": "cli/cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kukko/web-wombat.git"
