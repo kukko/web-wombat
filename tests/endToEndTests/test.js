@@ -1,6 +1,6 @@
 let { lstatSync, readdirSync } = require("fs"),
 	{ join, dirname, resolve } = require("path"),
-	{ spawnSync } = require("child_process"),
+	{ execSync } = require("child_process"),
 	logger = require("../../src/Logger.js"),
 	testsFolder = dirname(__filename),
 	ignoredTests = [],
@@ -30,7 +30,7 @@ let { lstatSync, readdirSync } = require("fs"),
 for (let testIndex in tests) {
 	let test = tests[testIndex];
 	process.stdout.write(test + " ...");
-	let testResult = spawnSync("node", [
+	let testResult = execSync("node", [
 		resolve(testsFolder, join(test, test + ".js"))
 	]);
 	printTestResult(test, testResult);

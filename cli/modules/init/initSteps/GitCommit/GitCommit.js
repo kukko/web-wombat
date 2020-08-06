@@ -2,7 +2,7 @@ let StepInterface = require('../StepInterface'),
 	{ join } = require('path');
 
 class GitCommit extends StepInterface{
-	run(commitMessage, appName){
+	run(next, commitMessage, appName){
 		require('child_process').execSync('git stage .', {
 			cwd: join(process.cwd(), appName),
 			stdio: [
@@ -19,6 +19,7 @@ class GitCommit extends StepInterface{
 				process.stderr
 			]
 		});
+		next();
 	}
 }
 

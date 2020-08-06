@@ -8,6 +8,7 @@ class InitModule extends ModuleInterface{
             'CreateAppFolder',
             'InitNpmPackage',
             'InitGitRepository',
+            'AddFilesToGitignore',
             {
                 name: 'GitCommit',
                 parameters: [
@@ -20,19 +21,30 @@ class InitModule extends ModuleInterface{
                 parameters: [
                     '--enhancement: DEPENDENCIES: Add web-wombat as dependency.'
                 ]
-            }
+            },
+            'CopyRoutes'
         ];
-        for (let i in steps){
-            let isParameterizedStep = typeof steps[i] === "object",
+        this.runSteps(steps, 0, ...parameters);
+    }
+    runSteps(steps, i, ...parameters){
+        if (i < steps.length){
+            let next = () => {
+                    this.runSteps(steps, i + 1, ...parameters);
+                },
+                isParameterizedStep = typeof steps[i] === "object",
                 stepName = isParameterizedStep ? steps[i].name : steps[i],
                 StepClass = require(join(__dirname, 'initSteps', stepName, stepName)),
                 step = new StepClass();
+            console.log('\x1b[32m%s\x1b[0m', stepName);
             if (isParameterizedStep){
-                step.run(...steps[i].parameters, ...parameters);
+                step.run(next, ...steps[i].parameters, ...parameters);
             }
             else{
-                step.run(...parameters);
+                step.run(next, ...parameters);
             }
+        }
+        else{
+            process.exit();
         }
     }
 }

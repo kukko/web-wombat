@@ -2,7 +2,7 @@ let StepInterface = require('../StepInterface'),
 	{ join } = require('path');
 
 class InitGitRepository extends StepInterface{
-	run(appName){
+	run(next, appName){
 		require('child_process').execSync('git init', {
 			cwd: join(process.cwd(), appName),
 			stdio: [
@@ -11,6 +11,7 @@ class InitGitRepository extends StepInterface{
 				process.stderr
 			]
 		});
+		next();
 	}
 }
 

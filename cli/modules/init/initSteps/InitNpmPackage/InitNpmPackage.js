@@ -2,7 +2,7 @@ let StepInterface = require('../StepInterface'),
     { join } = require('path');
 
 class InitNpmPackage extends StepInterface{
-    run(appName){
+    run(next, appName){
         require('child_process').execSync('npm init -y', {
             cwd: join(process.cwd(), appName),
             stdio: [
@@ -11,6 +11,7 @@ class InitNpmPackage extends StepInterface{
                 process.stderr
             ]
         });
+        next();
     }
 }
 
