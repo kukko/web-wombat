@@ -1,6 +1,6 @@
 let ModuleInterface = require('../ModuleInterface.js'),
     { join } = require('path'),
-    { readdirSync } = require('fs');
+    possibleSwitches = [];
 
 class InitModule extends ModuleInterface{
     run(...parameters){
@@ -54,14 +54,15 @@ class InitModule extends ModuleInterface{
                 },
                 isParameterizedStep = typeof steps[i] === "object",
                 stepName = isParameterizedStep ? steps[i].name : steps[i],
-                StepClass = require(join(__dirname, 'initSteps', stepName, stepName)),
-                step = new StepClass();
+                step = require(join(__dirname, 'initSteps', stepName, stepName)),
+                StepClass = typeof step === "function" ? step : step.step,
+                stepObject = new StepClass();
             console.log('\x1b[32m%s\x1b[0m', stepName);
             if (isParameterizedStep){
-                step.run(next, ...steps[i].parameters, ...parameters);
+                stepObject.run(next, ...steps[i].parameters, ...parameters);
             }
             else{
-                step.run(next, ...parameters);
+                stepObject.run(next, ...parameters);
             }
         }
         else{
@@ -70,4 +71,7 @@ class InitModule extends ModuleInterface{
     }
 }
 
-module.exports = InitModule;
+module.exports = {
+    possibleSwitches,
+    module: InitModule
+};

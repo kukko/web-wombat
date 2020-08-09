@@ -4,9 +4,14 @@ let StepInterface = require('../StepInterface'),
         },
         WombatServer: {
             '--secure': '.setSecure()',
-            '--unsecure': '.setUnsecure()'
+            '--unsecure': '.setUnsecure()',
+            '--with-database': '.withDatabase()',
+            '--without-database': '.withoutDatabase()'
         }
-    };
+    },
+    possibleSwitches = Object.keys(switchesAndEffects).reduce((r, k) => {
+        return r.concat(Object.keys(switchesAndEffects[k]));
+    }, []);
 
 class CreateIndexFile extends StepInterface{
     run(next, appName, ...parameters){
@@ -17,13 +22,13 @@ class CreateIndexFile extends StepInterface{
         output.push("let { WombatServer } = require('web-wombat');");
         for (let switchName in switchesAndEffects.global){
             if (parameters.indexOf(switchName) !== -1){
-                output.push(switchesAndEffects[switchName]);
+                output.push(switchesAndEffects.global[switchName]);
             }
         }
         output.push("WombatServer");
         for (let switchName in switchesAndEffects.WombatServer){
             if (parameters.indexOf(switchName) !== -1){
-                output.push(switchesAndEffects[switchName]);
+                output.push(switchesAndEffects.WombatServer[switchName]);
             }
         }
         output.push(".init();");
@@ -32,4 +37,7 @@ class CreateIndexFile extends StepInterface{
     }
 }
 
-module.exports = CreateIndexFile;
+module.exports = {
+    possibleSwitches,
+    step: CreateIndexFile
+};

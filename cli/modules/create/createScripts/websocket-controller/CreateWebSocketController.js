@@ -7,7 +7,9 @@ class CreateWebSocketController extends CreationInterface{
         if (typeof methodName === "undefined"){
             methodName = "serve";
         }
-		let className = controllerName.charAt(0).toUpperCase() + controllerName.slice(1) + "Controller",
+		let className = controllerName.split('-').map((item) => {
+            return item.charAt(0).toUpperCase() + item.slice(1)
+        }).join('') + "Controller",
 			sampleFilePath = join(__dirname, 'sample'),
 			sample = readFileSync(sampleFilePath, {
 				encoding: 'UTF-8'
