@@ -10,12 +10,36 @@ For documentation see the GitHub pages site of project on the following link.
 
 ## Create new project with web-wombat
 ```bash
-mkdir wombat-project
-cd wombat-project
-npm init
-npm install web-wombat
-mkdir routes
-cp node_modules/web-wombat/src/routes/example-routes.js routes/routes.js
+npm install web-wombat -g
+web-wombat init foo
+cd foo
+node index.js
+```
+
+Note: You have to generate keys to handle SSL connections in the `<APP_FOLDER>/config/secureKey/` folder in `key.pem` and `certificate.pem`. But you can create project which do not listen for secure connections by adding `--unsecure` switch to the end of init command. It just adds an additional line to the `<APP_FOLDER>/index.js` which disables creation of HTTPS server.
+
+And you have a running web-server. After that you can start creating routes, controllers, and collections to store data in database.
+
+Note: You also can disable database by adding `--without-database` switch to the end of init command. It just adds an additional line to the `<APP_FOLDER>/index.js` which disables connection to database.
+
+You can easily add web-wombat to an already existing project:
+```bash
+npm install web-wombat --save
+```
+
+You can create a controller with the following command:
+```
+web-wombat create controller foo
+```
+
+You can create a websocket controller with the following command:
+```
+web-wombat create websocket-controller foo
+```
+
+You can create a collection with the following command:
+```
+web-wombat create collection foo
 ```
 
 ## Starting a web server with WebWombat
@@ -23,7 +47,7 @@ After you successfully installed `WebWombat`, you can easily start a web server.
 ```javascript
 let { WombatServer } = require('web-wombat');
 
-WombatServer.setRoutes(require('./routes/routes.js')).init();
+WombatServer.init();
 ```
 
 By default, `WebWombat` accepts secure connections, but it requires SSL certificate's private key and certification to be in `config/secureKey` folder in `key.pem` and `certificate.pem` files. If for some reasons you don't want to use secure connections, you can easily turn this off with the `setUnsecure` method of `WombatServer` class, before calling the `init` method.
