@@ -1,0 +1,9 @@
+let { BaseCollection } = require('web-wombat');
+
+class {{className}} extends BaseCollection {
+	static get collectionName() {
+		return "{{collectionName}}";
+	}
+}
+
+module.exports = {{className}};
