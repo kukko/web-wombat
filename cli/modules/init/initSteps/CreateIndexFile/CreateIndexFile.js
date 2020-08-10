@@ -1,5 +1,7 @@
 let StepInterface = require('../StepInterface'),
     switchesAndEffects = {
+        imports: {
+        },
         global: {
         },
         WombatServer: {
@@ -19,7 +21,8 @@ class CreateIndexFile extends StepInterface{
             { writeFileSync } = require('fs'),
             outputFilePath = join(process.cwd(), appName, 'index.js'),
             output = [];
-        output.push("let { WombatServer } = require('web-wombat');");
+        output.push("let { WombatServer, Config } = require('web-wombat');");
+        output.push("Config.setConfigFolder(require('path').join(__dirname, 'config'));");
         for (let switchName in switchesAndEffects.global){
             if (parameters.indexOf(switchName) !== -1){
                 output.push(switchesAndEffects.global[switchName]);
