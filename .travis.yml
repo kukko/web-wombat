@@ -1,6 +1,12 @@
 language: node_js
 node_js:
+  - "lts/*"
+  - "node"
   - "10"
+  - "11"
+  - "12"
+  - "13"
+  - "14"
 service:
   - mongodb
 before_script:
