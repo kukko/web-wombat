@@ -1,10 +1,10 @@
-#WebSocketController
+# WebSocketController
 
 This is a built in controller which provides functionality to establish websocket connections and handle incoming messages and send messages to clients.
 
 It's not recommended to pass this class to a route, as a controller class, because it's `onMessage` method, which is called when receives a message from client does nothing. So you have to extend this class and pass the child class to the route.
 
-This class extends [BaseController](/controllers/route.md) class, so it have all functions and attributes what that class have.
+This class extends [BaseController](./baseController.md) class, so it have all functions and attributes what that class have.
 
 ## Usable methods in requests
 
