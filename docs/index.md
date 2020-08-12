@@ -9,6 +9,8 @@ Framework for web services with NodeJS.
 * [Controllers](./controllers/controllers.md)
 	- [BaseController](./controllers/baseController.md)
 	- [WebSocketController](./controllers/webSocketController.md)
+* [Template connectors](./templateConnectors/templateConnectors.md)
+	- [TemplateInterface](./templateConnectors/templateInterface.md)
 
 With web-wombat, you can easily set up a simple webserver in 1-2 minutes. You can also set up a WebSocket server in one minute.
 
