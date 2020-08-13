@@ -1,4 +1,4 @@
-name: Node CI
+name: Coveralls
 
 on: [push]
 
@@ -26,4 +26,5 @@ jobs:
         CI: true
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1.1.1
-
+      with:
+        path-to-lcov: ./nyc_output
