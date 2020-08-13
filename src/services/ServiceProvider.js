@@ -2,6 +2,12 @@ class ServiceProvider{
     static getRouteService(){
         return this.getService('RouteService');
     }
+    static getSessionService(){
+        return this.getService('SessionService');
+    }
+    static getCookieService(){
+        return this.getService('CookieService');
+    }
     static getService(serviceType){
         if (typeof this.services[serviceType] === "undefined"){
             this.loadService(serviceType);

@@ -72,23 +72,7 @@ class BaseController {
 		this.response.end();
 	}
 	setCookie(name, value) {
-		let newCookies = this.response.getHeader('Set-Cookie'),
-			cookies = [],
-			added = false;
-		for (let index in newCookies){
-			let cookie = BaseController.cookie.parse(newCookies[index]);
-			if (cookie[name] === "undefined"){
-				cookies.push(BaseController.cookie.serialize(name, value));
-				added = true;
-			}
-			else{
-				cookies.push(newCookies[index]);
-			}
-		}
-		if (!added){
-			cookies.push(BaseController.cookie.serialize(name, value));
-		}
-		this.response.setHeader('Set-Cookie', cookies);
+		this.CookieService.setCookie(this.request, this.response, name, value);
 	}
 }
 
@@ -96,8 +80,8 @@ if (typeof BaseController.middlewareProvider === "undefined") {
 	BaseController.middlewareProvider = require("./MiddlewareProvider.js");
 }
 
-if (typeof BaseController.cookie === "undefined") {
-	BaseController.cookie = require("cookie");
+if (typeof BaseController.CookieService === "undefined") {
+	BaseController.CookieService = require("./services/CookieService/CookieService");
 }
 
 if (typeof BaseController.ViewProvider === "undefined") {

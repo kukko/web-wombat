@@ -4,7 +4,8 @@ let DatabaseHolder = require("./DatabaseHolder.js"),
 	ViewProvider = require("./ViewProvider.js"),
 	MiddlewareProvider = require("./MiddlewareProvider.js"),
 	TemplateInterface = require("./TemplateConnectors/TemplateInterface.js"),
-	logger = require("./Logger.js");
+	logger = require("./Logger.js"),
+	SessionService = require("./services/SessionService/SessionService.js");
 
 class WombatServer {
 	static init(callback) {
@@ -78,12 +79,24 @@ class WombatServer {
 		this.secureConnection = true;
 		return this;
 	}
+	static setSecure() {
+		this.secureConnection = true;
+		return this;
+	}
 	static setHttpsOptions(httpsOptions){
 		this.httpsOptions = httpsOptions;
 		return this;
 	}
 	static getHttpsOptions(){
 		return this.httpsOptions;
+	}
+	static setWithSessions(){
+		SessionService.setWithSessions();
+		return this;
+	}
+	static setWithoutSessions(){
+		SessionService.setWithoutSessions();
+		return this;
 	}
 	static listen(callback) {
 		let listening = 0,

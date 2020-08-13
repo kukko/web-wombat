@@ -1,6 +1,7 @@
 let ResourceController = require("./ResourceController.js"),
 	BaseMiddleware = require("./middlewares/BaseMiddleware.js"),
-	MiddlewareProvider = require("./MiddlewareProvider.js");
+	MiddlewareProvider = require("./MiddlewareProvider.js"),
+	SessionService = require("./services/SessionService/SessionService.js");
 
 class Route {
 	constructor(
@@ -78,6 +79,9 @@ class Route {
 			let controller = new this.Controller(request, response);
 			if (controller instanceof ResourceController) {
 				controller.setRouteAliasBase(this.routeAliasBase);
+			}
+			if (SessionService.startSessions && !SessionService.sessionStarted(request)){
+				SessionService.startSession(request, response);
 			}
 			return controller[this.controllerFunction](request, response);
 		}
