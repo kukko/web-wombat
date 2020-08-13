@@ -100,6 +100,9 @@ describe('Route', () => {
     describe('Methods works as expected', () => {
         let testRoute;
         beforeEach(() => {
+            Route = proxyquire.load('../../src/Route', {
+                './services/SessionService/SessionService.js': {}
+            });
             testRoute = new Route;
         });
         describe('setRoute', () => {

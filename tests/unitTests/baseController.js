@@ -1,5 +1,6 @@
 let assert = require('chai').assert,
-	sinon = require('sinon');
+	sinon = require('sinon'),
+    proxyquire = require('proxyquire').noCallThru();
 sinon.assert.expose(assert);
 
 describe('BaseController', () => {
@@ -25,9 +26,6 @@ describe('BaseController', () => {
 		});
 	});
 	describe('Have basic documented attributes', () => {
-		it('cookie', () => {
-			assert.isObject(BaseController.cookie);
-		});
 		it('middlewareProvider', () => {
 			assert.isFunction(BaseController.middlewareProvider);
 		});
@@ -50,7 +48,8 @@ describe('BaseController', () => {
 				method: "GET",
 				url: "",
 				upgrade: false,
-				headers: {}
+				headers: {},
+				cookies: {}
 			};
 			response = {};
 			fakeController = new FakeControllerClass(request, response);

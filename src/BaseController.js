@@ -72,7 +72,7 @@ class BaseController {
 		this.response.end();
 	}
 	setCookie(name, value) {
-		this.CookieService.setCookie(this.request, this.response, name, value);
+		BaseController.CookieService.setCookie(this.request, this.response, name, value);
 	}
 }
 
