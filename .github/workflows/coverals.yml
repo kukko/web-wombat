@@ -28,4 +28,4 @@ jobs:
       uses: coverallsapp/github-action@v1.1.1
       with:
         github-token: ${{ secrets.github_token }}
-        path-to-lcov: ./nyc_output
+        path-to-lcov: lcov.info
