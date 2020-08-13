@@ -10,7 +10,8 @@
     "prettify": "prettier --trailing-coma --write --use-tabs --tab-width 4 --arrow-parens always \"**/*.js\"",
     "code-coverage": "nyc npm run unit-test",
     "code-coverage-strict": "nyc --exclude=tests/unitTests --check-coverage --statements=65 --branches=55 --functions=65 --lines=65 npm run unit-test",
-    "code-coverage-todo": "nyc --exclude=tests/unitTests --check-coverage --statements=65 --branches=55 --functions=65 --lines=65 --skip-full npm run unit-test"
+    "code-coverage-todo": "nyc --exclude=tests/unitTests --check-coverage --statements=65 --branches=55 --functions=65 --lines=65 --skip-full npm run unit-test",
+    "coveralls": "npm run unit-test && nyc report --reporter=text-lcov"
   },
   "bin": {
     "web-wombat": "cli/cli.js"
