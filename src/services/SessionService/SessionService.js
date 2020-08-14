@@ -1,6 +1,12 @@
 class SessionService{
+    static getSessions(){
+        return this.sessions;
+    }
     static getSession(request){
         return this.sessions[request.cookies[this.sessionIdCookie]];
+    }
+    static setSessions(sessions){
+        this.sessions = sessions;
     }
     static setSession(uuid, data){
         this.sessions[uuid] = data;
@@ -40,7 +46,22 @@ class SessionService{
 	}
 	static setWithoutSessions(){
 		this.startSessions = false;
-	}
+    }
+    static isWithSessions(){
+        return this.startSessions;
+    }
+    static setPersistInterval(persistInterval){
+        this.persistInterval = persistInterval;
+    }
+    static getPersistInterval(){
+        return this.persistInterval;
+    }
+    static setPersister(persister){
+        this.persister = persister;
+    }
+    static getPersister(){
+        return this.persister;
+    }
 }
 
 SessionService.sessions = [];
@@ -50,5 +71,9 @@ SessionService.sessionIdCookie = 'node-sessid';
 SessionService.startSessions = true;
 
 SessionService.CookieService = require('../CookieService/CookieService');
+
+SessionService.persistInterval = 60000;
+
+SessionService.persister = require('./SessionPersisters/FilePersister/FilePersister');
 
 module.exports = SessionService;

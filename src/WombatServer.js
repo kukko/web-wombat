@@ -25,6 +25,16 @@ class WombatServer {
 				throw new Error("No routes provided.");
 			}
 		}
+		if (SessionService.isWithSessions()){
+			SessionService.getPersister().load().then((sessions) => {
+				if (sessions !== null){
+					SessionService.setSessions(sessions);
+				}
+			});
+			setInterval(() => {
+				SessionService.getPersister().persistSessions(SessionService.getSessions());
+			}, SessionService.getPersistInterval());
+		}
 		if (this.connectToDatabase) {
 			DatabaseHolder.connect()
 				.then((databaseResult) => {

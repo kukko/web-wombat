@@ -41,5 +41,9 @@ module.exports = {
 	errorHandler: {
 		ConsoleLoggerErrorHandler: require('./src/ErrorHandlers/ConsoleLoggerErrorHandler/ConsoleLoggerErrorHandler.js'),
 		TerminalErrorHandler: require('./src/ErrorHandlers/TerminalErrorHandler/TerminalErrorHandler.js')
+	},
+	AbstractSessionPersister: require('./src/services/SessionService/SessionPersisters/AbstractSessionPersister'),
+	sessionPersisters: {
+		FilePersister: require('./src/services/SessionService/SessionPersisters/FilePersister/FilePersister')
 	}
 };
