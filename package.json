@@ -36,7 +36,7 @@
     "wombat"
   ],
   "dependencies": {
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "blade": "^3.3.1",
     "cookie": "^0.4.0",
     "formidable": "^1.2.1",
