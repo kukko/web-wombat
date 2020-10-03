@@ -15,9 +15,13 @@ class AbstractSessionPersister{
     }
 	static persist(sessions){
         if (this.canStartPeristing()){
-			this.state = this.getWorkingState();
+			this.switchToWorkingState();
 			this.persistSessions(sessions).then((result) => {
-				this.state = this.getIdleState();
+				this.switchToIdleState();
+			})
+			.catch((error) => {
+				this.switchToIdleState();
+				console.error(error);
 			});
         }
 	}
@@ -29,9 +33,13 @@ class AbstractSessionPersister{
 					this.switchToIdleState();
 					resolve(result);
 				}).catch((error) => {
-					console.log(error);
+					this.switchToIdleState();
+					console.error(error);
 					reject(error);
 				});
+			}
+			else{
+				reject(new Error("Persister works, can not load sessions"));
 			}
 		});
 	}

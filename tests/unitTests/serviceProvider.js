@@ -21,6 +21,90 @@ describe('ServiceProvider', () => {
         });
     });
     describe('Methods works as expected', () => {
+        describe('getRouteService', () => {
+            beforeEach(() => {
+                sinon.spy(ServiceProvider, 'getService');
+            });
+            describe('Returns correct value', () => {
+                it('Returned value is function', () => {
+                    assert.isFunction(ServiceProvider.getRouteService());
+                });
+            });
+            describe('Calls methods', () => {
+                beforeEach(() => {
+                    ServiceProvider.getRouteService();
+                });
+                describe('Calls \'getService\' method', () => {
+                    it('Called once', () => {
+                        sinon.assert.calledOnce(ServiceProvider.getService);
+                    });
+                    it('Called with correct values', () => {
+                        assert.deepEqual(ServiceProvider.getService.getCall(0).args, [
+                            'RouteService'
+                        ]);
+                    });
+                });
+            });
+            afterEach(() => {
+                sinon.restore();
+            });
+        });
+        describe('getSessionService', () => {
+            beforeEach(() => {
+                sinon.spy(ServiceProvider, 'getService');
+            });
+            describe('Returns correct value', () => {
+                it('Returned value is function', () => {
+                    assert.isFunction(ServiceProvider.getSessionService());
+                });
+            });
+            describe('Calls methods', () => {
+                beforeEach(() => {
+                    ServiceProvider.getSessionService();
+                });
+                describe('Calls \'getService\' method', () => {
+                    it('Called once', () => {
+                        sinon.assert.calledOnce(ServiceProvider.getService);
+                    });
+                    it('Called with correct values', () => {
+                        assert.deepEqual(ServiceProvider.getService.getCall(0).args, [
+                            'SessionService'
+                        ]);
+                    });
+                });
+            });
+            afterEach(() => {
+                sinon.restore();
+            });
+        });
+        describe('getCookieService', () => {
+            beforeEach(() => {
+                sinon.spy(ServiceProvider, 'getService');
+            });
+            describe('Returns correct value', () => {
+                it('Returned value is function', () => {
+                    assert.isFunction(ServiceProvider.getCookieService());
+                });
+            });
+            describe('Calls methods', () => {
+                beforeEach(() => {
+                    ServiceProvider.getCookieService();
+                });
+                describe('Calls \'getService\' method', () => {
+                    it('Called once', () => {
+                        sinon.assert.calledOnce(ServiceProvider.getService);
+                    });
+                    it('Called with correct values', () => {
+                        assert.deepEqual(ServiceProvider.getService.getCall(0).args, [
+                            'CookieService'
+                        ]);
+                    });
+                });
+            });
+            afterEach(() => {
+                sinon.restore();
+            });
+        });
         describe('clearCache', () => {
             before(() => {
                 ServiceProvider.clearCache();

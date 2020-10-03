@@ -1,22 +1,19 @@
 class CookieService{
 	static setCookie(request, response, name, value) {
 		let newCookies = response.getHeader('Set-Cookie'),
-			cookies = [],
-			added = false;
+			cookies = [];
 		for (let index in newCookies){
 			let cookie = this.cookie.parse(newCookies[index]);
-			if (cookie[name] === "undefined"){
-				cookies.push(this.cookie.serialize(name, value));
-				added = true;
-			}
-			else{
+			console.log(cookie[name]);
+			if (typeof cookie[name] === "undefined"){
 				cookies.push(newCookies[index]);
 			}
 		}
-		if (!added){
-			cookies.push(this.cookie.serialize(name, value));
-		}
+		cookies.push(this.cookie.serialize(name, value));
 		response.setHeader('Set-Cookie', cookies);
+		if (typeof request.cookies === "undefined"){
+			request.cookies = [];
+		}
 		request.cookies[name] = value;
 	}
 }
