@@ -949,18 +949,223 @@ describe('Route', () => {
                 testRequest = {
                 };
             });
-            describe('URL does not match', () => {
-                describe('URL parts count not match', () => {
-                    beforeEach(() => {
-                        testRequest.url = testRoute.route + 'foo/bar';
+            describe('The url does not contains URL parameters', () => {
+                describe('URL does not match', () => {
+                    describe('URL parts count not match', () => {
+                        beforeEach(() => {
+                            testRequest.url = testRoute.route + 'foo/bar';
+                        });
+                        describe('Without route parameters', () => {
+                            describe('Returns correct value', () => {
+                                it('Returns boolean', () => {
+                                    assert.isBoolean(testRoute.urlIsMatching(testRequest));
+                                });
+                                it('Returned value is false', () => {
+                                    assert.isFalse(testRoute.urlIsMatching(testRequest));
+                                });
+                            });
+                            describe('Calls methods', () => {
+                                describe('Calls \'trimURL\' method of RouteService', () => {
+                                    beforeEach(() => {
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Calls it twice', () => {
+                                        sinon.assert.calledTwice(fakeTrimURL);
+                                    });
+                                    it('Firstly calls with the requested URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(0).args, [
+                                            testRequest.url
+                                        ]);
+                                    });
+                                    it('Secondly calls with the route\'s URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(1).args, [
+                                            testRoute.route
+                                        ]);
+                                    });
+                                });
+                                describe('Not calls \'substring\' method of string', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'substring');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Method not called', () => {
+                                        sinon.assert.notCalled(String.prototype.substring);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                                describe('Calls \'indexOf\' method of \'string\'', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'indexOf');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Called once', () => {
+                                        sinon.assert.callCount(String.prototype.indexOf, 1);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                            '?'
+                                        ]);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                            });
+                        });
+                        describe('With route parameters', () => {
+                            beforeEach(() => {
+                                testRoute = new Route('/{parameter}', 'GET');
+                                testRequest.url = '/foo/bar';
+                            });
+                            describe('Returns correct value', () => {
+                                it('Returns boolean', () => {
+                                    assert.isBoolean(testRoute.urlIsMatching(testRequest));
+                                });
+                                it('Returned value is false', () => {
+                                    assert.isFalse(testRoute.urlIsMatching(testRequest));
+                                });
+                            });
+                            describe('Calls methods', () => {
+                                describe('Calls \'trimURL\' method of RouteService', () => {
+                                    beforeEach(() => {
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Calls it twice', () => {
+                                        sinon.assert.calledTwice(fakeTrimURL);
+                                    });
+                                    it('Firstly calls with the requested URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(0).args, [
+                                            testRequest.url
+                                        ]);
+                                    });
+                                    it('Secondly calls with the route\'s URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(1).args, [
+                                            testRoute.route
+                                        ]);
+                                    });
+                                });
+                                describe('Not calls \'substring\' method of string', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'substring');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Method not called', () => {
+                                        sinon.assert.notCalled(String.prototype.substring);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                                describe('Calls \'indexOf\' method of \'string\'', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'indexOf');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Method not called', () => {
+                                        sinon.assert.callCount(String.prototype.indexOf, 6);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                            '?'
+                                        ]);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                            });
+                        });
                     });
+                    describe('URL parts count match', () => {
+                        beforeEach(() => {
+                            testRequest.url = testRoute.route + 'foo';
+                        });
+                        describe('Without route parameters', () => {
+                            describe('Returns correct value', () => {
+                                it('Returns boolean', () => {
+                                    assert.isBoolean(testRoute.urlIsMatching(testRequest));
+                                });
+                                it('Returned value is false', () => {
+                                    assert.isFalse(testRoute.urlIsMatching(testRequest));
+                                });
+                            });
+                            describe('Calls methods', () => {
+                                describe('Calls \'trimURL\' method of RouteService', () => {
+                                    beforeEach(() => {
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Calls it twice', () => {
+                                        sinon.assert.calledTwice(fakeTrimURL);
+                                    });
+                                    it('Firstly calls with the requested URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(0).args, [
+                                            testRequest.url
+                                        ]);
+                                    });
+                                    it('Secondly calls with the route\'s URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(1).args, [
+                                            testRoute.route
+                                        ]);
+                                    });
+                                });
+                                describe('Calls \'substring\' method of string', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'substring');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Method called twice', () => {
+                                        sinon.assert.calledTwice(String.prototype.substring);
+                                    });
+                                    it('Firstly calls with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.substring.getCall(0).args, [
+                                            0,
+                                            1
+                                        ]);
+                                    });
+                                    it('Secondly calls with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.substring.getCall(1).args, [
+                                            0,
+                                            1
+                                        ]);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                                describe('Calls \'indexOf\' method of \'string\'', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'indexOf');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Method not called', () => {
+                                        sinon.assert.callCount(String.prototype.indexOf, 6);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                            '?'
+                                        ]);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+                describe('URL does match', () => {
                     describe('Without route parameters', () => {
+                        beforeEach(() => {
+                            testRequest.url = testRoute.route;
+                        });
                         describe('Returns correct value', () => {
                             it('Returns boolean', () => {
                                 assert.isBoolean(testRoute.urlIsMatching(testRequest));
                             });
-                            it('Returned value is false', () => {
-                                assert.isFalse(testRoute.urlIsMatching(testRequest));
+                            it('Returned value is true', () => {
+                                assert.isTrue(testRoute.urlIsMatching(testRequest));
                             });
                         });
                         describe('Calls methods', () => {
@@ -987,8 +1192,37 @@ describe('Route', () => {
                                     sinon.spy(String.prototype, 'substring');
                                     testRoute.urlIsMatching(testRequest);
                                 });
+                                it('Method called', () => {
+                                    sinon.assert.calledTwice(String.prototype.substring);
+                                });
+                                it('Firstly called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.substring.getCall(0).args, [
+                                        0,
+                                        1
+                                    ]);
+                                })
+                                it('Secondly called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.substring.getCall(1).args, [
+                                        0,
+                                        1
+                                    ]);
+                                })
+                                afterEach(() => {
+                                    sinon.restore();
+                                });
+                            });
+                            describe('Calls \'indexOf\' method of \'string\'', () => {
+                                beforeEach(() => {
+                                    sinon.spy(String.prototype, 'indexOf');
+                                    testRoute.urlIsMatching(testRequest);
+                                });
                                 it('Method not called', () => {
-                                    sinon.assert.notCalled(String.prototype.substring);
+                                    sinon.assert.callCount(String.prototype.indexOf, 6);
+                                });
+                                it('Called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                        '?'
+                                    ]);
                                 });
                                 afterEach(() => {
                                     sinon.restore();
@@ -999,61 +1233,14 @@ describe('Route', () => {
                     describe('With route parameters', () => {
                         beforeEach(() => {
                             testRoute = new Route('/{parameter}', 'GET');
-                            testRequest.url = '/foo/bar';
+                            testRequest.url = '/foo';
                         });
                         describe('Returns correct value', () => {
                             it('Returns boolean', () => {
                                 assert.isBoolean(testRoute.urlIsMatching(testRequest));
                             });
-                            it('Returned value is false', () => {
-                                assert.isFalse(testRoute.urlIsMatching(testRequest));
-                            });
-                        });
-                        describe('Calls methods', () => {
-                            describe('Calls \'trimURL\' method of RouteService', () => {
-                                beforeEach(() => {
-                                    testRoute.urlIsMatching(testRequest);
-                                });
-                                it('Calls it twice', () => {
-                                    sinon.assert.calledTwice(fakeTrimURL);
-                                });
-                                it('Firstly calls with the requested URL', () => {
-                                    assert.deepEqual(fakeTrimURL.getCall(0).args, [
-                                        testRequest.url
-                                    ]);
-                                });
-                                it('Secondly calls with the route\'s URL', () => {
-                                    assert.deepEqual(fakeTrimURL.getCall(1).args, [
-                                        testRoute.route
-                                    ]);
-                                });
-                            });
-                            describe('Not calls \'substring\' method of string', () => {
-                                beforeEach(() => {
-                                    sinon.spy(String.prototype, 'substring');
-                                    testRoute.urlIsMatching(testRequest);
-                                });
-                                it('Method not called', () => {
-                                    sinon.assert.notCalled(String.prototype.substring);
-                                });
-                                afterEach(() => {
-                                    sinon.restore();
-                                });
-                            });
-                        });
-                    });
-                });
-                describe('URL parts count match', () => {
-                    beforeEach(() => {
-                        testRequest.url = testRoute.route + 'foo';
-                    });
-                    describe('Without route parameters', () => {
-                        describe('Returns correct value', () => {
-                            it('Returns boolean', () => {
-                                assert.isBoolean(testRoute.urlIsMatching(testRequest));
-                            });
-                            it('Returned value is false', () => {
-                                assert.isFalse(testRoute.urlIsMatching(testRequest));
+                            it('Returned value is true', () => {
+                                assert.isTrue(testRoute.urlIsMatching(testRequest));
                             });
                         });
                         describe('Calls methods', () => {
@@ -1080,19 +1267,42 @@ describe('Route', () => {
                                     sinon.spy(String.prototype, 'substring');
                                     testRoute.urlIsMatching(testRequest);
                                 });
-                                it('Method called twice', () => {
-                                    sinon.assert.calledTwice(String.prototype.substring);
+                                it('Method called', () => {
+                                    sinon.assert.calledThrice(String.prototype.substring);
                                 });
-                                it('Firstly calls with correct parameters', () => {
+                                it('Firstly called with correct parameters', () => {
                                     assert.deepEqual(String.prototype.substring.getCall(0).args, [
                                         0,
                                         1
                                     ]);
                                 });
-                                it('Secondly calls with correct parameters', () => {
+                                it('Secondly called with correct parameters', () => {
                                     assert.deepEqual(String.prototype.substring.getCall(1).args, [
                                         0,
                                         1
+                                    ]);
+                                });
+                                it('Secondly called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.substring.getCall(2).args, [
+                                        10,
+                                        11
+                                    ]);
+                                });
+                                afterEach(() => {
+                                    sinon.restore();
+                                });
+                            });
+                            describe('Calls \'indexOf\' method of \'string\'', () => {
+                                beforeEach(() => {
+                                    sinon.spy(String.prototype, 'indexOf');
+                                    testRoute.urlIsMatching(testRequest);
+                                });
+                                it('Method not called', () => {
+                                    sinon.assert.callCount(String.prototype.indexOf, 6);
+                                });
+                                it('Called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                        '?'
                                     ]);
                                 });
                                 afterEach(() => {
@@ -1103,129 +1313,404 @@ describe('Route', () => {
                     });
                 });
             });
-            describe('URL does match', () => {
-                describe('Without route parameters', () => {
-                    beforeEach(() => {
-                        testRequest.url = testRoute.route;
-                    });
-                    describe('Returns correct value', () => {
-                        it('Returns boolean', () => {
-                            assert.isBoolean(testRoute.urlIsMatching(testRequest));
+
+
+            
+            describe('The url does not contains URL parameters', () => {
+                describe('URL does not match', () => {
+                    describe('URL parts count not match', () => {
+                        let originalURL;
+                        beforeEach(() => {
+                            testRequest.url = testRoute.route + 'foo/bar';
+                            originalURL = testRequest.url
+                            testRequest.url += '?';
                         });
-                        it('Returned value is true', () => {
-                            assert.isTrue(testRoute.urlIsMatching(testRequest));
+                        describe('Without route parameters', () => {
+                            describe('Returns correct value', () => {
+                                it('Returns boolean', () => {
+                                    assert.isBoolean(testRoute.urlIsMatching(testRequest));
+                                });
+                                it('Returned value is false', () => {
+                                    assert.isFalse(testRoute.urlIsMatching(testRequest));
+                                });
+                            });
+                            describe('Calls methods', () => {
+                                describe('Calls \'trimURL\' method of RouteService', () => {
+                                    beforeEach(() => {
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Calls it twice', () => {
+                                        sinon.assert.calledTwice(fakeTrimURL);
+                                    });
+                                    it('Firstly calls with the requested URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(0).args, [
+                                            originalURL
+                                        ]);
+                                    });
+                                    it('Secondly calls with the route\'s URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(1).args, [
+                                            testRoute.route
+                                        ]);
+                                    });
+                                });
+                                describe('Not calls \'substring\' method of string', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'substring');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(String.prototype.substring);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(String.prototype.substring, testRoute.route.length - 1);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                                describe('Calls \'indexOf\' method of \'string\'', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'indexOf');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Called 7 times', () => {
+                                        sinon.assert.callCount(String.prototype.indexOf, 7);
+                                    });
+                                    it('Firstly called with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                            '?'
+                                        ]);
+                                    });
+                                    it('Secondly called with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.indexOf.getCall(1).args, [
+                                            '?'
+                                        ]);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                            });
                         });
-                    });
-                    describe('Calls methods', () => {
-                        describe('Calls \'trimURL\' method of RouteService', () => {
+                        describe('With route parameters', () => {
                             beforeEach(() => {
-                                testRoute.urlIsMatching(testRequest);
+                                testRoute = new Route('/{parameter}', 'GET');
+                                testRequest.url = '/foo/bar?';
                             });
-                            it('Calls it twice', () => {
-                                sinon.assert.calledTwice(fakeTrimURL);
+                            describe('Returns correct value', () => {
+                                it('Returns boolean', () => {
+                                    assert.isBoolean(testRoute.urlIsMatching(testRequest));
+                                });
+                                it('Returned value is false', () => {
+                                    assert.isFalse(testRoute.urlIsMatching(testRequest));
+                                });
                             });
-                            it('Firstly calls with the requested URL', () => {
-                                assert.deepEqual(fakeTrimURL.getCall(0).args, [
-                                    testRequest.url
-                                ]);
-                            });
-                            it('Secondly calls with the route\'s URL', () => {
-                                assert.deepEqual(fakeTrimURL.getCall(1).args, [
-                                    testRoute.route
-                                ]);
+                            describe('Calls methods', () => {
+                                describe('Calls \'trimURL\' method of RouteService', () => {
+                                    beforeEach(() => {
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Calls it twice', () => {
+                                        sinon.assert.calledTwice(fakeTrimURL);
+                                    });
+                                    it('Firstly calls with the requested URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(0).args, [
+                                            originalURL
+                                        ]);
+                                    });
+                                    it('Secondly calls with the route\'s URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(1).args, [
+                                            testRoute.route
+                                        ]);
+                                    });
+                                });
+                                describe('Not calls \'substring\' method of string', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'substring');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(String.prototype.substring);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(String.prototype.substring);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                                describe('Calls \'indexOf\' method of \'string\'', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'indexOf');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Called 7 times', () => {
+                                        sinon.assert.callCount(String.prototype.indexOf, 7);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                            '?'
+                                        ]);
+                                        it('Secondly called with correct parameters', () => {
+                                            assert.deepEqual(String.prototype.indexOf.getCall(1).args, [
+                                                '?'
+                                            ]);
+                                        });
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
                             });
                         });
-                        describe('Not calls \'substring\' method of string', () => {
-                            beforeEach(() => {
-                                sinon.spy(String.prototype, 'substring');
-                                testRoute.urlIsMatching(testRequest);
+                    });
+                    describe('URL parts count match', () => {
+                        let originalURL;
+                        beforeEach(() => {
+                            testRequest.url = testRoute.route + 'foo';
+                            originalURL = testRequest.url;
+                            testRequest.url += '?';
+                        });
+                        describe('Without route parameters', () => {
+                            describe('Returns correct value', () => {
+                                it('Returns boolean', () => {
+                                    assert.isBoolean(testRoute.urlIsMatching(testRequest));
+                                });
+                                it('Returned value is false', () => {
+                                    assert.isFalse(testRoute.urlIsMatching(testRequest));
+                                });
                             });
-                            it('Method called', () => {
-                                sinon.assert.calledTwice(String.prototype.substring);
-                            });
-                            it('Firstly called with correct parameters', () => {
-                                assert.deepEqual(String.prototype.substring.getCall(0).args, [
-                                    0,
-                                    1
-                                ]);
-                            })
-                            it('Secondly called with correct parameters', () => {
-                                assert.deepEqual(String.prototype.substring.getCall(1).args, [
-                                    0,
-                                    1
-                                ]);
-                            })
-                            afterEach(() => {
-                                sinon.restore();
+                            describe('Calls methods', () => {
+                                describe('Calls \'trimURL\' method of RouteService', () => {
+                                    beforeEach(() => {
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Calls it twice', () => {
+                                        sinon.assert.calledTwice(fakeTrimURL);
+                                    });
+                                    it('Firstly calls with the requested URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(0).args, [
+                                            originalURL
+                                        ]);
+                                    });
+                                    it('Secondly calls with the route\'s URL', () => {
+                                        assert.deepEqual(fakeTrimURL.getCall(1).args, [
+                                            testRoute.route
+                                        ]);
+                                    });
+                                });
+                                describe('Calls \'substring\' method of string', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'substring');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Method called thrice', () => {
+                                        sinon.assert.calledThrice(String.prototype.substring);
+                                    });
+                                    it('Firstly calls with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.substring.getCall(0).args, [
+                                            0,
+                                            4
+                                        ]);
+                                    });
+                                    it('Secondly calls with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.substring.getCall(1).args, [
+                                            0,
+                                            1
+                                        ]);
+                                    });
+                                    it('Thricely calls with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.substring.getCall(2).args, [
+                                            0,
+                                            1
+                                        ]);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
+                                describe('Calls \'indexOf\' method of \'string\'', () => {
+                                    beforeEach(() => {
+                                        sinon.spy(String.prototype, 'indexOf');
+                                        testRoute.urlIsMatching(testRequest);
+                                    });
+                                    it('Called 7 times', () => {
+                                        sinon.assert.callCount(String.prototype.indexOf, 7);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                            '?'
+                                        ]);
+                                    });
+                                    afterEach(() => {
+                                        sinon.restore();
+                                    });
+                                });
                             });
                         });
                     });
                 });
-                describe('With route parameters', () => {
-                    beforeEach(() => {
-                        testRoute = new Route('/{parameter}', 'GET');
-                        testRequest.url = '/foo';
+                describe('URL does match', () => {
+                    describe('Without route parameters', () => {
+                        beforeEach(() => {
+                            testRequest.url = testRoute.route;
+                        });
+                        describe('Returns correct value', () => {
+                            it('Returns boolean', () => {
+                                assert.isBoolean(testRoute.urlIsMatching(testRequest));
+                            });
+                            it('Returned value is true', () => {
+                                assert.isTrue(testRoute.urlIsMatching(testRequest));
+                            });
+                        });
+                        describe('Calls methods', () => {
+                            describe('Calls \'trimURL\' method of RouteService', () => {
+                                beforeEach(() => {
+                                    testRoute.urlIsMatching(testRequest);
+                                });
+                                it('Calls it twice', () => {
+                                    sinon.assert.calledTwice(fakeTrimURL);
+                                });
+                                it('Firstly calls with the requested URL', () => {
+                                    assert.deepEqual(fakeTrimURL.getCall(0).args, [
+                                        testRequest.url
+                                    ]);
+                                });
+                                it('Secondly calls with the route\'s URL', () => {
+                                    assert.deepEqual(fakeTrimURL.getCall(1).args, [
+                                        testRoute.route
+                                    ]);
+                                });
+                            });
+                            describe('Not calls \'substring\' method of string', () => {
+                                beforeEach(() => {
+                                    sinon.spy(String.prototype, 'substring');
+                                    testRoute.urlIsMatching(testRequest);
+                                });
+                                it('Method called', () => {
+                                    sinon.assert.calledTwice(String.prototype.substring);
+                                });
+                                it('Firstly called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.substring.getCall(0).args, [
+                                        0,
+                                        1
+                                    ]);
+                                })
+                                it('Secondly called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.substring.getCall(1).args, [
+                                        0,
+                                        1
+                                    ]);
+                                })
+                                afterEach(() => {
+                                    sinon.restore();
+                                });
+                            });
+                            describe('Calls \'indexOf\' method of \'string\'', () => {
+                                beforeEach(() => {
+                                    sinon.spy(String.prototype, 'indexOf');
+                                    testRoute.urlIsMatching(testRequest);
+                                });
+                                it('Method not called', () => {
+                                    sinon.assert.callCount(String.prototype.indexOf, 6);
+                                });
+                                it('Called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                        '?'
+                                    ]);
+                                });
+                                afterEach(() => {
+                                    sinon.restore();
+                                });
+                            });
+                        });
                     });
-                    describe('Returns correct value', () => {
-                        it('Returns boolean', () => {
-                            assert.isBoolean(testRoute.urlIsMatching(testRequest));
+                    describe('With route parameters', () => {
+                        beforeEach(() => {
+                            testRoute = new Route('/{parameter}', 'GET');
+                            testRequest.url = '/foo';
                         });
-                        it('Returned value is true', () => {
-                            assert.isTrue(testRoute.urlIsMatching(testRequest));
-                        });
-                    });
-                    describe('Calls methods', () => {
-                        describe('Calls \'trimURL\' method of RouteService', () => {
-                            beforeEach(() => {
-                                testRoute.urlIsMatching(testRequest);
+                        describe('Returns correct value', () => {
+                            it('Returns boolean', () => {
+                                assert.isBoolean(testRoute.urlIsMatching(testRequest));
                             });
-                            it('Calls it twice', () => {
-                                sinon.assert.calledTwice(fakeTrimURL);
-                            });
-                            it('Firstly calls with the requested URL', () => {
-                                assert.deepEqual(fakeTrimURL.getCall(0).args, [
-                                    testRequest.url
-                                ]);
-                            });
-                            it('Secondly calls with the route\'s URL', () => {
-                                assert.deepEqual(fakeTrimURL.getCall(1).args, [
-                                    testRoute.route
-                                ]);
+                            it('Returned value is true', () => {
+                                assert.isTrue(testRoute.urlIsMatching(testRequest));
                             });
                         });
-                        describe('Calls \'substring\' method of string', () => {
-                            beforeEach(() => {
-                                sinon.spy(String.prototype, 'substring');
-                                testRoute.urlIsMatching(testRequest);
+                        describe('Calls methods', () => {
+                            describe('Calls \'trimURL\' method of RouteService', () => {
+                                beforeEach(() => {
+                                    testRoute.urlIsMatching(testRequest);
+                                });
+                                it('Calls it twice', () => {
+                                    sinon.assert.calledTwice(fakeTrimURL);
+                                });
+                                it('Firstly calls with the requested URL', () => {
+                                    assert.deepEqual(fakeTrimURL.getCall(0).args, [
+                                        testRequest.url
+                                    ]);
+                                });
+                                it('Secondly calls with the route\'s URL', () => {
+                                    assert.deepEqual(fakeTrimURL.getCall(1).args, [
+                                        testRoute.route
+                                    ]);
+                                });
                             });
-                            it('Method called', () => {
-                                sinon.assert.calledThrice(String.prototype.substring);
+                            describe('Calls \'substring\' method of string', () => {
+                                beforeEach(() => {
+                                    sinon.spy(String.prototype, 'substring');
+                                    testRoute.urlIsMatching(testRequest);
+                                });
+                                it('Method called', () => {
+                                    sinon.assert.calledThrice(String.prototype.substring);
+                                });
+                                it('Firstly called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.substring.getCall(0).args, [
+                                        0,
+                                        1
+                                    ]);
+                                });
+                                it('Secondly called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.substring.getCall(1).args, [
+                                        0,
+                                        1
+                                    ]);
+                                });
+                                it('Secondly called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.substring.getCall(2).args, [
+                                        10,
+                                        11
+                                    ]);
+                                });
+                                afterEach(() => {
+                                    sinon.restore();
+                                });
                             });
-                            it('Firstly called with correct parameters', () => {
-                                assert.deepEqual(String.prototype.substring.getCall(0).args, [
-                                    0,
-                                    1
-                                ]);
-                            });
-                            it('Secondly called with correct parameters', () => {
-                                assert.deepEqual(String.prototype.substring.getCall(1).args, [
-                                    0,
-                                    1
-                                ]);
-                            });
-                            it('Secondly called with correct parameters', () => {
-                                assert.deepEqual(String.prototype.substring.getCall(2).args, [
-                                    10,
-                                    11
-                                ]);
-                            });
-                            afterEach(() => {
-                                sinon.restore();
+                            describe('Calls \'indexOf\' method of \'string\'', () => {
+                                beforeEach(() => {
+                                    sinon.spy(String.prototype, 'indexOf');
+                                    testRoute.urlIsMatching(testRequest);
+                                });
+                                it('Method not called', () => {
+                                    sinon.assert.callCount(String.prototype.indexOf, 6);
+                                });
+                                it('Called with correct parameters', () => {
+                                    assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
+                                        '?'
+                                    ]);
+                                });
+                                afterEach(() => {
+                                    sinon.restore();
+                                });
                             });
                         });
                     });
                 });
             });
+
+
+
         });
         describe('getRouteVariableNames', () => {
             let testRoute,
@@ -2412,9 +2897,6 @@ describe('Route', () => {
                 sinon.restore();
             });
         });
-
-
-
         describe('static resources', () => {
             let testURL,
                 testMethod,
@@ -3243,8 +3725,5 @@ describe('Route', () => {
                 sinon.restore();
             });
         });
-
-
-
     });
 });
