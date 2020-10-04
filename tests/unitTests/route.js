@@ -437,7 +437,12 @@ describe('Route', () => {
                 testMiddlewares,
                 fakeControllerConstructor,
                 fakeControllerServe,
-                fakeControllerSetRouteAliasBase;
+                fakeControllerSetRouteAliasBase,
+                fakeIsWithSessions,
+                fakeIsWithSessionsReturnValue,
+                fakeSessionStarted,
+                fakeSessionStartedReturnValue,
+                fakeStartSession;
             beforeEach(() => {
                 let { BaseController, BaseMiddleware } = require('../../index.js');
                 fakeControllerConstructor = sinon.fake(() => {
@@ -448,6 +453,25 @@ describe('Route', () => {
                 });
                 testRequest = {};
                 testResponse = {};
+                fakeIsWithSessions = sinon.fake(() => {
+                    return fakeIsWithSessionsReturnValue;
+                });
+                fakeSessionStarted = sinon.fake(() => {
+                    return fakeSessionStartedReturnValue;
+                });
+                fakeStartSession = sinon.fake(() => {
+                });
+                Route = proxyquire.load('../../src/Route.js', {
+                    './services/ServiceProvider.js': {
+                        getSessionService: () => {
+                            return {
+                                isWithSessions: fakeIsWithSessions,
+                                sessionStarted: fakeSessionStarted,
+                                startSession: fakeStartSession
+                            };
+                        }
+                    }
+                });
             });
             describe('Middlewares are empty', () => {
                 beforeEach(() => {
@@ -458,8 +482,8 @@ describe('Route', () => {
                     beforeEach(() => {
                         let { BaseController } = require('../../index.js');
                         class FakeControllerClass extends BaseController{
-                            constructor(){
-                                fakeControllerConstructor();
+                            constructor(...parameters){
+                                fakeControllerConstructor(...parameters);
                                 return FakeControllerClass.prototype;
                             }
                         }
@@ -473,17 +497,204 @@ describe('Route', () => {
                         });
                     });
                     describe('Calls methods', () => {
-                        beforeEach(() => {
-                            testRoute.runMiddlewares(testRequest, testResponse, testMiddlewares);
+                        describe('The \'isWithSessions\' method of \'SessionService\' class returns false', () => {
+                            beforeEach(() => {
+                                fakeIsWithSessionsReturnValue = false;
+                            });
+                            describe('The \'sessionStarted\' method of \'SessionService\' class returns false', () => {
+                                beforeEach(() => {
+                                    fakeSessionStartedReturnValue = false;
+                                    testRoute.runMiddlewares(testRequest, testResponse, testMiddlewares);
+                                });
+                                describe('Instantiates Controller', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeControllerConstructor);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeControllerConstructor, testRequest, testResponse);
+                                    });
+                                });
+                                describe('Calls controller\'s setRouteAliasBase method', () => {
+                                    it('Not called', () => {
+                                        sinon.assert.notCalled(fakeControllerSetRouteAliasBase);
+                                    });
+                                });
+                                describe('Calls controller\'s serve method', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeControllerServe);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeControllerServe, testRequest, testResponse);
+                                    });
+                                });
+                                describe('Calls \'isWithSessions\' method of \'SessionService\' class', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeIsWithSessions);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeIsWithSessions);
+                                    });
+                                });
+                                describe('Calls \'sessionStarted\' method of \'SessionService\' class', () => {
+                                    it('Not called', () => {
+                                        sinon.assert.notCalled(fakeSessionStarted);
+                                    });
+                                });
+                                describe('Calls \'startSession\' method of \'SessionService\' class', () => {
+                                    it('Not called', () => {
+                                        sinon.assert.notCalled(fakeStartSession);
+                                    });
+                                });
+                            });
+                            describe('The \'sessionStarted\' method of \'SessionService\' class returns true', () => {
+                                beforeEach(() => {
+                                    fakeSessionStartedReturnValue = true;
+                                    testRoute.runMiddlewares(testRequest, testResponse, testMiddlewares);
+                                });
+                                describe('Instantiates Controller', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeControllerConstructor);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeControllerConstructor, testRequest, testResponse);
+                                    });
+                                });
+                                describe('Calls controller\'s setRouteAliasBase method', () => {
+                                    it('Not called', () => {
+                                        sinon.assert.notCalled(fakeControllerSetRouteAliasBase);
+                                    });
+                                });
+                                describe('Calls controller\'s serve method', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeControllerServe);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeControllerServe, testRequest, testResponse);
+                                    });
+                                });
+                                describe('Calls \'isWithSessions\' method of \'SessionService\' class', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeIsWithSessions);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeIsWithSessions);
+                                    });
+                                });
+                                describe('Calls \'sessionStarted\' method of \'SessionService\' class', () => {
+                                    it('Not called', () => {
+                                        sinon.assert.notCalled(fakeSessionStarted);
+                                    });
+                                });
+                                describe('Calls \'startSession\' method of \'SessionService\' class', () => {
+                                    it('Not called', () => {
+                                        sinon.assert.notCalled(fakeStartSession);
+                                    });
+                                });
+                            });
                         });
-                        it('instantiates Controller', () => {
-                            sinon.assert.calledOnce(fakeControllerConstructor);
-                        });
-                        it('Not calls controller\'s setRouteAliasBase method', () => {
-                            sinon.assert.notCalled(fakeControllerSetRouteAliasBase);
-                        });
-                        it('Calls controller\'s serve method', () => {
-                            sinon.assert.calledOnce(fakeControllerServe);
+                        describe('The \'isWithSessions\' method of \'SessionService\' class returns false', () => {
+                            beforeEach(() => {
+                                fakeIsWithSessionsReturnValue = true;
+                            });
+                            describe('The \'sessionStarted\' method of \'SessionService\' class returns false', () => {
+                                beforeEach(() => {
+                                    fakeSessionStartedReturnValue = false;
+                                    testRoute.runMiddlewares(testRequest, testResponse, testMiddlewares);
+                                });
+                                describe('Instantiates Controller', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeControllerConstructor);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeControllerConstructor, testRequest, testResponse);
+                                    });
+                                });
+                                describe('Calls controller\'s setRouteAliasBase method', () => {
+                                    it('Not called', () => {
+                                        sinon.assert.notCalled(fakeControllerSetRouteAliasBase);
+                                    });
+                                });
+                                describe('Calls controller\'s serve method', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeControllerServe);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeControllerServe, testRequest, testResponse);
+                                    });
+                                });
+                                describe('Calls \'isWithSessions\' method of \'SessionService\' class', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeIsWithSessions);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeIsWithSessions);
+                                    });
+                                });
+                                describe('Calls \'sessionStarted\' method of \'SessionService\' class', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeSessionStarted);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeSessionStarted, testRequest);
+                                    });
+                                });
+                                describe('Calls \'startSession\' method of \'SessionService\' class', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeStartSession);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeStartSession, testRequest, testResponse);
+                                    });
+                                });
+                            });
+                            describe('The \'sessionStarted\' method of \'SessionService\' class returns true', () => {
+                                beforeEach(() => {
+                                    fakeSessionStartedReturnValue = true;
+                                    testRoute.runMiddlewares(testRequest, testResponse, testMiddlewares);
+                                });
+                                describe('Instantiates Controller', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeControllerConstructor);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeControllerConstructor, testRequest, testResponse);
+                                    });
+                                });
+                                describe('Calls controller\'s setRouteAliasBase method', () => {
+                                    it('Not called', () => {
+                                        sinon.assert.notCalled(fakeControllerSetRouteAliasBase);
+                                    });
+                                });
+                                describe('Calls controller\'s serve method', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeControllerServe);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeControllerServe, testRequest, testResponse);
+                                    });
+                                });
+                                describe('Calls \'isWithSessions\' method of \'SessionService\' class', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeIsWithSessions);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeIsWithSessions);
+                                    });
+                                });
+                                describe('Calls \'sessionStarted\' method of \'SessionService\' class', () => {
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(fakeSessionStarted);
+                                    });
+                                    it('Called with correct parameters', () => {
+                                        sinon.assert.alwaysCalledWith(fakeSessionStarted, testRequest);
+                                    });
+                                });
+                                describe('Calls \'startSession\' method of \'SessionService\' class', () => {
+                                    it('Not called', () => {
+                                        sinon.assert.notCalled(fakeStartSession);
+                                    });
+                                });
+                            });
                         });
                     });
                 });
@@ -491,8 +702,8 @@ describe('Route', () => {
                     beforeEach(() => {
                         let { ResourceController } = require('../../index.js');
                         class FakeControllerClass extends ResourceController{
-                            constructor(){
-                                fakeControllerConstructor();
+                            constructor(...parameters){
+                                fakeControllerConstructor(...parameters);
                                 return FakeControllerClass.prototype;
                             }
                         }
@@ -538,8 +749,8 @@ describe('Route', () => {
                     beforeEach(() => {
                         let { BaseController } = require('../../index.js');
                         class FakeControllerClass extends BaseController{
-                            constructor(){
-                                fakeControllerConstructor();
+                            constructor(...parameters){
+                                fakeControllerConstructor(...parameters);
                                 return FakeControllerClass.prototype;
                             }
                         }
@@ -575,8 +786,8 @@ describe('Route', () => {
                     beforeEach(() => {
                         let { ResourceController } = require('../../index.js');
                         class FakeControllerClass extends ResourceController{
-                            constructor(){
-                                fakeControllerConstructor();
+                            constructor(...parameters){
+                                fakeControllerConstructor(...parameters);
                                 return FakeControllerClass.prototype;
                             }
                         }

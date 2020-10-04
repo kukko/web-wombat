@@ -1,7 +1,7 @@
 let ResourceController = require("./ResourceController.js"),
 	BaseMiddleware = require("./middlewares/BaseMiddleware.js"),
 	MiddlewareProvider = require("./MiddlewareProvider.js"),
-	SessionService = require("./services/SessionService/SessionService.js");
+	ServiceProvider = require("./services/ServiceProvider.js");
 
 class Route {
 	constructor(
@@ -27,7 +27,7 @@ class Route {
 	}
 	getRoute(trim = false) {
 		return trim
-			? require("./services/ServiceProvider.js").getRouteService().trimURL(this.route)
+			? ServiceProvider.getRouteService().trimURL(this.route)
 			: this.route;
 	}
 	setMiddlewares(middlewares){
@@ -80,8 +80,8 @@ class Route {
 			if (controller instanceof ResourceController) {
 				controller.setRouteAliasBase(this.routeAliasBase);
 			}
-			if (SessionService.startSessions && !SessionService.sessionStarted(request)){
-				SessionService.startSession(request, response);
+			if (ServiceProvider.getSessionService().isWithSessions() && !ServiceProvider.getSessionService().sessionStarted(request)){
+				ServiceProvider.getSessionService().startSession(request, response);
 			}
 			return controller[this.controllerFunction](request, response);
 		}
