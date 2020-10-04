@@ -1001,12 +1001,10 @@ describe('Route', () => {
                                         testRoute.urlIsMatching(testRequest);
                                     });
                                     it('Called once', () => {
-                                        sinon.assert.callCount(String.prototype.indexOf, 1);
+                                        sinon.assert.calledOnce(String.prototype.indexOf);
                                     });
                                     it('Called with correct parameters', () => {
-                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                            '?'
-                                        ]);
+                                        sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                     });
                                     afterEach(() => {
                                         sinon.restore();
@@ -1063,13 +1061,11 @@ describe('Route', () => {
                                         sinon.spy(String.prototype, 'indexOf');
                                         testRoute.urlIsMatching(testRequest);
                                     });
-                                    it('Method not called', () => {
-                                        sinon.assert.callCount(String.prototype.indexOf, 6);
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(String.prototype.indexOf);
                                     });
                                     it('Called with correct parameters', () => {
-                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                            '?'
-                                        ]);
+                                        sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                     });
                                     afterEach(() => {
                                         sinon.restore();
@@ -1139,13 +1135,11 @@ describe('Route', () => {
                                         sinon.spy(String.prototype, 'indexOf');
                                         testRoute.urlIsMatching(testRequest);
                                     });
-                                    it('Method not called', () => {
-                                        sinon.assert.callCount(String.prototype.indexOf, 6);
+                                    it('Called once', () => {
+                                        sinon.assert.calledOnce(String.prototype.indexOf);
                                     });
                                     it('Called with correct parameters', () => {
-                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                            '?'
-                                        ]);
+                                        sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                     });
                                     afterEach(() => {
                                         sinon.restore();
@@ -1216,13 +1210,11 @@ describe('Route', () => {
                                     sinon.spy(String.prototype, 'indexOf');
                                     testRoute.urlIsMatching(testRequest);
                                 });
-                                it('Method not called', () => {
-                                    sinon.assert.callCount(String.prototype.indexOf, 6);
+                                it('Called once', () => {
+                                    sinon.assert.calledOnce(String.prototype.indexOf);
                                 });
                                 it('Called with correct parameters', () => {
-                                    assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                        '?'
-                                    ]);
+                                    sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                 });
                                 afterEach(() => {
                                     sinon.restore();
@@ -1297,13 +1289,11 @@ describe('Route', () => {
                                     sinon.spy(String.prototype, 'indexOf');
                                     testRoute.urlIsMatching(testRequest);
                                 });
-                                it('Method not called', () => {
-                                    sinon.assert.callCount(String.prototype.indexOf, 6);
+                                it('Called once', () => {
+                                    sinon.assert.calledOnce(String.prototype.indexOf);
                                 });
                                 it('Called with correct parameters', () => {
-                                    assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                        '?'
-                                    ]);
+                                    sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                 });
                                 afterEach(() => {
                                     sinon.restore();
@@ -1373,18 +1363,11 @@ describe('Route', () => {
                                         sinon.spy(String.prototype, 'indexOf');
                                         testRoute.urlIsMatching(testRequest);
                                     });
-                                    it('Called 7 times', () => {
-                                        sinon.assert.callCount(String.prototype.indexOf, 7);
+                                    it('Called twice', () => {
+                                        sinon.assert.calledTwice(String.prototype.indexOf);
                                     });
                                     it('Firstly called with correct parameters', () => {
-                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                            '?'
-                                        ]);
-                                    });
-                                    it('Secondly called with correct parameters', () => {
-                                        assert.deepEqual(String.prototype.indexOf.getCall(1).args, [
-                                            '?'
-                                        ]);
+                                        sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                     });
                                     afterEach(() => {
                                         sinon.restore();
@@ -1444,18 +1427,11 @@ describe('Route', () => {
                                         sinon.spy(String.prototype, 'indexOf');
                                         testRoute.urlIsMatching(testRequest);
                                     });
-                                    it('Called 7 times', () => {
-                                        sinon.assert.callCount(String.prototype.indexOf, 7);
+                                    it('Called twice', () => {
+                                        sinon.assert.calledTwice(String.prototype.indexOf);
                                     });
                                     it('Called with correct parameters', () => {
-                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                            '?'
-                                        ]);
-                                        it('Secondly called with correct parameters', () => {
-                                            assert.deepEqual(String.prototype.indexOf.getCall(1).args, [
-                                                '?'
-                                            ]);
-                                        });
+                                        sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                     });
                                     afterEach(() => {
                                         sinon.restore();
@@ -1534,13 +1510,11 @@ describe('Route', () => {
                                         sinon.spy(String.prototype, 'indexOf');
                                         testRoute.urlIsMatching(testRequest);
                                     });
-                                    it('Called 7 times', () => {
-                                        sinon.assert.callCount(String.prototype.indexOf, 7);
+                                    it('Called twice', () => {
+                                        sinon.assert.calledTwice(String.prototype.indexOf);
                                     });
                                     it('Called with correct parameters', () => {
-                                        assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                            '?'
-                                        ]);
+                                        sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                     });
                                     afterEach(() => {
                                         sinon.restore();
@@ -1611,13 +1585,11 @@ describe('Route', () => {
                                     sinon.spy(String.prototype, 'indexOf');
                                     testRoute.urlIsMatching(testRequest);
                                 });
-                                it('Method not called', () => {
-                                    sinon.assert.callCount(String.prototype.indexOf, 6);
+                                it('Called once', () => {
+                                    sinon.assert.calledOnce(String.prototype.indexOf);
                                 });
                                 it('Called with correct parameters', () => {
-                                    assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                        '?'
-                                    ]);
+                                    sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                 });
                                 afterEach(() => {
                                     sinon.restore();
@@ -1692,13 +1664,11 @@ describe('Route', () => {
                                     sinon.spy(String.prototype, 'indexOf');
                                     testRoute.urlIsMatching(testRequest);
                                 });
-                                it('Method not called', () => {
-                                    sinon.assert.callCount(String.prototype.indexOf, 6);
+                                it('Called once', () => {
+                                    sinon.assert.calledOnce(String.prototype.indexOf);
                                 });
                                 it('Called with correct parameters', () => {
-                                    assert.deepEqual(String.prototype.indexOf.getCall(0).args, [
-                                        '?'
-                                    ]);
+                                    sinon.assert.alwaysCalledWith(String.prototype.indexOf, '?');
                                 });
                                 afterEach(() => {
                                     sinon.restore();
