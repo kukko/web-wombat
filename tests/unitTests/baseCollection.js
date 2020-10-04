@@ -100,7 +100,10 @@ describe('BaseCollection', () => {
                 fakeDb = {
                     createCollection: (collectionName, callback) => {
                         callback(testError, testResult);
-                    }
+                    },
+                    collection : sinon.fake((collectionName) => {
+                        return testResult;
+                    })
                 }
             });
             it('Returns promise', () => {
@@ -133,21 +136,59 @@ describe('BaseCollection', () => {
                         });
                     });
                 });
-                describe('Promise rejects', () => {
-                    describe('When an error occurred in the database\'s \'createCollection\' method', () => {
-                        let testErrorMessage;
-                        beforeEach(() => {
-                            testErrorMessage = 'foo';
-                            testError = new Error(testErrorMessage);
-                        });
-                        it('Rejects with an Error object', (done) => {
-                            FakeCollection.create(fakeDb).catch((e) => {
-                                done(!(e instanceof Error));
+                describe('When an error occurred in the database\'s \'createCollection\' method', () => {
+                    let testErrorMessage;
+                    beforeEach(() => {
+                        testErrorMessage = 'foo';
+                        testError = new Error(testErrorMessage);
+                    });
+                    describe('When the collection does not exists', () => {
+                        describe('Returned promise rejects', () => {
+                            it('Rejects with an Error object', (done) => {
+                                FakeCollection.create(fakeDb).catch((e) => {
+                                    done(!(e instanceof Error));
+                                });
+                            });
+                            it('Rejected Error object\'s message is correct', (done) => {
+                                FakeCollection.create(fakeDb).catch((e) => {
+                                    done(e.message !== testErrorMessage);
+                                });
                             });
                         });
-                        it('Rejected Error object\'s message is correct', (done) => {
-                            FakeCollection.create(fakeDb).catch((e) => {
-                                done(e.message !== testErrorMessage);
+                    });
+                    describe('When the collection already exists', () => {
+                        beforeEach(() => {
+                            testError.code = 48;
+                            testResult = {};
+                        });
+                        describe('Returned promise resolves', () => {
+                            it('Resolves an object', (done) => {
+                                FakeCollection.create(fakeDb).then((collection) => {
+                                    done(typeof collection !== 'object');
+                                });
+                            });
+                            it('Resolved object is correct', (done) => {
+                                FakeCollection.create(fakeDb).then((collection) => {
+                                    done(collection !== testResult);
+                                });
+                            });
+                        });
+                        describe('Calls methods', () => {
+                            describe('Calls \'collection\' method of \'BaseCollection\' class', () => {
+                                it('Called once', (done) => {
+                                    FakeCollection.create(fakeDb).then((collection) => {
+                                        sinon.assert.calledOnce(fakeDb.collection);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    FakeCollection.create(fakeDb).then((collection) => {
+                                        assert.deepEqual(fakeDb.collection.getCall(0).args, [
+                                            FakeCollection.collectionName
+                                        ]);
+                                        done();
+                                    });
+                                });
                             });
                         });
                     });
