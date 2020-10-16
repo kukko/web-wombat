@@ -4,7 +4,6 @@ class CookieService{
 			cookies = [];
 		for (let index in newCookies){
 			let cookie = this.cookie.parse(newCookies[index]);
-			console.log(cookie[name]);
 			if (typeof cookie[name] === "undefined"){
 				cookies.push(newCookies[index]);
 			}

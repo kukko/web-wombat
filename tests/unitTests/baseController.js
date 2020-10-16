@@ -15,9 +15,6 @@ describe('BaseController', () => {
 		it('view', () => {
 			assert.isFunction(BaseController.prototype.view);
 		});
-		it('static getMiddleware', () => {
-			assert.isFunction(BaseController.getMiddleware);
-		});
 		it('setViewConnector', () => {
 			assert.isFunction(BaseController.prototype.setViewConnector);
 		});
@@ -55,19 +52,21 @@ describe('BaseController', () => {
 			fakeController = new FakeControllerClass(request, response);
 		});
 		describe('Abstract methods', () => {
-			let { logger } = require('../../index.js');
-			beforeEach(() => {
-				sinon.replace(logger, 'warn', sinon.spy());
-			});
-			it('Method serve returns undefined', () => {
-				assert.isUndefined(fakeController.serve());
-			});
-			it('Method serve writes warning to the console', () => {
-				fakeController.serve();
-				sinon.assert.calledOnce(logger.warn);
-			});
-			afterEach(() => {
-				sinon.restore();
+			describe('serve', () => {
+				let { logger } = require('../../index.js');
+				beforeEach(() => {
+					sinon.replace(logger, 'warn', sinon.spy());
+				});
+				it('Method serve returns undefined', () => {
+					assert.isUndefined(fakeController.serve());
+				});
+				it('Method serve writes warning to the console', () => {
+					fakeController.serve();
+					sinon.assert.calledOnce(logger.warn);
+				});
+				afterEach(() => {
+					sinon.restore();
+				});
 			});
 		});
 		describe('Implemented methods', () => {
@@ -79,6 +78,192 @@ describe('BaseController', () => {
 				response.getHeader = sinon.fake((name) => {
 					return cookies[name];
 				})
+			});
+			describe('view', () => {
+				let testFilePath,
+					testOptions,
+					fakeConstructor,
+					fakeGetView,
+					fakeGetViewReturnValue;
+				beforeEach(() => {
+					testFilePath = 'foo';
+					testOptions = {};
+					fakeConstructor = sinon.fake();
+					fakeGetViewReturnValue = 'bar';
+					fakeGetView = sinon.fake(() => {
+						return fakeGetViewReturnValue;
+					});
+					class fakeViewProvider{
+						constructor(request, response, connector){
+							fakeConstructor(request, response, connector);
+						}
+						getView(filePath, options, writeToResponse, endResponse){
+							return fakeGetView(filePath, options, writeToResponse, endResponse);
+						}
+					}
+					fakeController.ViewProvider = fakeViewProvider;
+				});
+				describe('Returns correct value', () => {
+					it('Returns the same type as the \'GetView\' method of \'ViewProvider\' class', () => {
+						assert.equal(typeof fakeController.view(testFilePath, testOptions), typeof fakeGetViewReturnValue);
+					});
+					it('Returns the same value as the \'GetView\' method of \'ViewProvider\' class', () => {
+						assert.equal(fakeController.view(testFilePath, testOptions), fakeGetViewReturnValue);
+					});
+				});
+				describe('Called with minimal parameters', () => {
+					describe('Calls methods', () => {
+						beforeEach(() => {
+							fakeController.view(testFilePath, testOptions);
+						});
+						describe('Instantiates class from \'ViewProvider\' attribute of \'BaseController\' class', () => {
+							it('Called once', () => {
+								sinon.assert.calledOnce(fakeConstructor);
+							});
+							it('Called with correct parameters', () => {
+								sinon.assert.calledWith(fakeConstructor, request, response, fakeController.viewConnector);
+							});
+						});
+						describe('Calls the \'getView\' method on instance of class stored in the \'ViewProvier\' attribute of \'BaseController\' class', () => {
+							it('Called once', () => {
+								sinon.assert.calledOnce(fakeGetView);
+							});
+							it('Called with correct parameters', () => {
+								sinon.assert.calledWith(fakeGetView, testFilePath, testOptions, true, true);
+							});
+						});
+					});
+				});
+				describe('Called with all parameters specified', () => {
+					let testWriteToResponseParameter,
+						testEndResponseParameter;
+					beforeEach(() => {
+						testWriteToResponseParameter = false;
+						testEndResponseParameter = false;
+					});
+					describe('Calls methods', () => {
+						beforeEach(() => {
+							fakeController.view(testFilePath, testOptions, testWriteToResponseParameter, testEndResponseParameter);
+						});
+						describe('Instantiates class from \'ViewProvider\' attribute of \'BaseController\' class', () => {
+							it('Called once', () => {
+								sinon.assert.calledOnce(fakeConstructor);
+							});
+							it('Called with correct parameters', () => {
+								sinon.assert.calledWith(fakeConstructor, request, response, fakeController.viewConnector);
+							});
+						});
+						describe('Calls the \'getView\' method on instance of class stored in the \'ViewProvier\' attribute of \'BaseController\' class', () => {
+							it('Called once', () => {
+								sinon.assert.calledOnce(fakeGetView);
+							});
+							it('Called with correct parameters', () => {
+								sinon.assert.calledWith(fakeGetView, testFilePath, testOptions, testWriteToResponseParameter, testEndResponseParameter);
+							});
+						});
+					});
+				});
+			});
+			describe('setViewConnector', () => {
+				let testViewConnector,
+					viewConnectorBefore;
+				beforeEach(() => {
+					testViewConnector = {};
+					viewConnectorBefore = fakeController.viewConnector;
+				});
+				describe('Returns correct value', () => {
+					it('Returns \'undefined\' value', () => {
+						assert.isUndefined(fakeController.setViewConnector(testViewConnector));
+					});
+				});
+				describe('Modifies attributes properly', () => {
+					beforeEach(() => {
+						fakeController.setViewConnector(testViewConnector);
+					});
+					it('Modifies \'viewConnector\' properly', () => {
+						assert.equal(fakeController.viewConnector, testViewConnector);
+					});
+				});
+				afterEach(() => {
+					fakeController.viewConnector = viewConnectorBefore;
+				});
+			});
+			describe('getAllMiddlewares', () => {
+				describe('Returns correct value', () => {
+					it('Returned value is an array', () => {
+						assert.isArray(BaseController.getAllMiddlewares());
+					});
+					it('Returned array contains two elements', () => {
+						assert.lengthOf(BaseController.getAllMiddlewares(), 2);
+					});
+				});
+				describe('Calls methods', () => {
+					beforeEach(() => {
+						sinon.spy(BaseController, 'getBaseMiddlewares');
+						sinon.spy(BaseController, 'getMiddlewares');
+						BaseController.getAllMiddlewares();
+					});
+					describe('getBaseMiddlewares', () => {
+						it('Called once', () => {
+							sinon.assert.calledOnce(BaseController.getBaseMiddlewares);
+						});
+						it('Called with correct parameters', () => {
+							sinon.assert.alwaysCalledWith(BaseController.getBaseMiddlewares);
+						});
+					});
+					describe('getMiddlewares', () => {
+						it('Called once', () => {
+							sinon.assert.calledOnce(BaseController.getMiddlewares);
+						});
+						it('Called with correct parameters', () => {
+							sinon.assert.alwaysCalledWith(BaseController.getMiddlewares);
+						});
+					});
+					afterEach(() => {
+						sinon.restore();
+					});
+				});
+			});
+			describe('getBaseMiddlewares', () => {
+				beforeEach(() => {
+					sinon.spy(BaseController.middlewareProvider, 'getMiddleware');
+				});
+				describe('Returns correct value', () => {
+					it('Returned value is an array', () => {
+						assert.isArray(BaseController.getBaseMiddlewares());
+					});
+					it('Returned array contains two elements', () => {
+						assert.lengthOf(BaseController.getBaseMiddlewares(), 2);
+					});
+				});
+				describe('Calls methods', () => {
+					beforeEach(() => {
+						BaseController.getBaseMiddlewares();
+					});
+					it('Called twice', () => {
+						sinon.assert.calledTwice(BaseController.middlewareProvider.getMiddleware);
+					});
+					it('Firstly called with correct parameters', () => {
+						assert.deepEqual(BaseController.middlewareProvider.getMiddleware.getCall(0).args, [
+							'CookieParserMiddleware'
+						]);
+					});
+					it('Secondly called with correct parameters', () => {
+						assert.deepEqual(BaseController.middlewareProvider.getMiddleware.getCall(1).args, [
+							'RouteVariableParserMiddleware'
+						]);
+					});
+				});
+			});
+			describe('getMiddlewares', () => {
+				describe('Returns correct value', () => {
+					it('Returned value is an array', () => {
+						assert.isArray(BaseController.getMiddlewares());
+					});
+					it('Returned array is empty', () => {
+						assert.lengthOf(BaseController.getMiddlewares(), 0);
+					});
+				});
 			});
 			describe('redirect', () => {
 				before(() => {

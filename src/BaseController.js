@@ -6,35 +6,13 @@ class BaseController {
 		this.request = request;
 		this.response = response;
 	}
-	get db() {
-		return new Proxy(DatabaseHolder, {
-			get(target, name, receiver) {
-				if (typeof target[name] !== "undefined") {
-					if (typeof target.collections[name] !== "undefined") {
-						throw new Error(
-							"Resolved keyword (" +
-							name +
-							") used as collection name for " +
-							target.collections[name].name +
-							"."
-						);
-					}
-				} else {
-					if (typeof target.collections[name] !== "undefined") {
-						return target.collections[name];
-					}
-					return null;
-				}
-			}
-		});
-	}
 	serve() {
 		logger.warn(
 			"Not implemented 'serve' method in class: " + this.constructor.name + "!"
 		);
 	}
 	view(filePath, options, writeToResponse = true, endResponse = true) {
-		let viewProviderObj = new BaseController.ViewProvider(
+		let viewProviderObj = new this.ViewProvider(
 			this.request,
 			this.response,
 			this.viewConnector
@@ -46,26 +24,21 @@ class BaseController {
 			endResponse
 		);
 	}
-	static getMiddleware(name) {
-		return BaseController.middlewareProvider.getMiddleware(name);
-	}
 	setViewConnector(viewConnector) {
 		this.viewConnector = viewConnector;
 	}
-
-	static get allMiddlewares() {
-		return [...this.baseMiddlewares, ...this.middlewares];
+	static getAllMiddlewares() {
+		return [...this.getBaseMiddlewares(), ...this.getMiddlewares()];
 	}
-	static get baseMiddlewares() {
+	static getBaseMiddlewares() {
 		return [
-			this.getMiddleware("CookieParserMiddleware"),
-			this.getMiddleware("RouteVariableParserMiddleware")
+			this.middlewareProvider.getMiddleware("CookieParserMiddleware"),
+			this.middlewareProvider.getMiddleware("RouteVariableParserMiddleware")
 		];
 	}
-	static get middlewares() {
+	static getMiddlewares() {
 		return [];
 	}
-
 	redirect(url) {
 		this.response.statusCode = 302;
 		this.response.setHeader("Location", url);
@@ -76,16 +49,8 @@ class BaseController {
 	}
 }
 
-if (typeof BaseController.middlewareProvider === "undefined") {
-	BaseController.middlewareProvider = require("./MiddlewareProvider.js");
-}
-
-if (typeof BaseController.CookieService === "undefined") {
-	BaseController.CookieService = require("./services/CookieService/CookieService");
-}
-
-if (typeof BaseController.ViewProvider === "undefined") {
-	BaseController.ViewProvider = require("./ViewProvider.js");
-}
+BaseController.middlewareProvider = require("./MiddlewareProvider.js");
+BaseController.CookieService = require("./services/CookieService/CookieService");
+BaseController.ViewProvider = require("./ViewProvider.js");
 
 module.exports = BaseController;
