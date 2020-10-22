@@ -3,7 +3,7 @@ let { join, dirname } = require("path");
 class DatabaseHolder {
 	static get collections() {
 		if (typeof this._collections === "undefined") {
-			this._collections = require("./CollectionsProvider.js").collections;
+			this._collections = require("./CollectionsProvider.js").getCollections();
 		}
 		return this._collections;
 	}
@@ -56,7 +56,7 @@ class DatabaseHolder {
 								resolve(true);
 							}
 						};
-						if (Object.keys(this.collections).length > 0) {
+						if (Object.keys(this.getCollections()).length > 0) {
 							for (let collectionName in this.collections) {
 								this.collections[collectionName]
 									.create(this.db)
