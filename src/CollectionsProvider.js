@@ -2,7 +2,7 @@ let { lstatSync, readdirSync } = require("fs");
 let { join, dirname } = require("path");
 
 class CollectionsProvider {
-	static get collections() {
+	static getCollections() {
 		if (typeof this._collections !== "undefined") {
 			return this._collections;
 		}
@@ -29,7 +29,7 @@ class CollectionsProvider {
 		));
 	}
 	static getCollection(collectionName){
-		return this.collections[collectionName].collection;
+		return this.getCollections()[collectionName];
 	}
 	static isDirectory(source) {
 		return lstatSync(
