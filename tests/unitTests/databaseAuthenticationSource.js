@@ -51,11 +51,13 @@ describe('DatabaseAuthenticationSource', () => {
             let { CollectionsProvider } = require('../../index.js');
             CollectionsProvider.getCollection = sinon.fake(() => {
                 return {
-                    findOne: (parameters, callback) => {
-                        callback(error, testUser);
-                    },
-                    insertOne: (toBeInserted, callback) => {
-                        callback(insertError, insertResult);
+                    collection: {
+                        findOne: (parameters, callback) => {
+                            callback(error, testUser);
+                        },
+                        insertOne: (toBeInserted, callback) => {
+                            callback(insertError, insertResult);
+                        }
                     }
                 }
             });
@@ -216,7 +218,6 @@ describe('DatabaseAuthenticationSource', () => {
                                         });
                                         it('The hashed password have been set to the user', (done) => {
                                             DatabaseAuthenticationSource.addUser(user).catch(() => {
-                                                console.log(user);
                                                 done(user.password !== 'foofoo');
                                             });
                                         });

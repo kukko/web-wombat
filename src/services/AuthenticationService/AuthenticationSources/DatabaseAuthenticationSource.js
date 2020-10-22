@@ -6,7 +6,7 @@ class DatabaseAuthenticationSource extends AuthenticationSourceInterface{
 		return new Promise((resolve, reject) => {
 			let findParameters = {};
 			findParameters[this.getIdentificationField()] = username;
-			CollectionsProvider.getCollection(this.getAuthenticationCollection()).findOne(findParameters, (error, user) => {
+			CollectionsProvider.getCollection(this.getAuthenticationCollection()).collection.findOne(findParameters, (error, user) => {
 				if (!error){
 					if (user){
 						this.bcrypt.compare(password, user[this.getAuthenticationField()], (error, result) => {
@@ -32,12 +32,12 @@ class DatabaseAuthenticationSource extends AuthenticationSourceInterface{
 		return new Promise((resolve, reject) => {
 			let findParameters = {};
 			findParameters[this.getIdentificationField()] = user[this.getIdentificationField()];
-			CollectionsProvider.getCollection(this.getAuthenticationCollection()).findOne(findParameters, (findError, foundUser) => {
+			CollectionsProvider.getCollection(this.getAuthenticationCollection()).collection.findOne(findParameters, (findError, foundUser) => {
 				if (!findError){
 					if (!foundUser){
 						this.hashPassword(user[this.getAuthenticationField()]).then((hash) => {
 							user[this.getAuthenticationField()] = hash;
-							CollectionsProvider.getCollection(this.getAuthenticationCollection()).insertOne(user, (insertError, result) => {
+							CollectionsProvider.getCollection(this.getAuthenticationCollection()).collection.insertOne(user, (insertError, result) => {
 								if (!insertError){
 									resolve(true);
 								}
