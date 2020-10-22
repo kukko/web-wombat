@@ -56,7 +56,7 @@ class DatabaseHolder {
 								resolve(true);
 							}
 						};
-						if (Object.keys(this.getCollections()).length > 0) {
+						if (Object.keys(this.collections).length > 0) {
 							for (let collectionName in this.collections) {
 								this.collections[collectionName]
 									.create(this.db)
