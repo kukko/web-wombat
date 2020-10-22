@@ -532,7 +532,9 @@ describe('AbstractSessionPersister', () => {
                 });
                 describe('Returns correct value', () => {
                     it('Returned value is instance of Promise', () => {
-                        assert.instanceOf(AbstractSessionPersister.load(), Promise);
+                        let returnedValue = AbstractSessionPersister.load();
+                        returnedValue.catch(() => {});
+                        assert.instanceOf(returnedValue, Promise);
                     });
                     describe('Returned promise rejects', () => {
                         it('Rejected value is instance of Error', (done) => {
