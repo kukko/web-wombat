@@ -344,7 +344,7 @@ describe('Route', () => {
                 testRouteMiddlewares = [
                 ];
                 class testControllerClass extends BaseController{
-                    static get allMiddlewares(){
+                    static getAllMiddlewares(){
                         fakeControllerAllMiddlewares();
                         return testControllerMiddlewares;
                     }
@@ -398,8 +398,6 @@ describe('Route', () => {
                     });
                     describe('Controller middlewares are empty', () => {
                         beforeEach(() => {
-                            testController = class {
-                            };
                             testRoute = new Route('/', 'GET', testController);
                             testRoute.runMiddlewares = sinon.fake(() => {
                             });

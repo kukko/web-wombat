@@ -54,7 +54,7 @@ class Route {
 		new this.Controller(request, socket, head);
 	}
 	runController(request, response) {
-		let controllerMiddlewares = this.Controller.allMiddlewares;
+		let controllerMiddlewares = this.Controller.getAllMiddlewares();
 		return this.runMiddlewares(request, response, typeof controllerMiddlewares !== "undefined" ? [
 			...controllerMiddlewares,
 			...this.getMiddlewares()
