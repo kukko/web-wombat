@@ -112,7 +112,7 @@ class Route {
 						Route.routeVariableSeparators.end.length,
 					routeParts[i].length
 				) === Route.routeVariableSeparators.end;
-			output = output && urlParts[i] === routeParts[i] || isRouteVariable;
+			output = output && (urlParts[i] === routeParts[i] || isRouteVariable);
 		}
 		return output;
 	}
