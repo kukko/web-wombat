@@ -43,7 +43,7 @@ describe('BodyParserMiddleware works expected', () => {
         assert.deepEqual(request.body, data);
     });
     it('Parse body for UPDATE request', () => {
-        request.method = "UPDATE";
+        request.method = "PATCH";
         BodyParserMiddleware.run(request, response, next);
         assert.deepEqual(request.body, data);
     });
