@@ -70,8 +70,8 @@ describe('Route', () => {
         it('put', () => {
             assert.isFunction(Route.post);
         });
-        it('update', () => {
-            assert.isFunction(Route.update);
+        it('patch', () => {
+            assert.isFunction(Route.patch);
         });
         it('delete', () => {
             assert.isFunction(Route.delete);
@@ -2484,7 +2484,7 @@ describe('Route', () => {
                 sinon.restore();
             });
         });
-        describe('static update', () => {
+        describe('static patch', () => {
             let testURL,
                 testMethod,
                 testController,
@@ -2494,7 +2494,7 @@ describe('Route', () => {
                 testRouteAliasBase;
             beforeEach(() => {
                 testURL = '/';
-                testMethod = 'UPDATE';
+                testMethod = 'PATCH';
                 testController = {};
                 sinon.spy(Route.prototype, 'setMiddlewares');
             });
@@ -2509,7 +2509,7 @@ describe('Route', () => {
                 describe('Returns correct value', () => {
                     let testRoute;
                     beforeEach(() => {
-                        testRoute = Route.update(testURL, testController);
+                        testRoute = Route.patch(testURL, testController);
                     });
                     it('Returns object', () => {
                         assert.isObject(testRoute);
@@ -2565,7 +2565,7 @@ describe('Route', () => {
                 describe('Returns correct value', () => {
                     let testRoute;
                     beforeEach(() => {
-                        testRoute = Route.update(testURL, testController, testControllerFunction, testMiddlewares);
+                        testRoute = Route.patch(testURL, testController, testControllerFunction, testMiddlewares);
                     });
                     it('Returns object', () => {
                         assert.isObject(testRoute);

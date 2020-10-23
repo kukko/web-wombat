@@ -216,10 +216,10 @@ class Route {
 			middlewares
 		);
 	}
-	static update(route, controller, controllerFunction, middlewares) {
+	static patch(route, controller, controllerFunction, middlewares) {
 		return new Route(
 			route,
-			"UPDATE",
+			"PATCH",
 			controller,
 			controllerFunction,
 			middlewares
