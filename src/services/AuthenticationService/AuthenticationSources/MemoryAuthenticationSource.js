@@ -72,6 +72,26 @@ class MemoryAuthenticationSource extends AuthenticationSourceInterface{
 		this.authenticationField = authenticationField;
 		return this;
 	}
+	static getUser(username){
+		return new Promise((resolve, reject) => {
+			for (let i in this.getUsers()){
+				let user = this.getUsers()[i];
+				if (user[this.getIdentificationField()] === username){
+					resolve(user);
+					return;
+				}
+			}
+			reject(null);
+		});
+	}
+	static changePassword(username, password){
+		return new Promise((resolve, reject) => {
+			this.getUser(username).then((user) => {
+				user[this.getAuthenticationField()] = password;
+				resolve(true);
+			});
+		})
+	}
 }
 
 MemoryAuthenticationSource.setUsers([]);

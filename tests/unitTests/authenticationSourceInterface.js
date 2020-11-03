@@ -18,6 +18,12 @@ describe('AuthenticationSourceInterface', () => {
         it('buildUserObject', () => {
             assert.isFunction(FakeAuthenticationSource.buildUserObject);
         });
+        it('getUser', () => {
+            assert.isFunction(FakeAuthenticationSource.getUser);
+        });
+        it('changePassword', () => {
+            assert.isFunction(FakeAuthenticationSource.changePassword);
+        });
     });
     describe('Abstract methods', () => {
         it('Method \'authenticateUser\' throws error', () => {
@@ -28,6 +34,12 @@ describe('AuthenticationSourceInterface', () => {
         });
         it('Method \'buildUserObject\' throws error', () => {
             assert.throws(FakeAuthenticationSource.buildUserObject);
+        });
+        it('Method \'getUser\' throws error', () => {
+            assert.throws(FakeAuthenticationSource.getUser);
+        });
+        it('Method \'changePassword\' throws error', () => {
+            assert.throws(FakeAuthenticationSource.changePassword);
         });
     });
 });

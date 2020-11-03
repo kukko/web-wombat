@@ -4,27 +4,22 @@ let AuthenticationSourceInterface = require("../AuthenticationSourceInterface.js
 class DatabaseAuthenticationSource extends AuthenticationSourceInterface{
 	static authenticateUser(username, password){
 		return new Promise((resolve, reject) => {
-			let findParameters = {};
-			findParameters[this.getIdentificationField()] = username;
-			CollectionsProvider.getCollection(this.getAuthenticationCollection()).collection.findOne(findParameters, (error, user) => {
-				if (!error){
-					if (user){
-						this.bcrypt.compare(password, user[this.getAuthenticationField()], (error, result) => {
-							if (result){
-								resolve(user);
-							}
-							else{
-								resolve(null);
-							}
-						});
-					}
-					else{
-						resolve(null);
-					}
+			this.getUser(username).then((user) => {
+				if (user !== null){
+					this.bcrypt.compare(password, user[this.getAuthenticationField()], (error, result) => {
+						if (result){
+							resolve(user);
+						}
+						else{
+							resolve(null);
+						}
+					});
 				}
 				else{
-					reject(error);
+					resolve(null);
 				}
+			}).catch((error) => {
+				reject(error);
 			});
 		});
 	}
@@ -32,30 +27,27 @@ class DatabaseAuthenticationSource extends AuthenticationSourceInterface{
 		return new Promise((resolve, reject) => {
 			let findParameters = {};
 			findParameters[this.getIdentificationField()] = user[this.getIdentificationField()];
-			CollectionsProvider.getCollection(this.getAuthenticationCollection()).collection.findOne(findParameters, (findError, foundUser) => {
-				if (!findError){
-					if (!foundUser){
-						this.hashPassword(user[this.getAuthenticationField()]).then((hash) => {
-							user[this.getAuthenticationField()] = hash;
-							CollectionsProvider.getCollection(this.getAuthenticationCollection()).collection.insertOne(user, (insertError, result) => {
-								if (!insertError){
-									resolve(true);
-								}
-								else{
-									reject(insertError);
-								}
-							});
-						}).catch((hashingError) => {
-							reject(hashingError);
+			this.getUser(user[this.getIdentificationField()]).then((foundUser) => {
+				if (foundUser === null){
+					this.hashPassword(user[this.getAuthenticationField()]).then((hash) => {
+						user[this.getAuthenticationField()] = hash;
+						CollectionsProvider.getCollection(this.getAuthenticationCollection()).collection.insertOne(user, (insertError, result) => {
+							if (!insertError){
+								resolve(true);
+							}
+							else{
+								reject(insertError);
+							}
 						});
-					}
-					else{
-						reject(new Error("The username is already in use."));
-					}
+					}).catch((hashingError) => {
+						reject(hashingError);
+					});
 				}
 				else{
-					reject(findError);
+					reject(new Error("The username is already in use."));
 				}
+			}).catch((findError) => {
+				reject(findError);
 			});
 		});
 	}
@@ -97,6 +89,34 @@ class DatabaseAuthenticationSource extends AuthenticationSourceInterface{
 	static setAuthenticationField(authenticationField){
 		this.authenticationField = authenticationField;
 		return this;
+	}
+	static getUser(username){
+		let findParameters = {};
+		findParameters[this.getIdentificationField()] = username;
+		return CollectionsProvider.getCollection(this.getAuthenticationCollection()).collection.findOne(findParameters);
+	}
+	static changePassword(username, password){
+		return new Promise((resolve, reject) => {
+			this.getUser(username).then((user) => {
+				let updateFields = {};
+				this.hashPassword(password).then((hash) => {
+					updateFields[this.getAuthenticationField()] = hash;
+					CollectionsProvider.getCollection(this.getAuthenticationCollection()).collection.updateOne({
+						_id: user._id
+					}, {
+						$set: updateFields
+					}).then(() => {
+						resolve(true);
+					}).catch((e) => {
+						reject(e);
+					});
+				}).catch((e) => {
+					reject(e);
+				});
+			}).catch((e) => {
+				reject(e);
+			});
+		});
 	}
 }
 

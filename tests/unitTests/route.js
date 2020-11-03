@@ -339,8 +339,7 @@ describe('Route', () => {
                 let BaseController = require('../../index.js').BaseController;
                 fakeControllerAllMiddlewares = sinon.fake(() => {
                 });
-                testControllerMiddlewares = [
-                ];
+                testControllerMiddlewares = undefined;
                 testRouteMiddlewares = [
                 ];
                 class testControllerClass extends BaseController{

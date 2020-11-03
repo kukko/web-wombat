@@ -53,7 +53,14 @@ describe('DatabaseAuthenticationSource', () => {
                 return {
                     collection: {
                         findOne: (parameters, callback) => {
-                            callback(error, testUser);
+                            return new Promise((resolve, reject) => {
+                                if (!error){
+                                    resolve(testUser);
+                                }
+                                else{
+                                    reject(error);
+                                }
+                            });
                         },
                         insertOne: (toBeInserted, callback) => {
                             callback(insertError, insertResult);
@@ -318,6 +325,544 @@ describe('DatabaseAuthenticationSource', () => {
             });
             afterEach(() => {
                 sinon.restore();
+            });
+        });
+        describe('The \'getUser\' method works as expected.', () => {
+            let testUsername,
+                fakeGetIdentificationField,
+                fakeGetIdentificationFieldReturnValue,
+                fakeGetAuthenticationCollection,
+                fakeGetAuthenticationCollectionReturnValue,
+                fakeFindOne,
+                testUser;
+            beforeEach(() => {
+                testUsername = 'foo-username';
+                testUser = {};
+                testUser[fakeGetIdentificationField] = testUsername;
+                fakeFindOne = sinon.fake(() => {
+                    return new Promise((resolve, reject) => {
+                        if (!(testUser instanceof Error)){
+                            resolve(testUser);
+                        }
+                        else{
+                            reject(testUser);
+                        }
+                    });
+                });
+                fakeGetCollection = sinon.fake(() => {
+                    return {
+                        collection: {
+                            findOne: fakeFindOne
+                        }
+                    };
+                });
+                DatabaseAuthenticationSource = proxyquire.load('../../src/services/AuthenticationService/AuthenticationSources/DatabaseAuthenticationSource.js', {
+                    '../../../CollectionsProvider.js': {
+                        getCollection: fakeGetCollection
+                    }
+                });
+                fakeGetIdentificationFieldReturnValue = 'foo';
+                fakeGetIdentificationField = sinon.fake(() => {
+                    return fakeGetIdentificationFieldReturnValue;
+                });
+                DatabaseAuthenticationSource.getIdentificationField = fakeGetIdentificationField;
+                fakeGetAuthenticationCollectionReturnValue = 'bar';
+                fakeGetAuthenticationCollection = sinon.fake(() => {
+                    return fakeGetAuthenticationCollectionReturnValue;
+                });
+                DatabaseAuthenticationSource.getAuthenticationCollection = fakeGetAuthenticationCollection;
+            });
+            describe('User was found', () => {
+                describe('Returns correct value', () => {
+                    it('Returns promise', () => {
+                        assert.instanceOf(DatabaseAuthenticationSource.getUser(testUsername), Promise);
+                    });
+                    it('Returned promise resolves', (done) => {
+                        DatabaseAuthenticationSource.getUser(testUsername).then(() => {
+                            done();
+                        });
+                    });
+                    it('Returned promise resolves correct value', (done) => {
+                        DatabaseAuthenticationSource.getUser(testUsername).then((user) => {
+                            assert.equal(user, testUser);
+                            done();
+                        });
+                    });
+                });
+                describe('Calls methods', () => {
+                    describe('Calls \'getIdentificationField\' method of \'DatabaseAuthenticationSource\' class', () => {
+                        it('Called once', (done) => {
+                            DatabaseAuthenticationSource.getUser(testUsername).then(() => {
+                                sinon.assert.calledOnce(fakeGetIdentificationField);
+                                done();
+                            });
+                        });
+                        it('Called with correct parameters', (done) => {
+                            DatabaseAuthenticationSource.getUser(testUsername).then(() => {
+                                sinon.assert.calledWithExactly(fakeGetIdentificationField);
+                                done();
+                            });
+                        });
+                    });
+                    describe('Calls \'getAuthenticationCollection\' method of \'DatabaseAuthenticationSource\' class', () => {
+                        it('Called once', (done) => {
+                            DatabaseAuthenticationSource.getUser(testUsername).then(() => {
+                                sinon.assert.calledOnce(fakeGetAuthenticationCollection);
+                                done();
+                            });
+                        });
+                        it('Called with correct parameters', (done) => {
+                            DatabaseAuthenticationSource.getUser(testUsername).then(() => {
+                                sinon.assert.calledWithExactly(fakeGetAuthenticationCollection);
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        describe('The \'changePassword\' method works as expected.', () => {
+            let testUsername,
+                testPassword,
+                testUser,
+                passwordHash,
+                updateResult,
+                fakeGetAuthenticationField,
+                fakeGetAuthenticationFieldReturnValue,
+                fakeGetAuthenticationCollection,
+                fakeGetAuthenticationCollectionReturnValue,
+                fakeGetCollection,
+                fakeUpdateOne,
+                fakeHashPassword,
+                fakeGetUser,
+                testErrorMessage;
+            beforeEach(() => {
+                testUsername = 'foo-user';
+                testPassword = 'foo-password';
+                fakeUpdateOne = sinon.fake(() => {
+                    return new Promise((resolve, reject) => {
+                        if (!(updateResult instanceof Error)){
+                            resolve(updateResult);
+                        }
+                        else{
+                            reject(updateResult);
+                        }
+                    });
+                });
+                fakeGetCollection = sinon.fake(() => {
+                    return {
+                        collection: {
+                            updateOne: fakeUpdateOne
+                        }
+                    };
+                });
+                DatabaseAuthenticationSource = proxyquire.load('../../src/services/AuthenticationService/AuthenticationSources/DatabaseAuthenticationSource.js', {
+                    '../../../CollectionsProvider.js': {
+                        getCollection: fakeGetCollection
+                    }
+                });
+                fakeHashPassword = sinon.fake(() => {
+                    return new Promise((resolve, reject) => {
+                        if (!(passwordHash instanceof Error)){
+                            resolve(passwordHash);
+                        }
+                        else{
+                            reject(passwordHash);
+                        }
+                    });
+                });
+                DatabaseAuthenticationSource.hashPassword = fakeHashPassword;
+                fakeGetUser = sinon.fake(() => {
+                    return new Promise((resolve, reject) => {
+                        if (!(testUser instanceof Error)){
+                            resolve(testUser);
+                        }
+                        else{
+                            reject(testUser);
+                        }
+                    });
+                });
+                DatabaseAuthenticationSource.getUser = fakeGetUser;
+                fakeGetAuthenticationCollectionReturnValue = 'foo';
+                fakeGetAuthenticationCollection = sinon.fake(() => {
+                    return fakeGetAuthenticationCollectionReturnValue;
+                });
+                DatabaseAuthenticationSource.getAuthenticationCollection = fakeGetAuthenticationCollection;
+                fakeGetAuthenticationFieldReturnValue = 'foo-field';
+                fakeGetAuthenticationField = sinon.fake(() => {
+                    return fakeGetAuthenticationFieldReturnValue;
+                });
+                DatabaseAuthenticationSource.getAuthenticationField = fakeGetAuthenticationField;
+            });
+            describe('The user was found', () => {
+                beforeEach(() => {
+                    testUser = {};
+                });
+                describe('The password hashing was successful', () => {
+                    beforeEach(() => {
+                        passwordHash = 'bar';
+                    });
+                    describe('The update of user was successful', () => {
+                        beforeEach(() => {
+                            updateResult = {};
+                        });
+                        describe('Returns correct value', () => {
+                            it('Returns promise', () => {
+                                assert.instanceOf(DatabaseAuthenticationSource.changePassword(testUsername, testPassword), Promise);
+                            });
+                            it('Returned promise resolves', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                    done();
+                                });
+                            });
+                            it('Returned promise resolves correct value', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then((result) => {
+                                    assert.equal(result, true);
+                                    done();
+                                });
+                            });
+                        });
+                        describe('Calls methods', () => {
+                            describe('Calls \'getUser\' method of \'DatabaseAuthenticationSource\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledOnce(fakeGetUser);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledWithExactly(fakeGetUser, testUsername);
+                                        done();
+                                    });
+                                });
+                            });
+                            describe('Calls \'hashPassword\' method of \'DatabaseAuthenticationSource\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledOnce(fakeHashPassword);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledWithExactly(fakeHashPassword, testPassword);
+                                        done();
+                                    });
+                                });
+                            });
+                            describe('Calls \'getAuthenticationField\' method of \'DatabaseAuthenticationSource\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledOnce(fakeGetAuthenticationField);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledWithExactly(fakeGetAuthenticationField);
+                                        done();
+                                    });
+                                });
+                            });
+                            describe('Calls \'getAuthenticationCollection\' method of \'DatabaseAuthenticationSource\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledOnce(fakeGetAuthenticationCollection);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledWithExactly(fakeGetAuthenticationCollection);
+                                        done();
+                                    });
+                                });
+                            });
+                            describe('Calls \'getCollection\' method of \'CollectionsProvider\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledOnce(fakeGetCollection);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).then(() => {
+                                        sinon.assert.calledWithExactly(fakeGetCollection, fakeGetAuthenticationCollectionReturnValue);
+                                        done();
+                                    });
+                                });
+                            });
+                        });
+                    });
+                    describe('The update of user was not successful', () => {
+                        beforeEach(() => {
+                            testErrorMessage = 'Something went wrong during the update of user.';
+                            updateResult = new Error(testErrorMessage);
+                        });
+                        describe('Returns correct value', () => {
+                            it('Returns promise', () => {
+                                let returnedPromise = DatabaseAuthenticationSource.changePassword(testUsername, testPassword);
+                                returnedPromise.catch(() => {
+                                });
+                                assert.instanceOf(returnedPromise, Promise);
+                            });
+                            it('Returned promise rejects', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                    done();
+                                });
+                            });
+                            it('Returned promise rejects correct value', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch((error) => {
+                                    assert.equal(error, updateResult);
+                                    done();
+                                });
+                            });
+                            it('Rejected error\'s message is correct', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch((error) => {
+                                    assert.equal(error.message, testErrorMessage);
+                                    done();
+                                });
+                            });
+                        });
+                        describe('Calls methods', () => {
+                            describe('Calls \'getUser\' method of \'DatabaseAuthenticationSource\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledOnce(fakeGetUser);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledWithExactly(fakeGetUser, testUsername);
+                                        done();
+                                    });
+                                });
+                            });
+                            describe('Calls \'hashPassword\' method of \'DatabaseAuthenticationSource\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledOnce(fakeHashPassword);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledWithExactly(fakeHashPassword, testPassword);
+                                        done();
+                                    });
+                                });
+                            });
+                            describe('Calls \'getAuthenticationField\' method of \'DatabaseAuthenticationSource\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledOnce(fakeGetAuthenticationField);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledWithExactly(fakeGetAuthenticationField);
+                                        done();
+                                    });
+                                });
+                            });
+                            describe('Calls \'getAuthenticationCollection\' method of \'DatabaseAuthenticationSource\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledOnce(fakeGetAuthenticationCollection);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledWithExactly(fakeGetAuthenticationCollection);
+                                        done();
+                                    });
+                                });
+                            });
+                            describe('Calls \'getCollection\' method of \'CollectionsProvider\' class', () => {
+                                it('Called once', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledOnce(fakeGetCollection);
+                                        done();
+                                    });
+                                });
+                                it('Called with correct parameters', (done) => {
+                                    DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                        sinon.assert.calledWithExactly(fakeGetCollection, fakeGetAuthenticationCollectionReturnValue);
+                                        done();
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+                describe('The password hashing was not successful', () => {
+                    beforeEach(() => {
+                        testErrorMessage = 'Something went wrong during the hashing of password.';
+                        passwordHash = new Error(testErrorMessage);
+                    });
+                    describe('Returns correct value', () => {
+                        it('Returns promise', () => {
+                            let returnedPromise = DatabaseAuthenticationSource.changePassword(testUsername, testPassword);
+                            returnedPromise.catch(() => {
+                            });
+                            assert.instanceOf(returnedPromise, Promise);
+                        });
+                        it('Returned promise rejects', (done) => {
+                            DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                done();
+                            });
+                        });
+                        it('Returned promise rejects correct value', (done) => {
+                            DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch((error) => {
+                                assert.equal(error, passwordHash);
+                                done();
+                            });
+                        });
+                        it('Rejected error\'s message is correct', (done) => {
+                            DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch((error) => {
+                                assert.equal(error.message, testErrorMessage);
+                                done();
+                            });
+                        });
+                    });
+                    describe('Calls methods', () => {
+                        describe('Calls \'getUser\' method of \'DatabaseAuthenticationSource\' class', () => {
+                            it('Called once', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                    sinon.assert.calledOnce(fakeGetUser);
+                                    done();
+                                });
+                            });
+                            it('Called with correct parameters', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                    sinon.assert.calledWithExactly(fakeGetUser, testUsername);
+                                    done();
+                                });
+                            });
+                        });
+                        describe('Calls \'hashPassword\' method of \'DatabaseAuthenticationSource\' class', () => {
+                            it('Called once', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                    sinon.assert.calledOnce(fakeHashPassword);
+                                    done();
+                                });
+                            });
+                            it('Called with correct parameters', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                    sinon.assert.calledWithExactly(fakeHashPassword, testPassword);
+                                    done();
+                                });
+                            });
+                        });
+                        describe('Calls \'getAuthenticationField\' method of \'DatabaseAuthenticationSource\' class', () => {
+                            it('Not called', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                    sinon.assert.notCalled(fakeGetAuthenticationField);
+                                    done();
+                                });
+                            });
+                        });
+                        describe('Calls \'getAuthenticationCollection\' method of \'DatabaseAuthenticationSource\' class', () => {
+                            it('Not called', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                    sinon.assert.notCalled(fakeGetAuthenticationCollection);
+                                    done();
+                                });
+                            });
+                        });
+                        describe('Calls \'getCollection\' method of \'CollectionsProvider\' class', () => {
+                            it('Not called', (done) => {
+                                DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                    sinon.assert.notCalled(fakeGetCollection);
+                                    done();
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+            describe('The user was not found', () => {
+                beforeEach(() => {
+                    testErrorMessage = 'Something went wrong during the search of the user.';
+                    testUser = new Error(testErrorMessage);
+                });
+                describe('Returns correct value', () => {
+                    it('Returns promise', () => {
+                        let returnedPromise = DatabaseAuthenticationSource.changePassword(testUsername, testPassword);
+                        returnedPromise.catch(() => {
+                        });
+                        assert.instanceOf(returnedPromise, Promise);
+                    });
+                    it('Returned promise rejects', (done) => {
+                        DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                            done();
+                        });
+                    });
+                    it('Returned promise rejects correct value', (done) => {
+                        DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch((error) => {
+                            assert.equal(error, testUser);
+                            done();
+                        });
+                    });
+                    it('Rejected error\'s message is correct', (done) => {
+                        DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch((error) => {
+                            assert.equal(error.message, testErrorMessage);
+                            done();
+                        });
+                    });
+                });
+                describe('Calls methods', () => {
+                    describe('Calls \'getUser\' method of \'DatabaseAuthenticationSource\' class', () => {
+                        it('Called once', (done) => {
+                            DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                sinon.assert.calledOnce(fakeGetUser);
+                                done();
+                            });
+                        });
+                        it('Called with correct parameters', (done) => {
+                            DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                sinon.assert.calledWithExactly(fakeGetUser, testUsername);
+                                done();
+                            });
+                        });
+                    });
+                    describe('Calls \'hashPassword\' method of \'DatabaseAuthenticationSource\' class', () => {
+                        it('Not called', (done) => {
+                            DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                sinon.assert.notCalled(fakeHashPassword);
+                                done();
+                            });
+                        });
+                    });
+                    describe('Calls \'getAuthenticationField\' method of \'DatabaseAuthenticationSource\' class', () => {
+                        it('Not called', (done) => {
+                            DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                sinon.assert.notCalled(fakeGetAuthenticationField);
+                                done();
+                            });
+                        });
+                    });
+                    describe('Calls \'getAuthenticationCollection\' method of \'DatabaseAuthenticationSource\' class', () => {
+                        it('Not called', (done) => {
+                            DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                sinon.assert.notCalled(fakeGetAuthenticationCollection);
+                                done();
+                            });
+                        });
+                    });
+                    describe('Calls \'getCollection\' method of \'CollectionsProvider\' class', () => {
+                        it('Not called', (done) => {
+                            DatabaseAuthenticationSource.changePassword(testUsername, testPassword).catch(() => {
+                                sinon.assert.notCalled(fakeGetCollection);
+                                done();
+                            });
+                        });
+                    });
+                });
             });
         });
         after(() => {

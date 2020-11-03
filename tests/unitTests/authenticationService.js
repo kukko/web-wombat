@@ -100,5 +100,50 @@ describe('AuthenticationService', () => {
                 });
             });
         });
+        describe('getUser', () => {
+            before(() => {
+                class FakeAuthenticationSourceClass extends AuthenticationSourceInterface{
+                }
+                FakeAuthenticationSourceClass.getUser = sinon.fake();
+                FakeAuthenticationSource = FakeAuthenticationSourceClass;
+                AuthenticationService.setAuthenticationSource(FakeAuthenticationSource);
+            });
+            describe('Uses \'getUser\' method of authentication source', () => {
+                before(() => {
+                    AuthenticationService.getUser("foo");
+                });
+                it('The \'getUser\' method of authentication source is called', () => {
+                    sinon.assert.calledOnce(FakeAuthenticationSource.getUser);
+                });
+                it('The \'getUser\' method of authentication source is called with right parameters', () => {
+                    assert.deepEqual(FakeAuthenticationSource.getUser.getCall(0).args, [
+                        'foo'
+                    ]);
+                });
+            });
+        });
+        describe('changePassword', () => {
+            before(() => {
+                class FakeAuthenticationSourceClass extends AuthenticationSourceInterface{
+                }
+                FakeAuthenticationSourceClass.changePassword = sinon.fake();
+                FakeAuthenticationSource = FakeAuthenticationSourceClass;
+                AuthenticationService.setAuthenticationSource(FakeAuthenticationSource);
+            });
+            describe('Uses \'changePassword\' method of authentication source', () => {
+                before(() => {
+                    AuthenticationService.changePassword("foo", "bar");
+                });
+                it('The \'changePassword\' method of authentication source is called', () => {
+                    sinon.assert.calledOnce(FakeAuthenticationSource.changePassword);
+                });
+                it('The \'changePassword\' method of authentication source is called with right parameters', () => {
+                    assert.deepEqual(FakeAuthenticationSource.changePassword.getCall(0).args, [
+                        'foo',
+                        'bar'
+                    ]);
+                });
+            });
+        });
     });
 });
