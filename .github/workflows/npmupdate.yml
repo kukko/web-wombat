@@ -1,9 +1,8 @@
 name: Node.js update
 
 on:
-  push:
-    branches:
-      - continuous_integration
+  schedule:
+    - cron: 0 0 * * *
 
 jobs:
   package-update:
