@@ -20,5 +20,6 @@ jobs:
           EXECUTE: "true"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LOG_LEVEL: debug
+          COMMIT_MESSAGE: "--progress: DEPENDENCIES: Update dependencies."
         with:
           args: -u --packageFile package.json --loglevel verbose
