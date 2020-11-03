@@ -51,7 +51,7 @@ describe('CookieService', () => {
                     });
                     describe('Calls \'push\' method on \'Array\'', () => {
                         it('Called twice', () => {
-                            sinon.assert.calledTwice(Array.prototype.push);
+                            sinon.assert.calledOnce(Array.prototype.push);
                         });
                         it('Firstly calls with correct parameters', () => {
                             assert.deepEqual(Array.prototype.push.getCall(0).args, [
@@ -98,7 +98,7 @@ describe('CookieService', () => {
                         });
                         describe('Calls \'push\' method on \'Array\'', () => {
                             it('Called twice', () => {
-                                sinon.assert.calledThrice(Array.prototype.push);
+                                sinon.assert.calledTwice(Array.prototype.push);
                             });
                             it('Firstly calls with correct parameters', () => {
                                 assert.deepEqual(Array.prototype.push.getCall(0).args, [
@@ -140,7 +140,7 @@ describe('CookieService', () => {
                         });
                         describe('Calls \'push\' method on \'Array\'', () => {
                             it('Called twice', () => {
-                                sinon.assert.calledTwice(Array.prototype.push);
+                                sinon.assert.calledOnce(Array.prototype.push);
                             });
                             it('Firstly calls with correct parameters', () => {
                                 assert.deepEqual(Array.prototype.push.getCall(0).args, [
