@@ -34,8 +34,36 @@ describe('BaseController', () => {
 		let FakeControllerClass,
 			fakeController,
 			request,
-			response;
-		before(() => {
+			response,
+			fakeHasHeader,
+			fakeHasHeaderReturnValue,
+			fakeConstructor,
+			fakeGetView,
+			fakeGetViewReturnValue;
+		beforeEach(() => {
+			let BladeConnector = proxyquire.load('../../src/TemplateConnectors/BladeConnector/BladeConnector.js', {
+				blade: {
+					renderFile: (filePath, options, callback) => {
+						callback(null, fakeGetViewReturnValue);
+					}
+				}
+			});
+			fakeConstructor = sinon.fake();
+			fakeGetViewReturnValue = 'bar';
+			fakeGetView = sinon.fake(() => {
+				return fakeGetViewReturnValue;
+			});
+			class fakeViewProvider{
+				constructor(request, response, connector){
+					fakeConstructor(request, response, connector);
+				}
+				getView(filePath, options, writeToResponse, endResponse){
+					return fakeGetView(filePath, options, writeToResponse, endResponse);
+				}
+			}
+			BaseController = proxyquire.load('../../src/BaseController.js', {
+				'./ViewProvider.js': fakeViewProvider
+			});
 			class FakeController extends BaseController{
 			}
 			FakeControllerClass = FakeController;
@@ -48,7 +76,13 @@ describe('BaseController', () => {
 				headers: {},
 				cookies: {}
 			};
-			response = {};
+			fakeHasHeaderReturnValue = true;
+			fakeHasHeader = sinon.fake(() => {
+				return fakeHasHeaderReturnValue;
+			});
+			response = {
+				hasHeader: fakeHasHeader
+			};
 			fakeController = new FakeControllerClass(request, response);
 		});
 		describe('Abstract methods', () => {
@@ -81,27 +115,10 @@ describe('BaseController', () => {
 			});
 			describe('view', () => {
 				let testFilePath,
-					testOptions,
-					fakeConstructor,
-					fakeGetView,
-					fakeGetViewReturnValue;
+					testOptions;
 				beforeEach(() => {
 					testFilePath = 'foo';
 					testOptions = {};
-					fakeConstructor = sinon.fake();
-					fakeGetViewReturnValue = 'bar';
-					fakeGetView = sinon.fake(() => {
-						return fakeGetViewReturnValue;
-					});
-					class fakeViewProvider{
-						constructor(request, response, connector){
-							fakeConstructor(request, response, connector);
-						}
-						getView(filePath, options, writeToResponse, endResponse){
-							return fakeGetView(filePath, options, writeToResponse, endResponse);
-						}
-					}
-					fakeController.ViewProvider = fakeViewProvider;
 				});
 				describe('Returns correct value', () => {
 					it('Returns the same type as the \'GetView\' method of \'ViewProvider\' class', () => {

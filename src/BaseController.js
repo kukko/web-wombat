@@ -12,7 +12,7 @@ class BaseController {
 		);
 	}
 	view(filePath, options, writeToResponse = true, endResponse = true) {
-		let viewProviderObj = new this.ViewProvider(
+		let viewProviderObj = new BaseController.ViewProvider(
 			this.request,
 			this.response,
 			this.viewConnector
