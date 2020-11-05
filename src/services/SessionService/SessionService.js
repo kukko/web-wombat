@@ -29,7 +29,7 @@ class SessionService{
         return typeof this.sessions[uuid] !== 'undefined';
     }
     static createSession(uuid){
-        this.sessions[uuid] = [];
+        this.sessions[uuid] = {};
     }
     static generateUUID(length = 8, possibleChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'){
         let output;
@@ -64,7 +64,7 @@ class SessionService{
     }
 }
 
-SessionService.sessions = [];
+SessionService.sessions = {};
 
 SessionService.sessionIdCookie = 'node-sessid';
 

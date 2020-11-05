@@ -77,14 +77,12 @@ describe('SessionService', () => {
             testRequest = {
                 cookies: testCookies
             };
-            sessionsBefore = [
-                ...SessionService.sessions
-            ];
+            sessionsBefore = Object.assign({}, SessionService.sessions);
         });
         describe('getSessions', () => {
             describe('Returns correct value', () => {
                 it('Returned value is an \'array\'', () => {
-                    assert.isArray(SessionService.getSessions());
+                    assert.isObject(SessionService.getSessions());
                 });
                 it('Returned value is correct', () => {
                     assert.equal(SessionService.getSessions(), SessionService.sessions);
@@ -244,7 +242,7 @@ describe('SessionService', () => {
                         SessionService.writeToSession(testRequest, testKey, testValue)
                     });
                     it('Modifies \'sessions\' properly', () => {
-                        let expectedSession = [];
+                        let expectedSession = {};
                         expectedSession[testKey] = testValue;
                         assert.deepEqual(SessionService.sessions[testSessionId], expectedSession);
                     });
@@ -409,8 +407,8 @@ describe('SessionService', () => {
                     SessionService.createSession(testSessionId);
                 });
                 it('Modifies \'sessions\' properly', () => {
-                    let expectedSessions = [];
-                    expectedSessions[testSessionId] = [];
+                    let expectedSessions = {};
+                    expectedSessions[testSessionId] = {};
                     assert.deepEqual(SessionService.sessions, expectedSessions);
                 });
             });
@@ -689,9 +687,7 @@ describe('SessionService', () => {
             });
         });
         afterEach(() => {
-            SessionService.sessions = [
-                ...sessionsBefore
-            ];
+            SessionService.sessions = Object.assign({}, sessionsBefore);
         });
     });
 });
