@@ -44,7 +44,7 @@
     "handlebars": "^4.7.6",
     "jsonwebtoken": "^8.5.1",
     "mime": "^2.4.6",
-    "mongodb": "^3.6.2",
+    "mongodb": "^3.6.3",
     "mustache": "^4.0.1",
     "pug": "^3.0.0"
   },
