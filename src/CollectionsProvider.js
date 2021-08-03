@@ -38,16 +38,20 @@ class CollectionsProvider {
 	}
 	static getDirectories(source) {
 		return readdirSync(source)
-			.map((folder) => {
-				return {
-					parentFolder: source,
-					collectionFolder: folder
-				};
-			})
+			.map(this.transformFolder(source))
 			.filter(this.isDirectory)
-			.map((collection) => {
-				return collection.collectionFolder;
-			});
+			.map(this.extractCollectionsFolder);
+	}
+	static transformFolder(source){
+		return (folder) => {
+			return {
+				parentFolder: source,
+				collectionFolder: folder
+			};
+		};
+	}
+	static extractCollectionsFolder(collection){
+		return collection.collectionFolder;
 	}
 }
 

@@ -129,7 +129,7 @@ class WombatServer {
 						key: privateKey,
 						cert: certificate
 					},
-					this.serve
+					this.serveSecure
 				)
 				.on("listening", () => {
 					logger.log("Listening on " + this.getSecurePort() + "!");
@@ -165,20 +165,25 @@ class WombatServer {
 				port:this.getPort()
 			});
 	}
-	static serveWithMiddlewares(request, response) {
-		MiddlewareProvider.runMiddlewares(
-			request,
-			response,
-			this.serve,
-			MiddlewareProvider.getWebMiddlewares
-		);
-	}
 	static serve(request, response) {
+		if (!this.secureConnection || !this.forcingSecureConnection){
+			WombatServer.runMiddlewaresAndServeRequest(request, response);
+		}
+		else{
+			response.statusCode = 302;
+			response.setHeader("Location", request.url);
+			response.end();
+		}
+	}
+	static serveSecure(request, response) {
+		this.runMiddlewaresAndServeRequest(request, response);
+	}
+	static runMiddlewaresAndServeRequest(request, response){
 		MiddlewareProvider.runMiddlewares(
 			request,
 			response,
-			WombatServer.serveRequest,
-			MiddlewareProvider.getWebMiddlewares()
+			this.serveRequest,
+			MiddlewareProvider.getWebMiddlewares
 		);
 	}
 	static serveRequest(request, response){
@@ -288,6 +293,14 @@ class WombatServer {
 	static setErrorHandler(errorHandler){
 		this.errorHandler = errorHandler;
 	}
+	static doNotForceSecureConnection(){
+		this.forcingSecureConnection = false;
+		return this;
+	}
+	static forceSecureConnection(){
+		this.forcingSecureConnection = true;
+		return this;
+	}
 }
 
 WombatServer.setPort(8888);
@@ -297,6 +310,8 @@ WombatServer.setSecurePort(443);
 WombatServer.connectToDatabase = true;
 
 WombatServer.secureConnection = true;
+
+WombatServer.forcingSecureConnection = true;
 
 WombatServer.errorHandler = require('./ErrorHandlers/ConsoleLoggerErrorHandler/ConsoleLoggerErrorHandler.js');
 

@@ -5,7 +5,7 @@ let {
 
 class ResourceTestController extends ResourceController {
 	getCollection() {
-		return CollectionsProvider.collections.test;
+		return CollectionsProvider.getCollections().test;
 	}
 }
 

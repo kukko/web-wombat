@@ -18,14 +18,101 @@ describe('Config', () => {
             assert.isString(Config.folder);
         });
     });
+    describe('Have basic documented methods', () => {
+        it('GetAuth', () => {
+            assert.isFunction(Config.GetAuth);
+        });
+        it('GetDb', () => {
+            assert.isFunction(Config.GetDb);
+        });
+        it('GetConfig', () => {
+            assert.isFunction(Config.GetConfig);
+        });
+        it('LoadConfig', () => {
+            assert.isFunction(Config.LoadConfig);
+        });
+        it('setConfigFolder', () => {
+            assert.isFunction(Config.setConfigFolder);
+        });
+    });
     describe('Methods works as expected', () => {
+        let testAuthConfig,
+            testDbConfig;
         before(() => {
+            testAuthConfig = {};
+            testDbConfig = {};
             Config = proxyquire.load('../../src/config/Config.js', {
-                './auth.js': {}
+                './auth.js': testAuthConfig,
+                './db.js': testDbConfig
             });
         });
-        it('GetAuth', () => {
-            assert.isDefined(Config.GetAuth());
+        describe('GetAuth', () => {
+            let fakeGetConfig,
+                fakeGetConfigReturnValue;
+            beforeEach(() => {
+                fakeGetConfigReturnValue = {};
+                fakeGetConfig = sinon.fake(() => {
+                    return fakeGetConfigReturnValue;
+                });
+                Config.GetConfig = fakeGetConfig;
+            });
+            describe('Returns correct value', () => {
+                it('Returns object', () => {
+                    assert.isObject(Config.GetAuth());
+                });
+                it('Returned value is correct', () => {
+                    assert.equal(Config.GetAuth(), fakeGetConfigReturnValue);
+                });
+            });
+            describe('Calls methods', () => {
+                beforeEach(() => {
+                    Config.GetAuth();
+                });
+                describe('Calls \'GetConfig\' method of \'Config\' class', () => {
+                    it('Called once', () => {
+                        sinon.assert.calledOnce(fakeGetConfig);
+                    });
+                    it('Called with correct parameters', () => {
+                        assert.deepEqual(fakeGetConfig.getCall(0).args, [
+                            'auth'
+                        ]);
+                    });
+                });
+            });
+        });
+        describe('GetDb', () => {
+            let fakeGetConfig,
+                fakeGetConfigReturnValue;
+            beforeEach(() => {
+                fakeGetConfigReturnValue = {};
+                fakeGetConfig = sinon.fake(() => {
+                    return fakeGetConfigReturnValue;
+                });
+                Config.GetConfig = fakeGetConfig;
+            });
+            describe('Returns correct value', () => {
+                it('Returns object', () => {
+                    assert.isObject(Config.GetDb());
+                });
+                it('Returned value is correct', () => {
+                    assert.equal(Config.GetDb(), fakeGetConfigReturnValue);
+                });
+            });
+            describe('Calls methods', () => {
+                beforeEach(() => {
+                    Config.GetDb();
+                });
+                describe('Calls \'GetConfig\' method of \'Config\' class', () => {
+                    it('Called once', () => {
+                        sinon.assert.calledOnce(fakeGetConfig);
+                    });
+                    it('Called with correct parameters', () => {
+                        assert.deepEqual(fakeGetConfig.getCall(0).args, [
+                            'db'
+                        ]);
+                    });
+                });
+            });
         });
         describe('GetConfig', () => {
             let TestConfig = {

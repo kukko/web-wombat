@@ -10,7 +10,7 @@
     "prettify": "prettier --trailing-coma --write --use-tabs --tab-width 4 --arrow-parens always \"**/*.js\"",
     "code-coverage": "nyc npm run unit-test",
     "code-coverage-strict": "nyc --exclude=tests/unitTests --check-coverage --statements=70 --branches=60 --functions=70 --lines=70 npm run unit-test",
-    "code-coverage-todo": "nyc --exclude=tests/unitTests --check-coverage --statements=70 --branches=60 --functions=70 --lines=70 --skip-full npm run unit-test",
+    "code-coverage-todo": "nyc --exclude=tests/unitTests --check-coverage --statements=72 --branches=63 --functions=76 --lines=72 --skip-full npm run unit-test",
     "coveralls": "nyc mocha tests/unitTests/ && nyc report --reporter=text-lcov > ./lcov.info"
   },
   "bin": {
