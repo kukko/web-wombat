@@ -505,7 +505,9 @@ describe('DatabaseHolder', () => {
 				fakeGetCollectionsReturnValue,
 				fakeDb,
 				collectionCreatedBefore,
-				fakeCollectionCreated;
+				fakeCollectionCreated,
+				fakeGetDb,
+				fakeGetDbReturnValue;
 			beforeEach(() => {
 				fakeDb = sinon.fake();
 				testConnection = {
@@ -524,6 +526,15 @@ describe('DatabaseHolder', () => {
 					return fakeGetCollectionsReturnValue;
 				});
 				getCollectionsBefore = DatabaseHolder.getCollections;
+				fakeGetDbReturnValue = {};
+				fakeGetDb = sinon.fake(() => {
+					return fakeGetDbReturnValue;
+				});
+				DatabaseHolder = proxyquire.load('../../src/DatabaseHolder.js', {
+					'./config/Config.js': {
+						GetDb: fakeGetDb
+					}
+				});
 				DatabaseHolder.getCollections = fakeGetCollections;
 				sinon.spy(DatabaseHolder, 'getCollectionCNT');
 				fakeCollectionCreated = sinon.fake((collection, resolve) => {
