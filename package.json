@@ -42,7 +42,7 @@
     "cookie": "^0.4.1",
     "formidable": "^1.2.2",
     "handlebars": "^4.7.6",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mime": "^2.4.6",
     "mongodb": "^3.6.3",
     "mustache": "^4.0.1",
